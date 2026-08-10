@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <Compile Remove="Services \**" />
+	  <EmbeddedResource Remove="Services \**" />
+	  <None Remove="Services \**" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="BCrypt.Net-Next" Version="4.1.0" />
+	  <PackageReference Include="FluentValidation" Version="12.1.1" />
+	  <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.3.11" />
+	  <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.10" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\FarmStay.Domain\FarmStay.Domain.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Interfaces\Services\Customer\" />
+	  <Folder Include="Services\Customer\" />
+	</ItemGroup>
+
+</Project>
