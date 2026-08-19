@@ -14,21 +14,21 @@ namespace FarmStay.Application.Interfaces.Services.Auth
 
         Task<ApiResponse<bool>> VerifyOtpAsync(VerifyOtpRequestDto dto);
 
-        //Task<ApiResponse<LoginResponseDto>> LoginAsync(LoginDto dto);
+        Task<ApiResponse<LoginResponseDto>> LoginAsync(LoginRequestDto dto);
 
+        Task<ApiResponse<bool>> ForgotPasswordAsync(ForgotPasswordDto dto);
 
+        Task<ApiResponse<bool>> ResetPasswordEmailAsync(ResetPasswordByEmailDto dto);
 
-        //Task<ApiResponse<bool>> ResendVerificationAsync(string emailOrMobile);
+        Task<ApiResponse<bool>> ResetPasswordOtpAsync(ResetPasswordOtpDto dto);
 
-        //Task<ApiResponse<bool>> ForgotPasswordAsync(ForgotPasswordDto dto);
+        Task<ApiResponse<bool>> ChangePasswordAsync(ChangePasswordDto dto);
 
-        //Task<ApiResponse<bool>> ResetPasswordAsync(ResetPasswordDto dto);
+        Task<ApiResponse<ProfileDto>> GetProfileAsync();
 
-        //Task<ApiResponse<bool>> ChangePasswordAsync(int userId, ChangePasswordDto dto);
+        Task<ApiResponse<LoginResponseDto>> RefreshTokenAsync(RefreshTokenDto dto);
 
-        //Task<ApiResponse<LoginResponseDto>> RefreshTokenAsync(string refreshToken);
-
-        //Task<ApiResponse<bool>> LogoutAsync(int userId);
+        Task<ApiResponse<bool>> LogoutAsync(LogoutDto dto);
     }
 
 

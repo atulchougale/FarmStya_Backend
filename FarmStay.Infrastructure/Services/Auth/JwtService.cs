@@ -17,9 +17,10 @@ namespace FarmStay.Infrastructure.Services.Auth
         private readonly string _audience;
         private readonly double _expiryMinutes;
 
+
         public JwtService(IConfiguration configuration)
         {
-            _key = configuration["Jwt:Key"]
+                _key = configuration["Jwt:Key"]
                 ?? throw new InvalidOperationException("JWT Key is missing.");
 
             _issuer = configuration["Jwt:Issuer"]
@@ -34,26 +35,30 @@ namespace FarmStay.Infrastructure.Services.Auth
             );
         }
 
-        public string GenerateAccessToken(UserMembership membership)
+        public string GenerateAccessToken(
+            User user,
+            UserMembership membership,
+            FarmHouse farmHouse,
+            Role role)
         {
+            ArgumentNullException.ThrowIfNull(user);
             ArgumentNullException.ThrowIfNull(membership);
-
-            if (membership.User == null)
-                throw new InvalidOperationException("User navigation is not loaded.");
-
-            if (membership.Role == null)
-                throw new InvalidOperationException("Role navigation is not loaded.");
+            ArgumentNullException.ThrowIfNull(farmHouse);
+            ArgumentNullException.ThrowIfNull(role);
 
             var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.NameIdentifier, membership.UserId.ToString()),
-                new Claim(ClaimTypes.Name, membership.User.FullName),
-                new Claim(ClaimTypes.Email, membership.User.Email),
-                new Claim(ClaimTypes.Role, membership.Role.RoleName),
+        {
+            new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
+            new Claim(ClaimTypes.Name, user.FullName),
+            new Claim(ClaimTypes.Email, user.Email),
+            new Claim(ClaimTypes.Role, role.RoleName),
 
-                new Claim(JwtClaimNames.FarmHouseId, membership.FarmHouseId.ToString()),
-                new Claim(JwtClaimNames.UserMembershipId, membership.UserMembershipId.ToString())
-            };
+            new Claim(JwtClaimNames.FarmHouseId, farmHouse.FarmHouseId.ToString()),
+            new Claim(JwtClaimNames.UserMembershipId, membership.UserMembershipId.ToString()),
+
+            new Claim("RoleId", role.RoleId.ToString()),
+            new Claim("FarmHouseName", farmHouse.FarmHouseName)
+        };
 
             var signingKey = new SymmetricSecurityKey(
                 Encoding.UTF8.GetBytes(_key)
@@ -83,7 +88,6 @@ namespace FarmStay.Infrastructure.Services.Auth
             using var rng = RandomNumberGenerator.Create();
             rng.GetBytes(randomBytes);
 
-            // URL-safe token
             return Convert.ToHexString(randomBytes);
         }
 
@@ -129,4 +133,5 @@ namespace FarmStay.Infrastructure.Services.Auth
             }
         }
     }
+
 }

@@ -1,6 +1,5 @@
 ﻿using FarmStay.Application.Interfaces.Repositories;
 using FarmStay.Domain.Entities;
-using FarmStay.Infrastructure.Persistence;
 using FarmStay.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,6 +8,7 @@ namespace FarmStay.Infrastructure.Repositories.Auth
     public class UserRefreshTokenRepository : IUserRefreshTokenRepository
     {
         private readonly AppDbContext _context;
+
 
         public UserRefreshTokenRepository(AppDbContext context)
         {
@@ -55,4 +55,5 @@ namespace FarmStay.Infrastructure.Repositories.Auth
             return Task.CompletedTask;
         }
     }
+
 }

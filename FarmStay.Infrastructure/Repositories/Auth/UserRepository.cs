@@ -19,33 +19,6 @@ namespace FarmStay.Infrastructure.Repositories.Auth
             await _context.Users.AddAsync(user);
         }
 
-
-        public async Task<User?> GetByEmailAsync(string email, int farmhouseId)
-        {
-            return await _context.Users
-                .FirstOrDefaultAsync(x =>
-                    !x.IsDeleted &&
-                    x.Email == email &&
-                    x.FarmHouseId == farmhouseId);
-        }
-
-        public async Task<User?> GetByMobileNumberAsync(string mobileNumber, int farmhouseId)
-        {
-            return await _context.Users
-                .FirstOrDefaultAsync(x =>
-                    !x.IsDeleted &&
-                    x.MobileNumber == mobileNumber &&
-                    x.FarmHouseId == farmhouseId);
-        }
-
-        public async Task<User?> GetByEmailOrMobileAsync(string email, string mobileNumber)
-        {
-            return await _context.Users
-                .FirstOrDefaultAsync(x =>
-                    !x.IsDeleted &&
-                    (x.Email == email || x.MobileNumber == mobileNumber));
-        }
-
         public async Task<User?> GetByIdAsync(int userId)
         {
             return await _context.Users
@@ -54,21 +27,36 @@ namespace FarmStay.Infrastructure.Repositories.Auth
                     !x.IsDeleted);
         }
 
-        //public async Task<User?> GetByVerificationTokenAsync(string token)
-        //{
-        //    return await _context.Users
-        //        .FirstOrDefaultAsync(x =>
-        //            x.EmailVerificationToken == token &&
-        //            !x.IsDeleted);
-        //}
+        public async Task<User?> GetByEmailAsync(string email, int farmHouseId)
+        {
+            return await _context.Users
+                .FirstOrDefaultAsync(x =>
+                    !x.IsDeleted &&
+                    x.Email == email &&
+                    x.FarmHouseId == farmHouseId);
+        }
 
-        //public async Task<User?> GetByPasswordResetTokenAsync(string token)
-        //{
-        //    return await _context.Users
-        //        .FirstOrDefaultAsync(x =>
-        //            x.PasswordResetToken == token &&
-        //            !x.IsDeleted);
-        //}
+        public async Task<User?> GetByMobileNumberAsync(string mobileNumber, int farmHouseId)
+        {
+            return await _context.Users
+                .FirstOrDefaultAsync(x =>
+                    !x.IsDeleted &&
+                    x.MobileNumber == mobileNumber &&
+                    x.FarmHouseId == farmHouseId);
+        }
+
+        public async Task<User?> GetByEmailVerificationTokenAsync(
+            int userId,
+            int farmHouseId,
+            string token)
+        {
+            return await _context.Users
+                .FirstOrDefaultAsync(x =>
+                    !x.IsDeleted &&
+                    x.UserId == userId &&
+                    x.FarmHouseId == farmHouseId &&
+                    x.EmailVerificationToken == token);
+        }
 
         public async Task<List<User>> GetAllAsync()
         {
@@ -83,16 +71,6 @@ namespace FarmStay.Infrastructure.Repositories.Auth
         {
             _context.Users.Update(user);
             return Task.CompletedTask;
-        }
-
-        public async Task<User?> GetByEmailVerificationTokenAsync(int userId,int farmHouseId,string token)
-        {
-            return await _context.Users
-                .FirstOrDefaultAsync(x =>
-                    !x.IsDeleted &&
-                    x.UserId == userId &&
-                    x.FarmHouseId == farmHouseId &&
-                    x.EmailVerificationToken == token);
         }
     }
 }

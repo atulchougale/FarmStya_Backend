@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace FarmStay.Application.Validators.Auth
 {
-    public class LoginDtoValidator : AbstractValidator<LoginDto>
+    public class LoginDtoValidator : AbstractValidator<LoginRequestDto>
     {
         public LoginDtoValidator()
         {

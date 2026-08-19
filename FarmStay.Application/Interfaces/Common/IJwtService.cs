@@ -5,10 +5,15 @@ namespace FarmStay.Application.Interfaces.Common
 {
     public interface IJwtService
     {
-        string GenerateAccessToken(UserMembership membership);
+        string GenerateAccessToken(
+        User user,
+        UserMembership membership,
+        FarmHouse farmHouse,
+        Role role);
 
-        string GenerateRefreshToken();
+    string GenerateRefreshToken();
 
         ClaimsPrincipal? GetPrincipalFromExpiredToken(string token);
     }
+
 }

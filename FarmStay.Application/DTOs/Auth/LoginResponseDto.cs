@@ -2,11 +2,10 @@
 {
     public class LoginResponseDto
     {
-        // JWT Token
-        public string Token { get; set; } = string.Empty;
+        // JWT Access Token
+        public string AccessToken { get; set; } = string.Empty;
 
-
-    // Refresh Token
+        // Refresh Token
         public string RefreshToken { get; set; } = string.Empty;
 
         // User Information
@@ -29,5 +28,4 @@
         // Membership Information
         public bool IsOwner { get; set; }
     }
-
 }

@@ -44,6 +44,11 @@ namespace FarmStay.Domain.Entities
 
         public DateTime? VerificationTokenExpiry { get; set; }
 
+        [MaxLength(200)]
+        public string? PasswordResetToken { get; set; }
+
+        public DateTime? PasswordResetTokenExpiry { get; set; }
+
         // ================= Status =================
 
         public bool IsActive { get; set; } = true;

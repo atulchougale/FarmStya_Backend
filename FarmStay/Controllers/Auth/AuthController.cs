@@ -1,8 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
-using System.Security.Claims;
-using FarmStay.Application.DTOs.Auth;
+﻿using FarmStay.Application.DTOs.Auth;
 using FarmStay.Application.Interfaces.Services.Auth;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace FarmStay.API.Controllers.Auth
 {
@@ -18,13 +17,6 @@ namespace FarmStay.API.Controllers.Auth
         }
 
 
-        //[HttpPost("register")]
-        //public async Task<IActionResult> Register(RegisterRequestDto dto)
-        //{
-        //    var result = await _userService.RegisterAsync(dto);
-
-        //    return Ok(result);
-        //}
 
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterRequestDto dto)
@@ -55,95 +47,115 @@ namespace FarmStay.API.Controllers.Auth
         }
 
 
-
-        //[HttpPost("login")]
-        //public async Task<IActionResult> Login(LoginDto dto)
-        //{
-        //    var result = await _userService.LoginAsync(dto);
-
-        //    if (!result.Success)
-        //        return Unauthorized(result);
-
-        //    return Ok(result);
-        //}
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginRequestDto dto)
+        {
+            var result = await _userService.LoginAsync(dto);
 
 
-        //[Authorize]
-        //[HttpGet("profile")]
-        //public async Task<IActionResult> GetProfile()
-        //{
-        //    var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
 
-        //    if (userIdClaim == null) return Unauthorized();
+            return BadRequest(result);
 
-        //    int userId = int.Parse(userIdClaim.Value);
-
-        //    var result = await _userService.GetProfileAsync(userId);
-
-        //    if (!result.Success) return NotFound(result);
-
-        //    return Ok(result);
-        //}
+        }
 
 
-        //[HttpGet("verify-email")]
-        //public async Task<IActionResult> VerifyEmail(string token)
-        //{
-        //    var result = await _userService.VerifyEmailAsync(token);
+        [HttpPost("forgot-password")]
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDto dto)
+        {
+            var result = await _userService.ForgotPasswordAsync(dto);
 
-        //    if (!result.Success) return BadRequest(result);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
 
-        //    return Ok(result);
-        //}
+            return BadRequest(result);
+        }
 
-        //[HttpPost("forgot-password")]
-        //public async Task<IActionResult> ForgotPassword(ForgotPasswordDto dto)
-        //{
-        //    var result = await _userService.ForgotPasswordAsync(dto);
+        [HttpPost("reset-password-email")]
+        public async Task<IActionResult> ResetPasswordEmail([FromBody] ResetPasswordByEmailDto dto)
+        {
+            var result = await _userService.ResetPasswordEmailAsync(dto);
 
-        //    if (!result.Success) return BadRequest(result);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
 
-        //    return Ok(result);
-        //}
+            return BadRequest(result);
+        }
 
-        //[HttpPost("reset-password")]
-        //public async Task<IActionResult> ResetPassword(ResetPasswordDto dto)
-        //{
-        //    var result = await _userService.ResetPasswordAsync(dto);
+        [HttpPost("reset-password-otp")]
+        public async Task<IActionResult> ResetPasswordOtp([FromBody] ResetPasswordOtpDto dto)
+        {
+            var result = await _userService.ResetPasswordOtpAsync(dto);
 
-        //    if (!result.Success) return BadRequest(result);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
 
-        //    return Ok(result);
-        //}
+            return BadRequest(result);
+        }
 
-        ////[HttpGet("reset-password-direct")]
-        ////public async Task<IActionResult> ResetPasswordDirect(string token)
-        ////{
-        ////    var dto = new ResetPasswordDto
-        ////    {
-        ////        Token = token,
-        ////        NewPassword = "12345678"
-        ////    };
+        [Authorize]
+        [HttpPost("change-password")]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDto dto)
+        {
+            var result = await _userService.ChangePasswordAsync(dto);
 
-        ////    var result = await _userService.ResetPasswordAsync(dto);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
 
-        ////    if (!result.Success) return BadRequest(result);
+            return BadRequest(result);
+        }
 
-        ////    return Ok(result);
-        ////}
+        [Authorize]
+        [HttpGet("profile")]
+        public async Task<IActionResult> GetProfile()
+        {
+            var result = await _userService.GetProfileAsync();
 
-        //[Authorize]
+            if (result.Success)
+            {
+                return Ok(result);
+            }
 
-        //[HttpPost("change-password")]
-        //public async Task<IActionResult> ChangePassword(ChangePasswordDto dto)
-        //{
-        //    var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+            return BadRequest(result);
+        }
 
-        //    var result = await _userService.ChangePasswordAsync(userId,dto);
 
-        //    if (!result.Success) return BadRequest(result);
+        [HttpPost("refresh-token")]
+        public async Task<IActionResult> RefreshToken( [FromBody] RefreshTokenDto dto)
+        {
+            var result = await _userService.RefreshTokenAsync(dto);
 
-        //    return Ok(result);
-        //}
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+
+            return BadRequest(result);
+        }
+
+        [Authorize]
+        [HttpPost("logout")]
+        public async Task<IActionResult> Logout([FromBody] LogoutDto dto)
+        {
+            var result = await _userService.LogoutAsync(dto);
+
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+
+            return BadRequest(result);
+        }
     }
 }

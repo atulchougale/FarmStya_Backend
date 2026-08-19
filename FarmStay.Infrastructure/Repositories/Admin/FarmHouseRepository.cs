@@ -19,9 +19,9 @@ namespace FarmStay.Infrastructure.Repositories.Admin
             return await _context.FarmHouses
                 .Include(f => f.OwnerUser)
                 .FirstOrDefaultAsync(f =>
-                f.DomainName == domainName &&
-                f.IsActive &&
-                !f.IsDeleted);
+                    f.DomainName == domainName &&
+                    f.IsActive &&
+                    !f.IsDeleted);
         }
 
         public async Task<FarmHouse?> GetCurrentAsync()
@@ -37,6 +37,7 @@ namespace FarmStay.Infrastructure.Repositories.Admin
             return await _context.FarmHouses
                 .FirstOrDefaultAsync(f =>
                     f.FarmHouseId == id &&
+                    f.IsActive &&
                     !f.IsDeleted);
         }
 
@@ -59,4 +60,5 @@ namespace FarmStay.Infrastructure.Repositories.Admin
             return Task.CompletedTask;
         }
     }
+
 }
