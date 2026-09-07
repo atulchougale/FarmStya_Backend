@@ -39,7 +39,8 @@ namespace FarmStay.API.Controllers.Auth
             if (result.Success) { return Ok(result); } return BadRequest(result); 
         } 
         // ============================================= // Verify OTP // =============================================
-        [HttpPost("verify-otp")] public async Task<IActionResult> VerifyOtp( [FromBody] VerifyOtpRequestDto dto) 
+        [HttpPost("verify-otp")] 
+        public async Task<IActionResult> VerifyOtp( [FromBody] VerifyOtpRequestDto dto) 
         { 
             var result = await _userService.VerifyOtpAsync(dto); 
             if (result.Success) { return Ok(result); } 
@@ -149,6 +150,24 @@ namespace FarmStay.API.Controllers.Auth
         public async Task<IActionResult> Logout([FromBody] LogoutDto dto)
         {
             var result = await _userService.LogoutAsync(dto);
+
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+
+            return BadRequest(result);
+        }
+
+
+        // =============================================
+        // Resend OTP
+        // =============================================
+
+        [HttpPost("resend-otp")]
+        public async Task<IActionResult> ResendOtp([FromBody] ResendOtpRequestDto dto)
+        {
+            var result = await _userService.ResendOtpAsync(dto);
 
             if (result.Success)
             {

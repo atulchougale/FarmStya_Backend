@@ -14,7 +14,6 @@ using System.Security.Cryptography;
 namespace FarmStay.Application.Services.Auth
 {
     public class UserService : IUserService
-
     {
         private readonly IUserRepository _userRepository;
         private readonly IUserMembershipRepository _userMembershipRepository;
@@ -187,7 +186,11 @@ namespace FarmStay.Application.Services.Auth
                                 MobileNumber = emailUser.MobileNumber,
                                 FarmHouseId = emailUser.FarmHouseId,
                                 IsEmailVerificationSent = true,
-                                IsMobileOtpSent = true
+                                IsMobileOtpSent = true,
+                                IsEmailVerified = emailUser.IsEmailVerified,
+                                IsMobileVerified = emailUser.IsMobileVerified,
+
+                                Message = "Please verify your email and mobile number."
                             }
                         };
                     }
@@ -293,7 +296,10 @@ namespace FarmStay.Application.Services.Auth
                         MobileNumber = user.MobileNumber,
                         FarmHouseId = user.FarmHouseId,
                         IsEmailVerificationSent = true,
-                        IsMobileOtpSent = true
+                        IsMobileOtpSent = true,
+                        IsEmailVerified = user.IsEmailVerified,
+                        IsMobileVerified = user.IsMobileVerified,
+                        Message = "Please verify your email and mobile number."
                     }
                 };
             }
@@ -313,14 +319,14 @@ namespace FarmStay.Application.Services.Auth
 
         }
 
-        public async Task<ApiResponse<bool>> VerifyEmailAsync(VerifyEmailRequestDto dto)
+        public async Task<ApiResponse<VerificationStatusResponseDto>> VerifyEmailAsync( VerifyEmailRequestDto dto)
         {
             try
             {
                 _logger.LogInformation(
-                "Email verification request received. UserId: {UserId}, FarmHouseId: {FarmHouseId}",
-                dto.UserId,
-                dto.FarmHouseId);
+                    "Email verification request received. UserId: {UserId}, FarmHouseId: {FarmHouseId}",
+                    dto.UserId,
+                    dto.FarmHouseId);
 
                 // Step 1
                 // Validate FarmHouse
@@ -333,7 +339,7 @@ namespace FarmStay.Application.Services.Auth
                         "Invalid FarmHouse during email verification. FarmHouseId: {FarmHouseId}",
                         dto.FarmHouseId);
 
-                    return new ApiResponse<bool>
+                    return new ApiResponse<VerificationStatusResponseDto>
                     {
                         Success = false,
                         Message = "Invalid FarmHouse."
@@ -355,7 +361,7 @@ namespace FarmStay.Application.Services.Auth
                         dto.UserId,
                         dto.FarmHouseId);
 
-                    return new ApiResponse<bool>
+                    return new ApiResponse<VerificationStatusResponseDto>
                     {
                         Success = false,
                         Message = "Invalid verification link."
@@ -365,13 +371,14 @@ namespace FarmStay.Application.Services.Auth
                 // Step 3
                 // Check Token Expiry
 
-                if (!user.VerificationTokenExpiry.HasValue || user.VerificationTokenExpiry.Value < DateTime.UtcNow)
+                if (!user.VerificationTokenExpiry.HasValue ||
+                    user.VerificationTokenExpiry.Value < DateTime.UtcNow)
                 {
                     _logger.LogWarning(
                         "Email verification token expired. UserId: {UserId}",
                         user.UserId);
 
-                    return new ApiResponse<bool>
+                    return new ApiResponse<VerificationStatusResponseDto>
                     {
                         Success = false,
                         Message = "Verification link has expired."
@@ -413,11 +420,18 @@ namespace FarmStay.Application.Services.Auth
                         farmHouse.FarmHouseId);
                 }
 
-                return new ApiResponse<bool>
+                // Step 6
+                // Return Current Verification Status
+
+                return new ApiResponse<VerificationStatusResponseDto>
                 {
                     Success = true,
                     Message = "Email verified successfully.",
-                    Data = true
+                    Data = new VerificationStatusResponseDto
+                    {
+                        IsEmailVerified = user.IsEmailVerified,
+                        IsMobileVerified = user.IsMobileVerified
+                    }
                 };
             }
             catch (Exception ex)
@@ -428,24 +442,22 @@ namespace FarmStay.Application.Services.Auth
                     dto.UserId,
                     dto.FarmHouseId);
 
-                return new ApiResponse<bool>
+                return new ApiResponse<VerificationStatusResponseDto>
                 {
                     Success = false,
                     Message = "An unexpected error occurred while verifying email."
                 };
             }
-
         }
 
-
-        public async Task<ApiResponse<bool>> VerifyOtpAsync(VerifyOtpRequestDto dto)
+        public async Task<ApiResponse<VerificationStatusResponseDto>> VerifyOtpAsync( VerifyOtpRequestDto dto)
         {
             try
             {
                 _logger.LogInformation(
-                "OTP verification request received. UserId: {UserId}, FarmHouseId: {FarmHouseId}",
-                dto.UserId,
-                dto.FarmHouseId);
+                    "OTP verification request received. UserId: {UserId}, FarmHouseId: {FarmHouseId}",
+                    dto.UserId,
+                    dto.FarmHouseId);
 
                 // Step 1
                 // Validate FarmHouse
@@ -454,7 +466,11 @@ namespace FarmStay.Application.Services.Auth
 
                 if (farmHouse == null)
                 {
-                    return new ApiResponse<bool>
+                    _logger.LogWarning(
+                        "Invalid FarmHouse during OTP verification. FarmHouseId: {FarmHouseId}",
+                        dto.FarmHouseId);
+
+                    return new ApiResponse<VerificationStatusResponseDto>
                     {
                         Success = false,
                         Message = "Invalid FarmHouse."
@@ -468,7 +484,12 @@ namespace FarmStay.Application.Services.Auth
 
                 if (user == null || user.FarmHouseId != dto.FarmHouseId)
                 {
-                    return new ApiResponse<bool>
+                    _logger.LogWarning(
+                        "User not found or does not belong to FarmHouse. UserId: {UserId}, FarmHouseId: {FarmHouseId}",
+                        dto.UserId,
+                        dto.FarmHouseId);
+
+                    return new ApiResponse<VerificationStatusResponseDto>
                     {
                         Success = false,
                         Message = "User not found."
@@ -476,6 +497,27 @@ namespace FarmStay.Application.Services.Auth
                 }
 
                 // Step 3
+                // Check whether mobile is already verified
+
+                if (user.IsMobileVerified)
+                {
+                    _logger.LogWarning(
+                        "OTP verification requested for already verified mobile. UserId: {UserId}",
+                        user.UserId);
+
+                    return new ApiResponse<VerificationStatusResponseDto>
+                    {
+                        Success = false,
+                        Message = "Mobile number is already verified.",
+                        Data = new VerificationStatusResponseDto
+                        {
+                            IsEmailVerified = user.IsEmailVerified,
+                            IsMobileVerified = user.IsMobileVerified
+                        }
+                    };
+                }
+
+                // Step 4
                 // Get Active OTP
 
                 var otp = await _userOtpRepository.GetByOtpAsync(
@@ -485,14 +527,19 @@ namespace FarmStay.Application.Services.Auth
 
                 if (otp == null)
                 {
-                    return new ApiResponse<bool>
+                    _logger.LogWarning(
+                        "Invalid OTP. UserId: {UserId}, FarmHouseId: {FarmHouseId}",
+                        dto.UserId,
+                        dto.FarmHouseId);
+
+                    return new ApiResponse<VerificationStatusResponseDto>
                     {
                         Success = false,
                         Message = "Invalid OTP."
                     };
                 }
 
-                // Step 4
+                // Step 5
                 // Check OTP Expiry
 
                 if (otp.ExpiryDate < DateTime.UtcNow)
@@ -504,14 +551,18 @@ namespace FarmStay.Application.Services.Auth
                     await _userOtpRepository.UpdateAsync(otp);
                     await _unitOfWork.SaveChangesAsync();
 
-                    return new ApiResponse<bool>
+                    _logger.LogWarning(
+                        "OTP expired. UserId: {UserId}",
+                        user.UserId);
+
+                    return new ApiResponse<VerificationStatusResponseDto>
                     {
                         Success = false,
                         Message = "OTP has expired."
                     };
                 }
 
-                // Step 5
+                // Step 6
                 // Verify Mobile
 
                 otp.IsUsed = true;
@@ -534,7 +585,7 @@ namespace FarmStay.Application.Services.Auth
                     user.UserId,
                     user.FarmHouseId);
 
-                // Step 6
+                // Step 7
                 // If Email Already Verified, Create Membership
 
                 if (user.IsEmailVerified)
@@ -547,11 +598,18 @@ namespace FarmStay.Application.Services.Auth
                         farmHouse.FarmHouseId);
                 }
 
-                return new ApiResponse<bool>
+                // Step 8
+                // Return Current Verification Status
+
+                return new ApiResponse<VerificationStatusResponseDto>
                 {
                     Success = true,
                     Message = "Mobile number verified successfully.",
-                    Data = true
+                    Data = new VerificationStatusResponseDto
+                    {
+                        IsEmailVerified = user.IsEmailVerified,
+                        IsMobileVerified = user.IsMobileVerified
+                    }
                 };
             }
             catch (Exception ex)
@@ -562,13 +620,12 @@ namespace FarmStay.Application.Services.Auth
                     dto.UserId,
                     dto.FarmHouseId);
 
-                return new ApiResponse<bool>
+                return new ApiResponse<VerificationStatusResponseDto>
                 {
                     Success = false,
                     Message = "An unexpected error occurred while verifying OTP."
                 };
             }
-
         }
 
         private async Task StartVerificationFlowAsync(User user, FarmHouse farmHouse)
@@ -678,8 +735,10 @@ namespace FarmStay.Application.Services.Auth
                 // Step 6
                 // Build Email Verification Link and Queue Email
 
-                var verificationLink =
-                                    $"https://localhost:7081/api/Auth/verify-email?farmHouseId={farmHouse.FarmHouseId}&userId={user.UserId}&token={emailVerificationToken}";
+                //var verificationLink = $"https://localhost:7081/api/Auth/verify-email?farmHouseId={farmHouse.FarmHouseId}&userId={user.UserId}&token={emailVerificationToken}";
+
+                var verificationLink = $"http://localhost:4200/verify-email?farmHouseId={farmHouse.FarmHouseId}&userId={user.UserId}&token={emailVerificationToken}";
+
                 var emailSubject = "Verify Your FarmStay Account";
 
                 var emailBody = $@"
@@ -841,12 +900,13 @@ namespace FarmStay.Application.Services.Auth
             try
             {
                 _logger.LogInformation(
-                "Login request received for Email: {Email}",
-                dto.Email);
+                    "Login request received for Email: {Email}",
+                    dto.Email);
 
-
+                // ============================================================
                 // Step 1
                 // Validate FarmHouse from Header
+                // ============================================================
 
                 var farmHouseIdHeader = _httpContextAccessor.HttpContext?
                     .Request
@@ -865,7 +925,8 @@ namespace FarmStay.Application.Services.Auth
                     };
                 }
 
-                var farmHouse = await _farmHouseRepository.GetByIdAsync(farmHouseId);
+                var farmHouse = await _farmHouseRepository
+                    .GetByIdAsync(farmHouseId);
 
                 if (farmHouse == null)
                 {
@@ -884,12 +945,15 @@ namespace FarmStay.Application.Services.Auth
                     "FarmHouse validated successfully. FarmHouseId: {FarmHouseId}",
                     farmHouseId);
 
+                // ============================================================
                 // Step 2
                 // Find User
+                // ============================================================
 
                 var email = dto.Email.Trim().ToLower();
 
-                var user = await _userRepository.GetByEmailAsync(email, farmHouseId);
+                var user = await _userRepository
+                    .GetByEmailAsync(email, farmHouseId);
 
                 if (user == null)
                 {
@@ -905,8 +969,10 @@ namespace FarmStay.Application.Services.Auth
                     };
                 }
 
+                // ============================================================
                 // Step 3
                 // Check User Status
+                // ============================================================
 
                 if (!user.IsActive || user.IsDeleted)
                 {
@@ -921,8 +987,10 @@ namespace FarmStay.Application.Services.Auth
                     };
                 }
 
+                // ============================================================
                 // Step 4
                 // Verify Password
+                // ============================================================
 
                 var passwordValid = _passwordService.VerifyPassword(
                     dto.Password,
@@ -941,33 +1009,63 @@ namespace FarmStay.Application.Services.Auth
                     };
                 }
 
+                // ============================================================
                 // Step 5
                 // Check Membership
+                // ============================================================
 
-                var membership = await _userMembershipRepository.GetMembershipAsync(
-                    user.UserId,
-                    farmHouseId);
+                var membership = await _userMembershipRepository
+                    .GetMembershipAsync(
+                        user.UserId,
+                        farmHouseId);
+
+                // ------------------------------------------------------------
+                // Membership Not Found
+                // Verification is still pending
+                // ------------------------------------------------------------
 
                 if (membership == null)
                 {
                     _logger.LogInformation(
-                        "Membership not found. Starting verification flow. UserId: {UserId}, FarmHouseId: {FarmHouseId}",
+                        "Membership not found. Starting verification flow. " +
+                        "UserId: {UserId}, FarmHouseId: {FarmHouseId}, " +
+                        "IsEmailVerified: {IsEmailVerified}, IsMobileVerified: {IsMobileVerified}",
                         user.UserId,
-                        farmHouseId);
+                        farmHouseId,
+                        user.IsEmailVerified,
+                        user.IsMobileVerified);
 
+                    // Send new Email verification link + Mobile OTP
                     await StartVerificationFlowAsync(user, farmHouse);
 
                     return new ApiResponse<LoginResponseDto>
                     {
                         Success = false,
-                        Message = "Please verify your email and mobile number to activate your account."
+                        Message = "Please verify your email and mobile number to activate your account.",
+                        Data = new LoginResponseDto
+                        {
+                            UserId = user.UserId,
+                            FullName = user.FullName,
+                            Email = user.Email,
+                            MobileNumber = user.MobileNumber,
+
+                            FarmHouseId = farmHouse.FarmHouseId,
+                            FarmHouseName = farmHouse.FarmHouseName,
+
+                            IsEmailVerified = user.IsEmailVerified,
+                            IsMobileVerified = user.IsMobileVerified,
+                            RequiresVerification = true
+                        }
                     };
                 }
 
+                // ============================================================
                 // Step 6
                 // Get Role
+                // ============================================================
 
-                var role = await _roleRepository.GetByIdAsync(membership.RoleId);
+                var role = await _roleRepository
+                    .GetByIdAsync(membership.RoleId);
 
                 if (role == null)
                 {
@@ -983,8 +1081,10 @@ namespace FarmStay.Application.Services.Auth
                     };
                 }
 
+                // ============================================================
                 // Step 7
                 // Generate Tokens
+                // ============================================================
 
                 var accessToken = _jwtService.GenerateAccessToken(
                     user,
@@ -994,14 +1094,17 @@ namespace FarmStay.Application.Services.Auth
 
                 var refreshToken = _jwtService.GenerateRefreshToken();
 
+                // ============================================================
                 // Step 8
                 // Save Refresh Token
+                // ============================================================
 
                 var refreshTokenEntity = new UserRefreshToken
                 {
                     UserId = user.UserId,
 
-                    RefreshTokenHash = _passwordService.HashPassword(refreshToken),
+                    RefreshTokenHash =
+                        _passwordService.HashPassword(refreshToken),
 
                     ExpiryDate = DateTime.UtcNow.AddDays(30),
 
@@ -1013,14 +1116,18 @@ namespace FarmStay.Application.Services.Auth
                     CreatedBy = user.UserId
                 };
 
-                await _userRefreshTokenRepository.AddAsync(refreshTokenEntity);
+                await _userRefreshTokenRepository
+                    .AddAsync(refreshTokenEntity);
 
+                // ============================================================
                 // Step 9
                 // Update Last Login
+                // ============================================================
 
                 membership.LastLoginDate = DateTime.UtcNow;
 
-                await _userMembershipRepository.UpdateAsync(membership);
+                await _userMembershipRepository
+                    .UpdateAsync(membership);
 
                 await _unitOfWork.SaveChangesAsync();
 
@@ -1028,6 +1135,10 @@ namespace FarmStay.Application.Services.Auth
                     "Login successful. UserId: {UserId}, FarmHouseId: {FarmHouseId}",
                     user.UserId,
                     farmHouseId);
+
+                // ============================================================
+                // Final Successful Login Response
+                // ============================================================
 
                 return new ApiResponse<LoginResponseDto>
                 {
@@ -1041,6 +1152,7 @@ namespace FarmStay.Application.Services.Auth
                         UserId = user.UserId,
                         FullName = user.FullName,
                         Email = user.Email,
+                        MobileNumber = user.MobileNumber,
 
                         FarmHouseId = farmHouse.FarmHouseId,
                         FarmHouseName = farmHouse.FarmHouseName,
@@ -1048,7 +1160,10 @@ namespace FarmStay.Application.Services.Auth
                         RoleId = role.RoleId,
                         RoleName = role.RoleName,
 
-                        IsOwner = role.RoleName == "FarmOwner"
+                        IsOwner = role.RoleName == "FarmOwner",
+
+                        IsEmailVerified = user.IsEmailVerified,
+                        IsMobileVerified = user.IsMobileVerified
                     }
                 };
             }
@@ -1065,11 +1180,285 @@ namespace FarmStay.Application.Services.Auth
                     Message = "An unexpected error occurred while logging in."
                 };
             }
-
         }
 
 
         // Forgot password 
+        //public async Task<ApiResponse<bool>> ForgotPasswordAsync(ForgotPasswordDto dto)
+        //{
+        //    try
+        //    {
+        //        _logger.LogInformation(
+        //            "Forgot password request received. Method: {Method}",
+        //            dto.Method);
+
+        //        // Step 1
+        //        // Validate FarmHouse from Header
+
+        //        var farmHouseIdHeader = _httpContextAccessor.HttpContext?
+        //            .Request
+        //            .Headers["FarmHouseId"]
+        //            .FirstOrDefault();
+
+        //        if (!int.TryParse(farmHouseIdHeader, out int farmHouseId))
+        //        {
+        //            _logger.LogWarning(
+        //                "FarmHouseId header is missing or invalid.");
+
+        //            return new ApiResponse<bool>
+        //            {
+        //                Success = false,
+        //                Message = "Invalid FarmHouse."
+        //            };
+        //        }
+
+        //        var farmHouse = await _farmHouseRepository.GetByIdAsync(farmHouseId);
+
+        //        if (farmHouse == null)
+        //        {
+        //            _logger.LogWarning(
+        //                "Invalid FarmHouse. FarmHouseId: {FarmHouseId}",
+        //                farmHouseId);
+
+        //            return new ApiResponse<bool>
+        //            {
+        //                Success = false,
+        //                Message = "Invalid FarmHouse."
+        //            };
+        //        }
+
+        //        // Step 2
+        //        // Email Reset Flow
+
+        //        if (dto.Method == ForgotPasswordMethod.Email)
+        //        {
+        //            var email = dto.Email.Trim().ToLower();
+
+        //            var user = await _userRepository.GetByEmailAsync(
+        //                email,
+        //                farmHouseId);
+
+        //            if (user == null)
+        //            {
+        //                _logger.LogWarning(
+        //                    "Forgot password email not found. Email: {Email}, FarmHouseId: {FarmHouseId}",
+        //                    email,
+        //                    farmHouseId);
+
+        //                return new ApiResponse<bool>
+        //                {
+        //                    Success = true,
+        //                    Message = "If the account exists, password reset instructions have been sent.",
+        //                    Data = true
+        //                };
+        //            }
+
+        //            // Generate Password Reset Token
+
+        //            var resetToken = Guid.NewGuid().ToString("N");
+
+        //            var resetTokenExpiry = DateTime.UtcNow.AddHours(1);
+
+        //            user.PasswordResetToken = resetToken;
+        //            user.PasswordResetTokenExpiry = resetTokenExpiry;
+
+        //            user.ModifiedDate = DateTime.UtcNow;
+        //            user.ModifiedBy = user.UserId;
+
+        //            await _userRepository.UpdateAsync(user);
+        //            await _unitOfWork.SaveChangesAsync();
+
+        //            // Build Reset Password Link
+
+        //            var resetLink =
+        //                $"https://localhost:7081/api/Auth/reset-password-email" +
+        //                $"?farmHouseId={farmHouseId}" +
+        //                $"&userId={user.UserId}" +
+        //                $"&token={resetToken}";
+
+        //            var emailSubject = "Reset Your FarmStay Password";
+
+        //            var emailBody = $@"
+        //        <html>
+        //        <body>
+        //            <h2>Password Reset</h2>
+
+        //            <p>Hello {user.FullName},</p>
+
+        //            <p>
+        //                We received a request to reset your FarmStay password.
+        //            </p>
+
+        //            <p>
+        //                <a href=""{resetLink}""
+        //                   style=""
+        //                       background-color:#16a34a;
+        //                       color:white;
+        //                       padding:12px 20px;
+        //                       text-decoration:none;
+        //                       border-radius:6px;
+        //                       display:inline-block;
+        //                   "">
+        //                    Reset Password
+        //                </a>
+        //            </p>
+
+        //            <p>This link will expire in 1 hour.</p>
+
+        //            <p>
+        //                If you did not request a password reset,
+        //                please ignore this email.
+        //            </p>
+
+        //            <br/>
+        //            <p>
+        //                Thanks,<br/>
+        //                {farmHouse.FarmHouseName}
+        //            </p>
+        //        </body>
+        //        </html>";
+
+        //            _emailQueue.Enqueue(new EmailJob
+        //            {
+        //                To = user.Email,
+        //                Subject = emailSubject,
+        //                HtmlBody = emailBody,
+        //                IsHtml = true
+        //            });
+
+        //            _logger.LogInformation(
+        //                "Password reset email queued successfully. UserId: {UserId}, FarmHouseId: {FarmHouseId}",
+        //                user.UserId,
+        //                farmHouseId);
+
+        //            return new ApiResponse<bool>
+        //            {
+        //                Success = true,
+        //                Message = "Password reset link has been sent to your email.",
+        //                Data = true
+        //            };
+        //        }
+
+        //        // Step 3
+        //        // WhatsApp OTP Flow
+
+        //        if (dto.Method == ForgotPasswordMethod.WhatsAppOtp)
+        //        {
+        //            var mobileNumber = dto.MobileNumber.Trim();
+
+        //            var user = await _userRepository.GetByMobileNumberAsync(
+        //                mobileNumber,
+        //                farmHouseId);
+
+        //            if (user == null)
+        //            {
+        //                _logger.LogWarning(
+        //                    "Forgot password mobile number not found. MobileNumber: {MobileNumber}, FarmHouseId: {FarmHouseId}",
+        //                    mobileNumber,
+        //                    farmHouseId);
+
+        //                return new ApiResponse<bool>
+        //                {
+        //                    Success = true,
+        //                    Message = "If the account exists, password reset instructions have been sent.",
+        //                    Data = true
+        //                };
+        //            }
+
+        //            // Generate OTP
+
+        //            var otpCode = RandomNumberGenerator
+        //                .GetInt32(100000, 1000000)
+        //                .ToString();
+
+        //            var otpExpiry = DateTime.UtcNow.AddMinutes(5);
+
+        //            // Invalidate Existing Forgot Password OTP
+
+        //            var existingOtp = await _userOtpRepository.GetActiveOtpAsync(
+        //                user.UserId,
+        //                OtpPurpose.ForgotPassword);
+
+        //            if (existingOtp != null)
+        //            {
+        //                existingOtp.IsActive = false;
+        //                existingOtp.ModifiedDate = DateTime.UtcNow;
+        //                existingOtp.ModifiedBy = user.UserId;
+
+        //                await _userOtpRepository.UpdateAsync(existingOtp);
+        //            }
+
+        //            // Save New OTP
+
+        //            var userOtp = new UserOtp
+        //            {
+        //                UserId = user.UserId,
+        //                MobileNumber = user.MobileNumber,
+        //                OtpCode = otpCode,
+        //                Purpose = OtpPurpose.ForgotPassword,
+        //                ExpiryDate = otpExpiry,
+        //                IsUsed = false,
+        //                IsActive = true,
+        //                IsDeleted = false,
+        //                CreatedDate = DateTime.UtcNow,
+        //                CreatedBy = user.UserId
+        //            };
+
+        //            await _userOtpRepository.AddAsync(userOtp);
+
+        //            await _unitOfWork.SaveChangesAsync();
+
+        //            // Queue WhatsApp OTP
+
+        //            var whatsAppMessage =
+        //                $"Your FarmStay password reset OTP is {otpCode}. It is valid for 5 minutes.";
+
+        //            _whatsAppQueue.Enqueue(new WhatsAppJob
+        //            {
+        //                MobileNumber = user.MobileNumber,
+        //                Message = whatsAppMessage
+        //            });
+
+        //            _logger.LogInformation(
+        //                "Password reset WhatsApp OTP queued successfully. UserId: {UserId}, FarmHouseId: {FarmHouseId}",
+        //                user.UserId,
+        //                farmHouseId);
+
+        //            return new ApiResponse<bool>
+        //            {
+        //                Success = true,
+        //                Message = "Password reset OTP has been sent to your WhatsApp.",
+        //                Data = true
+        //            };
+        //        }
+
+        //        // Invalid Method
+
+        //        _logger.LogWarning(
+        //            "Invalid forgot password method. Method: {Method}",
+        //            dto.Method);
+
+        //        return new ApiResponse<bool>
+        //        {
+        //            Success = false,
+        //            Message = "Invalid password reset method."
+        //        };
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.LogError(
+        //            ex,
+        //            "An error occurred during forgot password.");
+
+        //        return new ApiResponse<bool>
+        //        {
+        //            Success = false,
+        //            Message = "An unexpected error occurred while processing forgot password."
+        //        };
+        //    }
+        //}
+
+
         public async Task<ApiResponse<bool>> ForgotPasswordAsync(ForgotPasswordDto dto)
         {
             try
@@ -1078,8 +1467,10 @@ namespace FarmStay.Application.Services.Auth
                     "Forgot password request received. Method: {Method}",
                     dto.Method);
 
+                // ============================================================
                 // Step 1
                 // Validate FarmHouse from Header
+                // ============================================================
 
                 var farmHouseIdHeader = _httpContextAccessor.HttpContext?
                     .Request
@@ -1113,8 +1504,10 @@ namespace FarmStay.Application.Services.Auth
                     };
                 }
 
+                // ============================================================
                 // Step 2
                 // Email Reset Flow
+                // ============================================================
 
                 if (dto.Method == ForgotPasswordMethod.Email)
                 {
@@ -1124,12 +1517,19 @@ namespace FarmStay.Application.Services.Auth
                         email,
                         farmHouseId);
 
+                    // --------------------------------------------------------
+                    // User Not Found
+                    // --------------------------------------------------------
+
                     if (user == null)
                     {
                         _logger.LogWarning(
                             "Forgot password email not found. Email: {Email}, FarmHouseId: {FarmHouseId}",
                             email,
                             farmHouseId);
+
+                        // Security:
+                        // Do not reveal whether the email exists or not.
 
                         return new ApiResponse<bool>
                         {
@@ -1139,7 +1539,9 @@ namespace FarmStay.Application.Services.Auth
                         };
                     }
 
+                    // --------------------------------------------------------
                     // Generate Password Reset Token
+                    // --------------------------------------------------------
 
                     var resetToken = Guid.NewGuid().ToString("N");
 
@@ -1152,57 +1554,78 @@ namespace FarmStay.Application.Services.Auth
                     user.ModifiedBy = user.UserId;
 
                     await _userRepository.UpdateAsync(user);
+
                     await _unitOfWork.SaveChangesAsync();
 
-                    // Build Reset Password Link
+                    // ========================================================
+                    // Build FRONTEND Reset Password Link
+                    // ========================================================
 
                     var resetLink =
-                        $"https://localhost:7081/api/Auth/reset-password-email" +
+                        $"https://localhost:4200/reset-password" +
                         $"?farmHouseId={farmHouseId}" +
                         $"&userId={user.UserId}" +
-                        $"&token={resetToken}";
+                        $"&token={Uri.EscapeDataString(resetToken)}";
+
+                    // ========================================================
+                    // Email
+                    // ========================================================
 
                     var emailSubject = "Reset Your FarmStay Password";
 
                     var emailBody = $@"
-                <html>
-                <body>
-                    <h2>Password Reset</h2>
+<html>
+<body>
 
-                    <p>Hello {user.FullName},</p>
+    <h2>Password Reset</h2>
 
-                    <p>
-                        We received a request to reset your FarmStay password.
-                    </p>
+    <p>Hello {user.FullName},</p>
 
-                    <p>
-                        <a href=""{resetLink}""
-                           style=""
-                               background-color:#16a34a;
-                               color:white;
-                               padding:12px 20px;
-                               text-decoration:none;
-                               border-radius:6px;
-                               display:inline-block;
-                           "">
-                            Reset Password
-                        </a>
-                    </p>
+    <p>
+        We received a request to reset your FarmStay password.
+    </p>
 
-                    <p>This link will expire in 1 hour.</p>
+    <p>
+        Click the button below to create a new password:
+    </p>
 
-                    <p>
-                        If you did not request a password reset,
-                        please ignore this email.
-                    </p>
+    <p>
+        <a href=""{resetLink}""
+           style=""
+               background-color:#c4512d;
+               color:white;
+               padding:12px 20px;
+               text-decoration:none;
+               border-radius:6px;
+               display:inline-block;
+               font-weight:600;
+           "">
+            Reset Password
+        </a>
+    </p>
 
-                    <br/>
-                    <p>
-                        Thanks,<br/>
-                        {farmHouse.FarmHouseName}
-                    </p>
-                </body>
-                </html>";
+    <p>
+        This link will expire in 1 hour.
+    </p>
+
+    <p>
+        If you did not request a password reset,
+        please ignore this email.
+    </p>
+
+    <br/>
+
+    <p>
+        Thanks,<br/>
+        {farmHouse.FarmHouseName}
+    </p>
+
+</body>
+</html>";
+
+                    // ========================================================
+                    // Queue Email
+                    // ========================================================
 
                     _emailQueue.Enqueue(new EmailJob
                     {
@@ -1225,8 +1648,10 @@ namespace FarmStay.Application.Services.Auth
                     };
                 }
 
+                // ============================================================
                 // Step 3
                 // WhatsApp OTP Flow
+                // ============================================================
 
                 if (dto.Method == ForgotPasswordMethod.WhatsAppOtp)
                 {
@@ -1235,6 +1660,10 @@ namespace FarmStay.Application.Services.Auth
                     var user = await _userRepository.GetByMobileNumberAsync(
                         mobileNumber,
                         farmHouseId);
+
+                    // --------------------------------------------------------
+                    // User Not Found
+                    // --------------------------------------------------------
 
                     if (user == null)
                     {
@@ -1251,7 +1680,9 @@ namespace FarmStay.Application.Services.Auth
                         };
                     }
 
+                    // --------------------------------------------------------
                     // Generate OTP
+                    // --------------------------------------------------------
 
                     var otpCode = RandomNumberGenerator
                         .GetInt32(100000, 1000000)
@@ -1259,7 +1690,9 @@ namespace FarmStay.Application.Services.Auth
 
                     var otpExpiry = DateTime.UtcNow.AddMinutes(5);
 
+                    // --------------------------------------------------------
                     // Invalidate Existing Forgot Password OTP
+                    // --------------------------------------------------------
 
                     var existingOtp = await _userOtpRepository.GetActiveOtpAsync(
                         user.UserId,
@@ -1274,7 +1707,9 @@ namespace FarmStay.Application.Services.Auth
                         await _userOtpRepository.UpdateAsync(existingOtp);
                     }
 
+                    // --------------------------------------------------------
                     // Save New OTP
+                    // --------------------------------------------------------
 
                     var userOtp = new UserOtp
                     {
@@ -1294,7 +1729,9 @@ namespace FarmStay.Application.Services.Auth
 
                     await _unitOfWork.SaveChangesAsync();
 
+                    // --------------------------------------------------------
                     // Queue WhatsApp OTP
+                    // --------------------------------------------------------
 
                     var whatsAppMessage =
                         $"Your FarmStay password reset OTP is {otpCode}. It is valid for 5 minutes.";
@@ -1318,7 +1755,9 @@ namespace FarmStay.Application.Services.Auth
                     };
                 }
 
+                // ============================================================
                 // Invalid Method
+                // ============================================================
 
                 _logger.LogWarning(
                     "Invalid forgot password method. Method: {Method}",
@@ -2365,6 +2804,168 @@ namespace FarmStay.Application.Services.Auth
                 };
             }
         }
+
+        public async Task<ApiResponse<bool>> ResendOtpAsync(ResendOtpRequestDto dto)
+        {
+            try
+            {
+                _logger.LogInformation(
+                    "Resend OTP request received. UserId: {UserId}, FarmHouseId: {FarmHouseId}",
+                    dto.UserId,
+                    dto.FarmHouseId);
+
+                // Step 1
+                // Validate FarmHouse
+
+                var farmHouse = await _farmHouseRepository
+                    .GetByIdAsync(dto.FarmHouseId);
+
+                if (farmHouse == null)
+                {
+                    _logger.LogWarning(
+                        "Invalid FarmHouse during resend OTP. FarmHouseId: {FarmHouseId}",
+                        dto.FarmHouseId);
+
+                    return new ApiResponse<bool>
+                    {
+                        Success = false,
+                        Message = "Invalid FarmHouse."
+                    };
+                }
+
+                // Step 2
+                // Validate User
+
+                var user = await _userRepository
+                    .GetByIdAsync(dto.UserId);
+
+                if (user == null || user.FarmHouseId != dto.FarmHouseId)
+                {
+                    _logger.LogWarning(
+                        "User not found or does not belong to FarmHouse. UserId: {UserId}, FarmHouseId: {FarmHouseId}",
+                        dto.UserId,
+                        dto.FarmHouseId);
+
+                    return new ApiResponse<bool>
+                    {
+                        Success = false,
+                        Message = "User not found."
+                    };
+                }
+
+                // Step 3
+                // Check whether mobile is already verified
+
+                if (user.IsMobileVerified)
+                {
+                    _logger.LogWarning(
+                        "Resend OTP requested for already verified mobile. UserId: {UserId}",
+                        user.UserId);
+
+                    return new ApiResponse<bool>
+                    {
+                        Success = false,
+                        Message = "Mobile number is already verified."
+                    };
+                }
+
+                // Step 4
+                // Invalidate existing active registration OTP
+
+                var existingOtp = await _userOtpRepository
+                    .GetActiveOtpAsync(
+                        user.UserId,
+                        OtpPurpose.Register);
+
+                if (existingOtp != null)
+                {
+                    existingOtp.IsActive = false;
+                    existingOtp.ModifiedDate = DateTime.UtcNow;
+                    existingOtp.ModifiedBy = user.UserId;
+
+                    await _userOtpRepository.UpdateAsync(existingOtp);
+
+                    _logger.LogInformation(
+                        "Existing registration OTP invalidated. UserId: {UserId}",
+                        user.UserId);
+                }
+
+                // Step 5
+                // Generate new OTP
+
+                var otpCode = RandomNumberGenerator
+                    .GetInt32(100000, 1000000)
+                    .ToString();
+
+                var otpExpiry = DateTime.UtcNow.AddMinutes(5);
+
+                // Step 6
+                // Save new OTP
+
+                var userOtp = new UserOtp
+                {
+                    UserId = user.UserId,
+                    MobileNumber = user.MobileNumber,
+                    OtpCode = otpCode,
+                    Purpose = OtpPurpose.Register,
+                    ExpiryDate = otpExpiry,
+                    IsUsed = false,
+                    IsActive = true,
+                    IsDeleted = false,
+                    CreatedDate = DateTime.UtcNow,
+                    CreatedBy = user.UserId
+                };
+
+                await _userOtpRepository.AddAsync(userOtp);
+
+                await _unitOfWork.SaveChangesAsync();
+
+                _logger.LogInformation(
+                    "New registration OTP saved successfully. UserId: {UserId}, Expiry: {Expiry}",
+                    user.UserId,
+                    otpExpiry);
+
+                // Step 7
+                // Queue WhatsApp OTP
+
+                var whatsAppMessage =
+                    $"Your FarmStay verification OTP is {otpCode}. It is valid for 5 minutes.";
+
+                _whatsAppQueue.Enqueue(new WhatsAppJob
+                {
+                    MobileNumber = user.MobileNumber,
+                    Message = whatsAppMessage
+                });
+
+                _logger.LogInformation(
+                    "Resend OTP queued successfully. UserId: {UserId}, Mobile: {MobileNumber}",
+                    user.UserId,
+                    user.MobileNumber);
+
+                return new ApiResponse<bool>
+                {
+                    Success = true,
+                    Message = "OTP resent successfully.",
+                    Data = true
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(
+                    ex,
+                    "Error occurred while resending OTP. UserId: {UserId}, FarmHouseId: {FarmHouseId}",
+                    dto.UserId,
+                    dto.FarmHouseId);
+
+                return new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = "An unexpected error occurred while resending OTP."
+                };
+            }
+        }
     }
+
+
 
 }

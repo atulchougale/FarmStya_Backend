@@ -10,9 +10,11 @@ namespace FarmStay.Application.Interfaces.Services.Auth
 
         Task<ApiResponse<RegisterResponseDto>> RegisterAsync(RegisterRequestDto dto);
 
-        Task<ApiResponse<bool>> VerifyEmailAsync(VerifyEmailRequestDto dto);
+        Task<ApiResponse<VerificationStatusResponseDto>> VerifyEmailAsync(VerifyEmailRequestDto dto);
 
-        Task<ApiResponse<bool>> VerifyOtpAsync(VerifyOtpRequestDto dto);
+        Task<ApiResponse<VerificationStatusResponseDto>> VerifyOtpAsync(VerifyOtpRequestDto dto);
+
+        Task<ApiResponse<bool>> ResendOtpAsync(ResendOtpRequestDto dto);
 
         Task<ApiResponse<LoginResponseDto>> LoginAsync(LoginRequestDto dto);
 

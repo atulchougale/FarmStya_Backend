@@ -16,6 +16,10 @@
 
         public bool IsMobileOtpSent { get; set; }
 
+        public bool IsEmailVerified { get; set; }
+
+        public bool IsMobileVerified { get; set; }
+
         public string Message { get; set; } = string.Empty;
     }
 }

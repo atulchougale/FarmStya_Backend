@@ -15,6 +15,8 @@
 
         public string Email { get; set; } = string.Empty;
 
+        public string MobileNumber { get; set; } = string.Empty;
+
         // Current FarmHouse Context
         public int FarmHouseId { get; set; }
 
@@ -27,5 +29,12 @@
 
         // Membership Information
         public bool IsOwner { get; set; }
+
+        // Verification Status
+        public bool IsEmailVerified { get; set; }
+
+        public bool IsMobileVerified { get; set; }
+
+        public bool RequiresVerification { get; set; }
     }
 }
