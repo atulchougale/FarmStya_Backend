@@ -27,6 +27,14 @@ namespace FarmStay.Infrastructure.Data
         public DbSet<RoleModule> RoleModules { get; set; }
         public DbSet<RoleModulePermission> RoleModulePermissions { get; set; }
 
+        //Admin Pages
+
+        public DbSet<Gallery> Galleries { get; set; }
+
+        public DbSet<FeedBack> FeedBacks { get; set; }
+
+        public DbSet<Amenity> Amenities { get; set; }
+
         // Referesh Token
         public DbSet<UserRefreshToken> UserRefreshTokens { get; set; }
         #endregion
@@ -256,6 +264,9 @@ namespace FarmStay.Infrastructure.Data
 
             modelBuilder.ApplyConfiguration(new UserRefreshTokenConfiguration());
             modelBuilder.ApplyConfiguration(new UserOtpConfiguration());
+            modelBuilder.ApplyConfiguration(new GalleryConfiguration());
+            modelBuilder.ApplyConfiguration(new FeedbackConfiguration());
+            modelBuilder.ApplyConfiguration(new AmenityConfiguration());
         }
     }
 }

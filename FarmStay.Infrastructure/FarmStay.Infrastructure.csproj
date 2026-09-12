@@ -25,7 +25,6 @@
 	<ItemGroup>
 	  <Folder Include="Migrations\" />
 	  <Folder Include="Repositories\Customer\" />
-	  <Folder Include="Repositories\Public\" />
 	</ItemGroup>
 
 </Project>

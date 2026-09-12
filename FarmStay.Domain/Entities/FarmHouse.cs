@@ -135,6 +135,12 @@ namespace FarmStay.Domain.Entities
         
         public ICollection<Property> Properties { get; set; }
             = new List<Property>();
+
+        public ICollection<Gallery> Galleries { get; set; } = new List<Gallery>();
+
+        public ICollection<FeedBack> FeedBacks { get; set; } = new List<FeedBack>();
+
+        public ICollection<Amenity> Amenities { get; set; } = new List<Amenity>();
     }
 
 }

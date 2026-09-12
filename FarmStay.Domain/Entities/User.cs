@@ -13,7 +13,7 @@ namespace FarmStay.Domain.Entities
         // ================= Relationships =================
 
         [Required]
-        public int? FarmHouseId { get; set; }
+        public int FarmHouseId { get; set; }
 
         // ================= Personal Information =================
 
@@ -89,5 +89,9 @@ namespace FarmStay.Domain.Entities
         // OTP History
         public ICollection<UserOtp> UserOtps { get; set; }
             = new List<UserOtp>();
+
+        // OTP History
+        public ICollection<Gallery> Galleries { get; set; }
+            = new List<Gallery>();
     }
 }

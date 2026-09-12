@@ -49,9 +49,6 @@ namespace FarmStay.Application.Validators.Admin
             RuleFor(x => x.ContactPersonName)
                 .NotEmpty()
                 .MaximumLength(100);
-
-            RuleFor(x => x.OwnerUserId)
-                .NotEmpty();
                 
             RuleFor(x => x.MobileNumber)
                 .NotEmpty()

@@ -19,7 +19,12 @@ namespace FarmStay.API.DependencyInjection
 
             services.AddScoped<IPublicSiteService, PublicSiteService>();
 
-            
+            services.AddScoped<IGalleryService, GalleryService>();
+
+            services.AddScoped<IFeedbackService, FeedbackService>();
+
+            services.AddScoped<IAmenityService, AmenityService>();
+
 
             return services;
         }

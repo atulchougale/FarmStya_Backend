@@ -16,7 +16,7 @@ namespace FarmStay.API.Controllers.Admin
         }
 
         // Create FarmHouse
-        [HttpPost]
+        [HttpPost("save-farmhouse")]
         public async Task<IActionResult> Create([FromBody] CreateFarmHouseDto dto)
         {
             var result = await _farmHouseService.CreateAsync(dto);
@@ -28,7 +28,7 @@ namespace FarmStay.API.Controllers.Admin
         }
 
         // Update FarmHouse
-        [HttpPut]
+        [HttpPut("update-farmhouse")]
         public async Task<IActionResult> Update([FromBody] UpdateFarmHouseDto dto)
         {
             var result = await _farmHouseService.UpdateAsync(dto);
@@ -40,7 +40,7 @@ namespace FarmStay.API.Controllers.Admin
         }
 
         // Delete FarmHouse
-        [HttpDelete("{id:int}")]
+        [HttpDelete("delete-farmhouse/{id:int}")]
         public async Task<IActionResult> Delete(int id)
         {
             var result = await _farmHouseService.DeleteAsync(id);
@@ -52,7 +52,7 @@ namespace FarmStay.API.Controllers.Admin
         }
 
         // Get FarmHouse By Id
-        [HttpGet("{id:int}")]
+        [HttpGet("get-byid-farmhouse/{id:int}")]
         public async Task<IActionResult> GetById(int id)
         {
             var result = await _farmHouseService.GetByIdAsync(id);
@@ -76,7 +76,7 @@ namespace FarmStay.API.Controllers.Admin
         }
 
         // Get All FarmHouses
-        [HttpGet]
+        [HttpGet("get-all-farmhouse")]
         public async Task<IActionResult> GetAll()
         {
             var result = await _farmHouseService.GetAllAsync();

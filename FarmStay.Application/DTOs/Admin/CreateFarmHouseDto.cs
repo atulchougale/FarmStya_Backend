@@ -4,7 +4,7 @@
     {
         // ================= Owner =================
 
-        public int OwnerUserId { get; set; }
+        public int? OwnerUserId { get; set; }
 
         // ================= Basic Information =================
 

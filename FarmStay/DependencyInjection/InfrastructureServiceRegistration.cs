@@ -9,6 +9,7 @@ using FarmStay.Infrastructure.BackgroundServices;
 using FarmStay.Infrastructure.Data;
 using FarmStay.Infrastructure.Repositories.Admin;
 using FarmStay.Infrastructure.Repositories.Auth;
+using FarmStay.Infrastructure.Repositories.Public;
 using FarmStay.Infrastructure.Services.Auth;
 using FarmStay.Infrastructure.Services.Communication;
 using FarmStay.Infrastructure.Services.WhatsApp;
@@ -77,6 +78,13 @@ namespace FarmStay.API.DependencyInjection
             services.AddScoped<IUserOtpRepository, UserOtpRepository>();
 
             services.AddScoped<IRoleRepository, RoleRepository>();
+
+            services.AddScoped<IGalleryRepository, GalleryRepository>();
+
+            services.AddScoped<IFeedbackRepository, FeedbackRepository>();
+
+
+            services.AddScoped<IAmenityRepository, AmenityRepository>();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
