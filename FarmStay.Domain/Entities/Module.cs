@@ -40,5 +40,8 @@ namespace FarmStay.Domain.Entities
 
         public ICollection<RoleModule> RoleModules { get; set; }
             = new List<RoleModule>();
+
+        public ICollection<FarmHouseModule> FarmHouseModules { get; set; }
+    = new List<FarmHouseModule>();
     }
 }

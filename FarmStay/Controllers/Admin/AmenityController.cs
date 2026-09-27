@@ -1,16 +1,14 @@
-﻿
-using FarmStay.Application.DTOs.Admin;
+﻿using FarmStay.Application.DTOs.Admin;
 using FarmStay.Application.Interfaces.Services.Admin;
-using FarmStay.Application.Services.Admin;
 using Microsoft.AspNetCore.Authorization;
-
 using Microsoft.AspNetCore.Mvc;
+using FarmStay.API.Authorization;
+
 namespace FarmStay.API.Controllers.Admin
 {
     [Route("api/[controller]")]
     [ApiController]
     public class AmenityController : ControllerBase
-
     {
         readonly private IAmenityService _amenityService;
 
@@ -20,8 +18,10 @@ namespace FarmStay.API.Controllers.Admin
         }
 
         [Authorize]
+        [HasPermission("Amenity.Create")]
         [HttpPost("save-amenity")]
-        public async Task<IActionResult> SaveAmenity([FromBody] AmenityRequestDto dto)
+        public async Task<IActionResult> SaveAmenity(
+            [FromBody] AmenityRequestDto dto)
         {
             var result = await _amenityService.SaveAmenityAsync(dto);
 
@@ -33,8 +33,8 @@ namespace FarmStay.API.Controllers.Admin
             return BadRequest(result);
         }
 
-
-
+        [Authorize]
+        [HasPermission("Amenity.View")]
         [HttpGet("get-byid-amenity/{imageId:int}")]
         public async Task<IActionResult> GetGalleryById(int imageId)
         {
@@ -43,7 +43,8 @@ namespace FarmStay.API.Controllers.Admin
             return Ok(result);
         }
 
-
+        [Authorize]
+        [HasPermission("Amenity.View")]
         [HttpGet("get-all-amenity")]
         public async Task<IActionResult> GetAllAsync()
         {
@@ -53,24 +54,24 @@ namespace FarmStay.API.Controllers.Admin
         }
 
         [Authorize]
+        [HasPermission("Amenity.Edit")]
         [HttpPut("update-amenity")]
-
-        public async Task<IActionResult> UpdateAsync(AmenityRequestDto dto)
+        public async Task<IActionResult> UpdateAsync(
+            AmenityRequestDto dto)
         {
             var result = await _amenityService.UpdateAmenityAsync(dto);
-            return Ok(result);
 
+            return Ok(result);
         }
 
         [Authorize]
+        [HasPermission("Amenity.Delete")]
         [HttpDelete("delete-amenity/{imageId:int}")]
         public async Task<IActionResult> DeleteAsync(int imageId)
         {
             var result = await _amenityService.DeleteAmenityAsync(imageId);
+
             return Ok(result);
-
         }
-
     }
-
 }

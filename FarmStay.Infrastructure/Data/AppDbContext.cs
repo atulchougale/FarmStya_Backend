@@ -27,7 +27,9 @@ namespace FarmStay.Infrastructure.Data
         public DbSet<RoleModule> RoleModules { get; set; }
         public DbSet<RoleModulePermission> RoleModulePermissions { get; set; }
 
-        //Admin Pages
+        public DbSet<FarmHouseModule> farmHouseModules { get; set; }
+
+        //Admin Pages   
 
         public DbSet<Gallery> Galleries { get; set; }
 
@@ -148,6 +150,54 @@ namespace FarmStay.Infrastructure.Data
                 .HasIndex(m => m.ModuleName)
                 .IsUnique();
 
+            modelBuilder.Entity<Module>().HasData(
+                new Module
+                {
+                    ModuleId = 1,
+                    ModuleName = "Dashboard",
+                    DisplayName = "Dashboard",
+                    Route = "/dashboard",
+                    DisplayOrder = 1,
+                    IsActive = true
+                },
+                new Module
+                {
+                    ModuleId = 2,
+                    ModuleName = "Bookings",
+                    DisplayName = "Bookings",
+                    Route = "/bookings",
+                    DisplayOrder = 2,
+                    IsActive = true
+                },
+                new Module
+                {
+                    ModuleId = 3,
+                    ModuleName = "Accounts",
+                    DisplayName = "Accounts / Finance",
+                    Route = "/accounts",
+                    DisplayOrder = 3,
+                    IsActive = true
+                },
+                new Module
+                {
+                    ModuleId = 4,
+                    ModuleName = "Reporting",
+                    DisplayName = "Reporting",
+                    Route = "/reporting",
+                    DisplayOrder = 4,
+                    IsActive = true
+                },
+                new Module
+                {
+                    ModuleId = 5,
+                    ModuleName = "WebsiteSettings",
+                    DisplayName = "Website Settings",
+                    Route = "/website-settings",
+                    DisplayOrder = 5,
+                    IsActive = true
+                }
+            );
+
             #endregion
 
             #region Permission
@@ -155,6 +205,110 @@ namespace FarmStay.Infrastructure.Data
             modelBuilder.Entity<Permission>()
                 .HasIndex(p => p.PermissionName)
                 .IsUnique();
+
+            modelBuilder.Entity<Permission>().HasData(
+            new Permission
+            {
+                PermissionId = 1,
+                PermissionName = "Gallery.View",
+                Description = "View gallery items",
+                DisplayOrder = 1,
+                IsSystemPermission = true,
+                IsActive = true
+            },
+            new Permission
+            {
+                PermissionId = 2,
+                PermissionName = "Gallery.Create",
+                Description = "Create gallery items",
+                DisplayOrder = 2,
+                IsSystemPermission = true,
+                IsActive = true
+            },
+            new Permission
+            {
+                PermissionId = 3,
+                PermissionName = "Gallery.Edit",
+                Description = "Edit gallery items",
+                DisplayOrder = 3,
+                IsSystemPermission = true,
+                IsActive = true
+            },
+            new Permission
+            {
+                PermissionId = 4,
+                PermissionName = "Gallery.Delete",
+                Description = "Delete gallery items",
+                DisplayOrder = 4,
+                IsSystemPermission = true,
+                IsActive = true
+            },
+
+            new Permission
+            {
+                PermissionId = 5,
+                PermissionName = "Amenity.View",
+                Description = "View amenities",
+                DisplayOrder = 5,
+                IsSystemPermission = true,
+                IsActive = true
+            },
+            new Permission
+            {
+                PermissionId = 6,
+                PermissionName = "Amenity.Create",
+                Description = "Create amenities",
+                DisplayOrder = 6,
+                IsSystemPermission = true,
+                IsActive = true
+            },
+            new Permission
+            {
+                PermissionId = 7,
+                PermissionName = "Amenity.Edit",
+                Description = "Edit amenities",
+                DisplayOrder = 7,
+                IsSystemPermission = true,
+                IsActive = true
+            },
+            new Permission
+            {
+                PermissionId = 8,
+                PermissionName = "Amenity.Delete",
+                Description = "Delete amenities",
+                DisplayOrder = 8,
+                IsSystemPermission = true,
+                IsActive = true
+            },
+
+            new Permission
+            {
+                PermissionId = 9,
+                PermissionName = "Feedback.View",
+                Description = "View customer feedback and reviews",
+                DisplayOrder = 9,
+                IsSystemPermission = true,
+                IsActive = true
+            },
+            new Permission
+            {
+                PermissionId = 10,
+                PermissionName = "Feedback.Create",
+                Description = "Create customer feedback",
+                DisplayOrder = 10,
+                IsSystemPermission = true,
+                IsActive = true
+            },
+            new Permission
+            {
+                PermissionId = 11,
+                PermissionName = "Feedback.Delete",
+                Description = "Delete customer feedback",
+                DisplayOrder = 11,
+                IsSystemPermission = true,
+                IsActive = true
+            }
+        );
 
             #endregion
 
@@ -260,6 +414,25 @@ namespace FarmStay.Infrastructure.Data
 
             #endregion
 
+            #region FarmHouseModule
+
+            modelBuilder.Entity<FarmHouseModule>()
+                .HasOne(fm => fm.FarmHouse)
+                .WithMany(f => f.FarmHouseModules)
+                .HasForeignKey(fm => fm.FarmHouseId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<FarmHouseModule>()
+                .HasOne(fm => fm.Module)
+                .WithMany(m => m.FarmHouseModules)
+                .HasForeignKey(fm => fm.ModuleId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<FarmHouseModule>()
+                .HasIndex(fm => new { fm.FarmHouseId, fm.ModuleId })
+                .IsUnique()
+                .HasFilter("[IsDeleted] = 0");
+            #endregion
 
 
             modelBuilder.ApplyConfiguration(new UserRefreshTokenConfiguration());

@@ -22,6 +22,6 @@ namespace FarmStay.Application.DTOs.Admin
         public bool IsCarasoul { get; set; }
 
         public int FarmHouseId { get; set; }
-        
+
     }
 }

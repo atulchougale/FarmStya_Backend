@@ -7,9 +7,7 @@ namespace FarmStay.Application.DTOs.Public
 
         public int FeedBackId { get; set; }
 
-
         public int FarmHouseId { get; set; }
-
         public string Review { get; set; } = string.Empty;
 
         public decimal Rating { get; set; }

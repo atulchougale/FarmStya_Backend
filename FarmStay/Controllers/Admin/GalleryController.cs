@@ -1,10 +1,7 @@
 ﻿using FarmStay.Application.DTOs.Admin;
-
 using Microsoft.AspNetCore.Authorization;
-
 using Microsoft.AspNetCore.Mvc;
-using static System.Net.Mime.MediaTypeNames;
-
+using FarmStay.API.Authorization;
 
 namespace FarmStay.API.Controllers.Admin
 {
@@ -12,7 +9,6 @@ namespace FarmStay.API.Controllers.Admin
     [ApiController]
     public class GalleryController : ControllerBase
     {
-
         readonly private IGalleryService _galleryService;
 
         public GalleryController(IGalleryService galleryService)
@@ -21,8 +17,10 @@ namespace FarmStay.API.Controllers.Admin
         }
 
         [Authorize]
+        [HasPermission("Gallery.Create")]
         [HttpPost("savegallery")]
-        public async Task<IActionResult> SaveGallery([FromBody] GalleryRequestDto dto)
+        public async Task<IActionResult> SaveGallery(
+            [FromBody] GalleryRequestDto dto)
         {
             var result = await _galleryService.SaveGalleryAsync(dto);
 
@@ -34,7 +32,8 @@ namespace FarmStay.API.Controllers.Admin
             return BadRequest(result);
         }
 
-
+        [Authorize]
+        [HasPermission("Gallery.View")]
         [HttpGet("get-byid-gallery/{imageId:int}")]
         public async Task<IActionResult> GetGalleryById(int imageId)
         {
@@ -43,7 +42,8 @@ namespace FarmStay.API.Controllers.Admin
             return Ok(result);
         }
 
-
+        [Authorize]
+        [HasPermission("Gallery.View")]
         [HttpGet("get-all-gallery")]
         public async Task<IActionResult> GetAllAsync()
         {
@@ -53,31 +53,34 @@ namespace FarmStay.API.Controllers.Admin
         }
 
         [Authorize]
+        [HasPermission("Gallery.Edit")]
         [HttpPut("update-gallery")]
-
-        public async Task<IActionResult> UpdateAsync(GalleryRequestDto dto)
+        public async Task<IActionResult> UpdateAsync(
+            GalleryRequestDto dto)
         {
             var result = await _galleryService.UpdateGalleryAsync(dto);
-            return Ok(result);
 
+            return Ok(result);
         }
 
         [Authorize]
+        [HasPermission("Gallery.Delete")]
         [HttpDelete("delete-gallery/{imageId:int}")]
         public async Task<IActionResult> DeleteAsync(int imageId)
         {
             var result = await _galleryService.DeleteGalleryAsync(imageId);
-            return Ok(result);
 
+            return Ok(result);
         }
 
-
+        [Authorize]
+        [HasPermission("Gallery.View")]
         [HttpGet("gallery-categories")]
         public async Task<IActionResult> GetCategoryAsync()
         {
             var result = await _galleryService.GetCategoryListAsync();
-            return Ok(result);
 
+            return Ok(result);
         }
     }
 }

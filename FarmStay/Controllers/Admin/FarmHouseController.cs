@@ -1,11 +1,13 @@
 ﻿using FarmStay.Application.DTOs.Admin;
 using FarmStay.Application.Interfaces.Services.Admin;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FarmStay.API.Controllers.Admin
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Super Admin")]
     public class FarmHouseController : ControllerBase
     {
         private readonly IFarmHouseService _farmHouseService;

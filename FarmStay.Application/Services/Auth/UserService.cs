@@ -1258,9 +1258,9 @@ namespace FarmStay.Application.Services.Auth
 
                         return new ApiResponse<bool>
                         {
-                            Success = true,
-                            Message = "If the account exists, password reset instructions have been sent.",
-                            Data = true
+                            Success = false,
+                            Message = "Email address not found.",
+                            Data = false
                         };
                     }
 
@@ -1299,54 +1299,54 @@ namespace FarmStay.Application.Services.Auth
                     var emailSubject = "Reset Your FarmStay Password";
 
                     var emailBody = $@"
-<html>
-<body>
+                        <html>
+                        <body>
 
-    <h2>Password Reset</h2>
+                            <h2>Password Reset</h2>
 
-    <p>Hello {user.FullName},</p>
+                            <p>Hello {user.FullName},</p>
 
-    <p>
-        We received a request to reset your FarmStay password.
-    </p>
+                            <p>
+                                We received a request to reset your FarmStay password.
+                            </p>
 
-    <p>
-        Click the button below to create a new password:
-    </p>
+                            <p>
+                                Click the button below to create a new password:
+                            </p>
 
-    <p>
-        <a href=""{resetLink}""
-           style=""
-               background-color:#c4512d;
-               color:white;
-               padding:12px 20px;
-               text-decoration:none;
-               border-radius:6px;
-               display:inline-block;
-               font-weight:600;
-           "">
-            Reset Password
-        </a>
-    </p>
+                            <p>
+                                <a href=""{resetLink}""
+                                   style=""
+                                       background-color:#c4512d;
+                                       color:white;
+                                       padding:12px 20px;
+                                       text-decoration:none;
+                                       border-radius:6px;
+                                       display:inline-block;
+                                       font-weight:600;
+                                   "">
+                                    Reset Password
+                                </a>
+                            </p>
 
-    <p>
-        This link will expire in 1 hour.
-    </p>
+                            <p>
+                                This link will expire in 1 hour.
+                            </p>
 
-    <p>
-        If you did not request a password reset,
-        please ignore this email.
-    </p>
+                            <p>
+                                If you did not request a password reset,
+                                please ignore this email.
+                            </p>
 
-    <br/>
+                            <br/>
 
-    <p>
-        Thanks,<br/>
-        {farmHouse.FarmHouseName}
-    </p>
+                            <p>
+                                Thanks,<br/>
+                                {farmHouse.FarmHouseName}
+                            </p>
 
-</body>
-</html>";
+                        </body>
+                        </html>";
 
                     // ========================================================
                     // Queue Email
@@ -1399,9 +1399,9 @@ namespace FarmStay.Application.Services.Auth
 
                         return new ApiResponse<bool>
                         {
-                            Success = true,
-                            Message = "If the account exists, password reset instructions have been sent.",
-                            Data = true
+                            Success = false,
+                            Message = "Mobile number not found.",
+                            Data = false
                         };
                     }
 

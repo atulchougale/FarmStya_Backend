@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using FarmStay.API.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
@@ -38,6 +40,20 @@ namespace FarmStay.API.DependencyInjection
                                         configuration["Jwt:Key"]!))
                         };
                 });
+
+            // -----------------------------
+            // Authorization
+            // -----------------------------
+
+            services.AddAuthorization();
+
+            services.AddSingleton<
+                IAuthorizationPolicyProvider,
+                PermissionPolicyProvider>();
+
+            services.AddScoped<
+                IAuthorizationHandler,
+                PermissionAuthorizationHandler>();
 
             return services;
         }

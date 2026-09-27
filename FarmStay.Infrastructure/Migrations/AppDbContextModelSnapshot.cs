@@ -313,6 +313,49 @@ namespace FarmStay.Infrastructure.Migrations
                     b.ToTable("FarmHouses");
                 });
 
+            modelBuilder.Entity("FarmStay.Domain.Entities.FarmHouseModule", b =>
+                {
+                    b.Property<int>("FarmHouseModuleId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("FarmHouseModuleId"));
+
+                    b.Property<int?>("CreatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("FarmHouseId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("ModifiedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ModuleId")
+                        .HasColumnType("int");
+
+                    b.HasKey("FarmHouseModuleId");
+
+                    b.HasIndex("ModuleId");
+
+                    b.HasIndex("FarmHouseId", "ModuleId")
+                        .IsUnique()
+                        .HasFilter("[IsDeleted] = 0");
+
+                    b.ToTable("farmHouseModules");
+                });
+
             modelBuilder.Entity("FarmStay.Domain.Entities.FeedBack", b =>
                 {
                     b.Property<int>("FeedBackId")
@@ -472,6 +515,58 @@ namespace FarmStay.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("Modules");
+
+                    b.HasData(
+                        new
+                        {
+                            ModuleId = 1,
+                            CreatedDate = new DateTime(2026, 9, 15, 15, 4, 49, 975, DateTimeKind.Utc).AddTicks(5481),
+                            DisplayName = "Dashboard",
+                            DisplayOrder = 1,
+                            IsActive = true,
+                            ModuleName = "Dashboard",
+                            Route = "/dashboard"
+                        },
+                        new
+                        {
+                            ModuleId = 2,
+                            CreatedDate = new DateTime(2026, 9, 15, 15, 4, 49, 975, DateTimeKind.Utc).AddTicks(5487),
+                            DisplayName = "Bookings",
+                            DisplayOrder = 2,
+                            IsActive = true,
+                            ModuleName = "Bookings",
+                            Route = "/bookings"
+                        },
+                        new
+                        {
+                            ModuleId = 3,
+                            CreatedDate = new DateTime(2026, 9, 15, 15, 4, 49, 975, DateTimeKind.Utc).AddTicks(5489),
+                            DisplayName = "Accounts / Finance",
+                            DisplayOrder = 3,
+                            IsActive = true,
+                            ModuleName = "Accounts",
+                            Route = "/accounts"
+                        },
+                        new
+                        {
+                            ModuleId = 4,
+                            CreatedDate = new DateTime(2026, 9, 15, 15, 4, 49, 975, DateTimeKind.Utc).AddTicks(5491),
+                            DisplayName = "Reporting",
+                            DisplayOrder = 4,
+                            IsActive = true,
+                            ModuleName = "Reporting",
+                            Route = "/reporting"
+                        },
+                        new
+                        {
+                            ModuleId = 5,
+                            CreatedDate = new DateTime(2026, 9, 15, 15, 4, 49, 975, DateTimeKind.Utc).AddTicks(5494),
+                            DisplayName = "Website Settings",
+                            DisplayOrder = 5,
+                            IsActive = true,
+                            ModuleName = "WebsiteSettings",
+                            Route = "/website-settings"
+                        });
                 });
 
             modelBuilder.Entity("FarmStay.Domain.Entities.Permission", b =>
@@ -518,6 +613,118 @@ namespace FarmStay.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("Permissions");
+
+                    b.HasData(
+                        new
+                        {
+                            PermissionId = 1,
+                            CreatedDate = new DateTime(2026, 9, 15, 15, 4, 49, 975, DateTimeKind.Utc).AddTicks(6301),
+                            Description = "View gallery items",
+                            DisplayOrder = 1,
+                            IsActive = true,
+                            IsSystemPermission = true,
+                            PermissionName = "Gallery.View"
+                        },
+                        new
+                        {
+                            PermissionId = 2,
+                            CreatedDate = new DateTime(2026, 9, 15, 15, 4, 49, 975, DateTimeKind.Utc).AddTicks(6307),
+                            Description = "Create gallery items",
+                            DisplayOrder = 2,
+                            IsActive = true,
+                            IsSystemPermission = true,
+                            PermissionName = "Gallery.Create"
+                        },
+                        new
+                        {
+                            PermissionId = 3,
+                            CreatedDate = new DateTime(2026, 9, 15, 15, 4, 49, 975, DateTimeKind.Utc).AddTicks(6310),
+                            Description = "Edit gallery items",
+                            DisplayOrder = 3,
+                            IsActive = true,
+                            IsSystemPermission = true,
+                            PermissionName = "Gallery.Edit"
+                        },
+                        new
+                        {
+                            PermissionId = 4,
+                            CreatedDate = new DateTime(2026, 9, 15, 15, 4, 49, 975, DateTimeKind.Utc).AddTicks(6311),
+                            Description = "Delete gallery items",
+                            DisplayOrder = 4,
+                            IsActive = true,
+                            IsSystemPermission = true,
+                            PermissionName = "Gallery.Delete"
+                        },
+                        new
+                        {
+                            PermissionId = 5,
+                            CreatedDate = new DateTime(2026, 9, 15, 15, 4, 49, 975, DateTimeKind.Utc).AddTicks(6313),
+                            Description = "View amenities",
+                            DisplayOrder = 5,
+                            IsActive = true,
+                            IsSystemPermission = true,
+                            PermissionName = "Amenity.View"
+                        },
+                        new
+                        {
+                            PermissionId = 6,
+                            CreatedDate = new DateTime(2026, 9, 15, 15, 4, 49, 975, DateTimeKind.Utc).AddTicks(6314),
+                            Description = "Create amenities",
+                            DisplayOrder = 6,
+                            IsActive = true,
+                            IsSystemPermission = true,
+                            PermissionName = "Amenity.Create"
+                        },
+                        new
+                        {
+                            PermissionId = 7,
+                            CreatedDate = new DateTime(2026, 9, 15, 15, 4, 49, 975, DateTimeKind.Utc).AddTicks(6316),
+                            Description = "Edit amenities",
+                            DisplayOrder = 7,
+                            IsActive = true,
+                            IsSystemPermission = true,
+                            PermissionName = "Amenity.Edit"
+                        },
+                        new
+                        {
+                            PermissionId = 8,
+                            CreatedDate = new DateTime(2026, 9, 15, 15, 4, 49, 975, DateTimeKind.Utc).AddTicks(6317),
+                            Description = "Delete amenities",
+                            DisplayOrder = 8,
+                            IsActive = true,
+                            IsSystemPermission = true,
+                            PermissionName = "Amenity.Delete"
+                        },
+                        new
+                        {
+                            PermissionId = 9,
+                            CreatedDate = new DateTime(2026, 9, 15, 15, 4, 49, 975, DateTimeKind.Utc).AddTicks(6319),
+                            Description = "View customer feedback and reviews",
+                            DisplayOrder = 9,
+                            IsActive = true,
+                            IsSystemPermission = true,
+                            PermissionName = "Feedback.View"
+                        },
+                        new
+                        {
+                            PermissionId = 10,
+                            CreatedDate = new DateTime(2026, 9, 15, 15, 4, 49, 975, DateTimeKind.Utc).AddTicks(6320),
+                            Description = "Create customer feedback",
+                            DisplayOrder = 10,
+                            IsActive = true,
+                            IsSystemPermission = true,
+                            PermissionName = "Feedback.Create"
+                        },
+                        new
+                        {
+                            PermissionId = 11,
+                            CreatedDate = new DateTime(2026, 9, 15, 15, 4, 49, 975, DateTimeKind.Utc).AddTicks(6322),
+                            Description = "Delete customer feedback",
+                            DisplayOrder = 11,
+                            IsActive = true,
+                            IsSystemPermission = true,
+                            PermissionName = "Feedback.Delete"
+                        });
                 });
 
             modelBuilder.Entity("FarmStay.Domain.Entities.Property", b =>
@@ -1105,6 +1312,25 @@ namespace FarmStay.Infrastructure.Migrations
                     b.Navigation("SubscriptionPlan");
                 });
 
+            modelBuilder.Entity("FarmStay.Domain.Entities.FarmHouseModule", b =>
+                {
+                    b.HasOne("FarmStay.Domain.Entities.FarmHouse", "FarmHouse")
+                        .WithMany("FarmHouseModules")
+                        .HasForeignKey("FarmHouseId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("FarmStay.Domain.Entities.Module", "Module")
+                        .WithMany("FarmHouseModules")
+                        .HasForeignKey("ModuleId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("FarmHouse");
+
+                    b.Navigation("Module");
+                });
+
             modelBuilder.Entity("FarmStay.Domain.Entities.FeedBack", b =>
                 {
                     b.HasOne("FarmStay.Domain.Entities.FarmHouse", "FarmHouse")
@@ -1271,6 +1497,8 @@ namespace FarmStay.Infrastructure.Migrations
                 {
                     b.Navigation("Amenities");
 
+                    b.Navigation("FarmHouseModules");
+
                     b.Navigation("FeedBacks");
 
                     b.Navigation("Galleries");
@@ -1284,6 +1512,8 @@ namespace FarmStay.Infrastructure.Migrations
 
             modelBuilder.Entity("FarmStay.Domain.Entities.Module", b =>
                 {
+                    b.Navigation("FarmHouseModules");
+
                     b.Navigation("RoleModules");
                 });
 

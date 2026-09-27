@@ -141,6 +141,8 @@ namespace FarmStay.Domain.Entities
         public ICollection<FeedBack> FeedBacks { get; set; } = new List<FeedBack>();
 
         public ICollection<Amenity> Amenities { get; set; } = new List<Amenity>();
+
+        public ICollection<FarmHouseModule> FarmHouseModules { get; set; } = new List<FarmHouseModule>();
     }
 
 }
