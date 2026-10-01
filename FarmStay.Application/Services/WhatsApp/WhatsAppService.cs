@@ -50,10 +50,7 @@ namespace FarmStay.Infrastructure.Services.WhatsApp
 
             try
             {
-                var normalizedNumber =
-                    mobileNumber.StartsWith("91")
-                        ? mobileNumber
-                        : $"91{mobileNumber}";
+                var normalizedNumber = mobileNumber.Length == 10 ? $"91{mobileNumber}" : mobileNumber;
 
                 var request = new WhatsAppMessageRequest
                 {

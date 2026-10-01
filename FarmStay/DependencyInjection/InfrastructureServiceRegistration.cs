@@ -95,6 +95,12 @@ namespace FarmStay.API.DependencyInjection
 
             services.AddScoped<IAdminMenuRepository, AdminMenuRepository>();
 
+            services.AddScoped<IContactRepository, ContactRepository>();
+
+            services.AddScoped<IAboutUsRepository, AboutUsRepository>();
+
+            services.AddScoped<IPublicPageRepository, PublicPageRepository>();
+
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             // -----------------------------

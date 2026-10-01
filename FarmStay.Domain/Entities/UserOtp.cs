@@ -27,6 +27,9 @@ namespace FarmStay.Domain.Entities
 
         public bool IsUsed { get; set; } = false;
 
+        // Number of wrong OTP entries; the OTP is invalidated after too many failures
+        public int FailedAttempts { get; set; } = 0;
+
         public bool IsActive { get; set; } = true;
 
         public bool IsDeleted { get; set; } = false;

@@ -176,5 +176,40 @@ namespace FarmStay.API.Controllers.Auth
 
             return BadRequest(result);
         }
+
+
+        // =============================================
+        // Login with Mobile OTP - Send OTP
+        // =============================================
+
+        [HttpPost("send-login-otp")]
+        public async Task<IActionResult> SendLoginOtp([FromBody] SendLoginOtpRequestDto dto)
+        {
+            var result = await _userService.SendLoginOtpAsync(dto);
+
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+
+            return BadRequest(result);
+        }
+
+        // =============================================
+        // Login with Mobile OTP - Verify OTP
+        // =============================================
+
+        [HttpPost("verify-login-otp")]
+        public async Task<IActionResult> VerifyLoginOtp([FromBody] VerifyLoginOtpRequestDto dto)
+        {
+            var result = await _userService.VerifyLoginOtpAsync(dto);
+
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+
+            return BadRequest(result);
+        }
     }
 }

@@ -143,6 +143,13 @@ namespace FarmStay.Domain.Entities
         public ICollection<Amenity> Amenities { get; set; } = new List<Amenity>();
 
         public ICollection<FarmHouseModule> FarmHouseModules { get; set; } = new List<FarmHouseModule>();
+
+        public ICollection<ContactUs> ContactUs { get; set; } = new List<ContactUs>();
+
+        //public ICollection<AboutUs> AboutUs { get; set; } = new List<AboutUs>();
+
+
+        public AboutUs? AboutUs { get; set; }
     }
 
 }

@@ -33,6 +33,9 @@ namespace FarmStay.Infrastructure.Persistence.Configurations
             builder.Property(x => x.IsUsed)
                 .HasDefaultValue(false);
 
+            builder.Property(x => x.FailedAttempts)
+                .HasDefaultValue(0);
+
             builder.Property(x => x.IsActive)
                 .HasDefaultValue(true);
 

@@ -2689,8 +2689,504 @@ namespace FarmStay.Application.Services.Auth
                 };
             }
         }
+   
+
+            // ============================================================
+        // Login with Mobile OTP (WhatsApp)
+        // ============================================================
+
+        private const int LoginOtpExpiryMinutes = 5;
+        private const int LoginOtpResendCooldownSeconds = 60;
+        private const int LoginOtpMaxFailedAttempts = 5;
+
+        public async Task<ApiResponse<bool>> SendLoginOtpAsync(SendLoginOtpRequestDto dto)
+        {
+            try
+            {
+                _logger.LogInformation("Login OTP request received.");
+
+                // Step 1
+                // Validate FarmHouse from Header
+
+                var farmHouseIdHeader = _httpContextAccessor.HttpContext?
+                    .Request
+                    .Headers["FarmHouseId"]
+                    .FirstOrDefault();
+
+                if (!int.TryParse(farmHouseIdHeader, out int farmHouseId))
+                {
+                    _logger.LogWarning("FarmHouseId header is missing or invalid.");
+
+                    return new ApiResponse<bool>
+                    {
+                        Success = false,
+                        Message = "Invalid FarmHouse.",
+                        Data = false
+                    };
+                }
+
+                var farmHouse = await _farmHouseRepository.GetByIdAsync(farmHouseId);
+
+                if (farmHouse == null)
+                {
+                    _logger.LogWarning(
+                        "Invalid FarmHouse. FarmHouseId: {FarmHouseId}",
+                        farmHouseId);
+
+                    return new ApiResponse<bool>
+                    {
+                        Success = false,
+                        Message = "Invalid FarmHouse.",
+                        Data = false
+                    };
+                }
+
+                // Step 2
+                // Find User by Mobile + FarmHouse
+
+                var mobileNumber = dto.MobileNumber.Trim();
+
+                var user = await _userRepository.GetByMobileNumberAsync(
+                    mobileNumber,
+                    farmHouseId);
+
+                if (user == null)
+                {
+                    _logger.LogWarning(
+                        "Login OTP requested for unknown mobile number. FarmHouseId: {FarmHouseId}",
+                        farmHouseId);
+
+                    return new ApiResponse<bool>
+                    {
+                        Success = false,
+                        Message = "Mobile number not found.",
+                        Data = false
+                    };
+                }
+
+                // Step 3
+                // Check User Status
+
+                if (!user.IsActive || user.IsDeleted)
+                {
+                    _logger.LogWarning(
+                        "Login OTP requested for inactive or deleted user. UserId: {UserId}",
+                        user.UserId);
+
+                    return new ApiResponse<bool>
+                    {
+                        Success = false,
+                        Message = "Your account is inactive.",
+                        Data = false
+                    };
+                }
+
+                // Step 4
+                // Resend cooldown + invalidate the previous active login OTP
+
+                var existingOtp = await _userOtpRepository.GetActiveOtpAsync(
+                    user.UserId,
+                    OtpPurpose.Login);
+
+                if (existingOtp != null)
+                {
+                    var secondsSinceLastOtp =
+                        (DateTime.UtcNow - existingOtp.CreatedDate).TotalSeconds;
+
+                    if (secondsSinceLastOtp < LoginOtpResendCooldownSeconds)
+                    {
+                        var waitSeconds = (int)Math.Ceiling(
+                            LoginOtpResendCooldownSeconds - secondsSinceLastOtp);
+
+                        _logger.LogWarning(
+                            "Login OTP requested during cooldown. UserId: {UserId}",
+                            user.UserId);
+
+                        return new ApiResponse<bool>
+                        {
+                            Success = false,
+                            Message = $"Please wait {waitSeconds} seconds before requesting another OTP.",
+                            Data = false
+                        };
+                    }
+
+                    existingOtp.IsActive = false;
+                    existingOtp.ModifiedDate = DateTime.UtcNow;
+                    existingOtp.ModifiedBy = user.UserId;
+
+                    await _userOtpRepository.UpdateAsync(existingOtp);
+                }
+
+                // Step 5
+                // Generate and Save New OTP
+
+                var otpCode = RandomNumberGenerator
+                    .GetInt32(100000, 1000000)
+                    .ToString();
+
+                var userOtp = new UserOtp
+                {
+                    UserId = user.UserId,
+                    MobileNumber = user.MobileNumber,
+                    OtpCode = otpCode,
+                    Purpose = OtpPurpose.Login,
+                    ExpiryDate = DateTime.UtcNow.AddMinutes(LoginOtpExpiryMinutes),
+                    IsUsed = false,
+                    FailedAttempts = 0,
+                    IsActive = true,
+                    IsDeleted = false,
+                    CreatedDate = DateTime.UtcNow,
+                    CreatedBy = user.UserId
+                };
+
+                await _userOtpRepository.AddAsync(userOtp);
+
+                await _unitOfWork.SaveChangesAsync();
+
+                // Step 6
+                // Queue WhatsApp OTP
+
+                var whatsAppMessage =
+                    $"Your FarmStay login OTP is {otpCode}. It is valid for {LoginOtpExpiryMinutes} minutes. Do not share this OTP with anyone.";
+
+                _whatsAppQueue.Enqueue(new WhatsAppJob
+                {
+                    MobileNumber = user.MobileNumber,
+                    Message = whatsAppMessage
+                });
+
+                _logger.LogInformation(
+                    "Login OTP queued successfully. UserId: {UserId}, FarmHouseId: {FarmHouseId}",
+                    user.UserId,
+                    farmHouseId);
+
+                return new ApiResponse<bool>
+                {
+                    Success = true,
+                    Message = "OTP has been sent to your WhatsApp.",
+                    Data = true
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(
+                    ex,
+                    "An error occurred while sending login OTP.");
+
+                return new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = "An unexpected error occurred while sending OTP.",
+                    Data = false
+                };
+            }
+        }
+
+        public async Task<ApiResponse<LoginResponseDto>> VerifyLoginOtpAsync(VerifyLoginOtpRequestDto dto)
+        {
+            try
+            {
+                _logger.LogInformation("Login OTP verification request received.");
+
+                // Step 1
+                // Validate FarmHouse from Header
+
+                var farmHouseIdHeader = _httpContextAccessor.HttpContext?
+                    .Request
+                    .Headers["FarmHouseId"]
+                    .FirstOrDefault();
+
+                if (!int.TryParse(farmHouseIdHeader, out int farmHouseId))
+                {
+                    _logger.LogWarning("FarmHouseId header is missing or invalid.");
+
+                    return new ApiResponse<LoginResponseDto>
+                    {
+                        Success = false,
+                        Message = "Invalid FarmHouse."
+                    };
+                }
+
+                var farmHouse = await _farmHouseRepository.GetByIdAsync(farmHouseId);
+
+                if (farmHouse == null)
+                {
+                    _logger.LogWarning(
+                        "Invalid FarmHouse. FarmHouseId: {FarmHouseId}",
+                        farmHouseId);
+
+                    return new ApiResponse<LoginResponseDto>
+                    {
+                        Success = false,
+                        Message = "Invalid FarmHouse."
+                    };
+                }
+
+                // Step 2
+                // Find User by Mobile + FarmHouse
+
+                var mobileNumber = dto.MobileNumber.Trim();
+
+                var user = await _userRepository.GetByMobileNumberAsync(
+                    mobileNumber,
+                    farmHouseId);
+
+                if (user == null)
+                {
+                    _logger.LogWarning(
+                        "Login OTP verification for unknown mobile number. FarmHouseId: {FarmHouseId}",
+                        farmHouseId);
+
+                    return new ApiResponse<LoginResponseDto>
+                    {
+                        Success = false,
+                        Message = "Invalid OTP."
+                    };
+                }
+
+                // Step 3
+                // Check User Status
+
+                if (!user.IsActive || user.IsDeleted)
+                {
+                    _logger.LogWarning(
+                        "Inactive or deleted user login attempt. UserId: {UserId}",
+                        user.UserId);
+
+                    return new ApiResponse<LoginResponseDto>
+                    {
+                        Success = false,
+                        Message = "Your account is inactive."
+                    };
+                }
+
+                // Step 4
+                // Get the latest active login OTP
+
+                var otp = await _userOtpRepository.GetActiveOtpAsync(
+                    user.UserId,
+                    OtpPurpose.Login);
+
+                if (otp == null)
+                {
+                    _logger.LogWarning(
+                        "No active login OTP found. UserId: {UserId}",
+                        user.UserId);
+
+                    return new ApiResponse<LoginResponseDto>
+                    {
+                        Success = false,
+                        Message = "Invalid or expired OTP. Please request a new one."
+                    };
+                }
+
+                // Step 5
+                // Check OTP Expiry
+
+                if (otp.ExpiryDate < DateTime.UtcNow)
+                {
+                    otp.IsActive = false;
+                    otp.ModifiedDate = DateTime.UtcNow;
+                    otp.ModifiedBy = user.UserId;
+
+                    await _userOtpRepository.UpdateAsync(otp);
+                    await _unitOfWork.SaveChangesAsync();
+
+                    return new ApiResponse<LoginResponseDto>
+                    {
+                        Success = false,
+                        Message = "OTP has expired."
+                    };
+                }
+
+                // Step 6
+                // Compare OTP (constant-time) and track failed attempts
+
+                var isOtpValid = CryptographicOperations.FixedTimeEquals(
+                    System.Text.Encoding.UTF8.GetBytes(otp.OtpCode),
+                    System.Text.Encoding.UTF8.GetBytes(dto.OtpCode.Trim()));
+
+                if (!isOtpValid)
+                {
+                    otp.FailedAttempts++;
+                    otp.ModifiedDate = DateTime.UtcNow;
+                    otp.ModifiedBy = user.UserId;
+
+                    if (otp.FailedAttempts >= LoginOtpMaxFailedAttempts)
+                    {
+                        otp.IsActive = false;
+                    }
+
+                    await _userOtpRepository.UpdateAsync(otp);
+                    await _unitOfWork.SaveChangesAsync();
+
+                    _logger.LogWarning(
+                        "Invalid login OTP. UserId: {UserId}, FailedAttempts: {FailedAttempts}",
+                        user.UserId,
+                        otp.FailedAttempts);
+
+                    return new ApiResponse<LoginResponseDto>
+                    {
+                        Success = false,
+                        Message = otp.IsActive
+                            ? "Invalid OTP."
+                            : "Too many failed attempts. Please request a new OTP."
+                    };
+                }
+
+                // Step 7
+                // Mark OTP as Used
+
+                otp.IsUsed = true;
+                otp.IsActive = false;
+                otp.ModifiedDate = DateTime.UtcNow;
+                otp.ModifiedBy = user.UserId;
+
+                await _userOtpRepository.UpdateAsync(otp);
+                await _unitOfWork.SaveChangesAsync();
+
+                // Step 8
+                // Complete login (membership, role, tokens)
+
+                return await CompleteLoginAsync(user, farmHouse);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(
+                    ex,
+                    "An error occurred while verifying login OTP.");
+
+                return new ApiResponse<LoginResponseDto>
+                {
+                    Success = false,
+                    Message = "An unexpected error occurred while logging in."
+                };
+            }
+        }
+
+        // Shared final steps of a successful login: membership, role, tokens,
+        // refresh-token persistence and last-login update.
+        // Mirrors steps 5-9 of LoginAsync.
+        private async Task<ApiResponse<LoginResponseDto>> CompleteLoginAsync(
+            User user,
+            FarmHouse farmHouse)
+        {
+            var membership = await _userMembershipRepository.GetMembershipAsync(
+                user.UserId,
+                farmHouse.FarmHouseId);
+
+            // Membership is created only after both email and mobile are verified,
+            // so this behaves exactly like the password login.
+            if (membership == null)
+            {
+                _logger.LogInformation(
+                    "Membership not found. Starting verification flow. UserId: {UserId}, FarmHouseId: {FarmHouseId}",
+                    user.UserId,
+                    farmHouse.FarmHouseId);
+
+                await StartVerificationFlowAsync(user, farmHouse);
+
+                return new ApiResponse<LoginResponseDto>
+                {
+                    Success = false,
+                    Message = "Please verify your email and mobile number to activate your account.",
+                    Data = new LoginResponseDto
+                    {
+                        UserId = user.UserId,
+                        FullName = user.FullName,
+                        Email = user.Email,
+                        MobileNumber = user.MobileNumber,
+
+                        FarmHouseId = farmHouse.FarmHouseId,
+                        FarmHouseName = farmHouse.FarmHouseName,
+
+                        IsEmailVerified = user.IsEmailVerified,
+                        IsMobileVerified = user.IsMobileVerified,
+                        RequiresVerification = true
+                    }
+                };
+            }
+
+            var role = await _roleRepository.GetByIdAsync(membership.RoleId);
+
+            if (role == null)
+            {
+                _logger.LogError(
+                    "Role not found. RoleId: {RoleId}, UserId: {UserId}",
+                    membership.RoleId,
+                    user.UserId);
+
+                return new ApiResponse<LoginResponseDto>
+                {
+                    Success = false,
+                    Message = "Unable to login at the moment."
+                };
+            }
+
+            var accessToken = _jwtService.GenerateAccessToken(
+                user,
+                membership,
+                farmHouse,
+                role);
+
+            var refreshToken = _jwtService.GenerateRefreshToken();
+
+            var refreshTokenEntity = new UserRefreshToken
+            {
+                UserId = user.UserId,
+
+                RefreshTokenHash = _passwordService.HashPassword(refreshToken),
+
+                ExpiryDate = DateTime.UtcNow.AddDays(30),
+
+                IsRevoked = false,
+                IsActive = true,
+                IsDeleted = false,
+
+                CreatedDate = DateTime.UtcNow,
+                CreatedBy = user.UserId
+            };
+
+            await _userRefreshTokenRepository.AddAsync(refreshTokenEntity);
+
+            membership.LastLoginDate = DateTime.UtcNow;
+
+            await _userMembershipRepository.UpdateAsync(membership);
+
+            await _unitOfWork.SaveChangesAsync();
+
+            _logger.LogInformation(
+                "Login successful through mobile OTP. UserId: {UserId}, FarmHouseId: {FarmHouseId}",
+                user.UserId,
+                farmHouse.FarmHouseId);
+
+            return new ApiResponse<LoginResponseDto>
+            {
+                Success = true,
+                Message = "Login successful.",
+                Data = new LoginResponseDto
+                {
+                    AccessToken = accessToken,
+                    RefreshToken = refreshToken,
+
+                    UserId = user.UserId,
+                    FullName = user.FullName,
+                    Email = user.Email,
+                    MobileNumber = user.MobileNumber,
+
+                    FarmHouseId = farmHouse.FarmHouseId,
+                    FarmHouseName = farmHouse.FarmHouseName,
+
+                    RoleId = role.RoleId,
+                    RoleName = role.RoleName,
+
+                    IsOwner = role.RoleName == "FarmOwner",
+
+                    IsEmailVerified = user.IsEmailVerified,
+                    IsMobileVerified = user.IsMobileVerified
+                }
+            };
+        }
     }
-
-
 
 }

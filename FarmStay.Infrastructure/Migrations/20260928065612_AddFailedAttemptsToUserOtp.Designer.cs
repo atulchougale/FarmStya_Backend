@@ -4,6 +4,7 @@ using FarmStay.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FarmStay.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260928065612_AddFailedAttemptsToUserOtp")]
+    partial class AddFailedAttemptsToUserOtp
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,109 +24,6 @@ namespace FarmStay.Infrastructure.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("FarmStay.Domain.Entities.AboutUs", b =>
-                {
-                    b.Property<int>("AboutUsId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AboutUsId"));
-
-                    b.Property<int>("CreatedBy")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("FarmHouseId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("HeroImageUrl")
-                        .IsRequired()
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<string>("HeroSubtitle")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<string>("HeroTitle")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<bool>("IsDelete")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
-
-                    b.Property<int>("ModifyBy")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("ModifyDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("StoryDescription")
-                        .IsRequired()
-                        .HasMaxLength(2000)
-                        .HasColumnType("nvarchar(2000)");
-
-                    b.Property<string>("StoryTitle")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.HasKey("AboutUsId");
-
-                    b.HasIndex("FarmHouseId")
-                        .IsUnique()
-                        .HasFilter("[IsDelete] = 0");
-
-                    b.ToTable("AboutUs", (string)null);
-                });
-
-            modelBuilder.Entity("FarmStay.Domain.Entities.AboutUsFeature", b =>
-                {
-                    b.Property<int>("FeatureId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("FeatureId"));
-
-                    b.Property<int>("AboutUsId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<int>("DisplayOrder")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Icon")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<bool>("IsDelete")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.HasKey("FeatureId");
-
-                    b.HasIndex("AboutUsId");
-
-                    b.ToTable("AboutUsFeatures", (string)null);
-                });
 
             modelBuilder.Entity("FarmStay.Domain.Entities.Amenity", b =>
                 {
@@ -662,7 +562,7 @@ namespace FarmStay.Infrastructure.Migrations
                         new
                         {
                             ModuleId = 1,
-                            CreatedDate = new DateTime(2026, 9, 29, 14, 15, 1, 346, DateTimeKind.Utc).AddTicks(2032),
+                            CreatedDate = new DateTime(2026, 9, 28, 6, 56, 10, 635, DateTimeKind.Utc).AddTicks(5239),
                             DisplayName = "Dashboard",
                             DisplayOrder = 1,
                             IsActive = true,
@@ -672,7 +572,7 @@ namespace FarmStay.Infrastructure.Migrations
                         new
                         {
                             ModuleId = 2,
-                            CreatedDate = new DateTime(2026, 9, 29, 14, 15, 1, 346, DateTimeKind.Utc).AddTicks(2037),
+                            CreatedDate = new DateTime(2026, 9, 28, 6, 56, 10, 635, DateTimeKind.Utc).AddTicks(5256),
                             DisplayName = "Bookings",
                             DisplayOrder = 2,
                             IsActive = true,
@@ -682,7 +582,7 @@ namespace FarmStay.Infrastructure.Migrations
                         new
                         {
                             ModuleId = 3,
-                            CreatedDate = new DateTime(2026, 9, 29, 14, 15, 1, 346, DateTimeKind.Utc).AddTicks(2040),
+                            CreatedDate = new DateTime(2026, 9, 28, 6, 56, 10, 635, DateTimeKind.Utc).AddTicks(5262),
                             DisplayName = "Accounts / Finance",
                             DisplayOrder = 3,
                             IsActive = true,
@@ -692,7 +592,7 @@ namespace FarmStay.Infrastructure.Migrations
                         new
                         {
                             ModuleId = 4,
-                            CreatedDate = new DateTime(2026, 9, 29, 14, 15, 1, 346, DateTimeKind.Utc).AddTicks(2042),
+                            CreatedDate = new DateTime(2026, 9, 28, 6, 56, 10, 635, DateTimeKind.Utc).AddTicks(5267),
                             DisplayName = "Reporting",
                             DisplayOrder = 4,
                             IsActive = true,
@@ -702,7 +602,7 @@ namespace FarmStay.Infrastructure.Migrations
                         new
                         {
                             ModuleId = 5,
-                            CreatedDate = new DateTime(2026, 9, 29, 14, 15, 1, 346, DateTimeKind.Utc).AddTicks(2043),
+                            CreatedDate = new DateTime(2026, 9, 28, 6, 56, 10, 635, DateTimeKind.Utc).AddTicks(5272),
                             DisplayName = "Website Settings",
                             DisplayOrder = 5,
                             IsActive = true,
@@ -760,7 +660,7 @@ namespace FarmStay.Infrastructure.Migrations
                         new
                         {
                             PermissionId = 1,
-                            CreatedDate = new DateTime(2026, 9, 29, 14, 15, 1, 346, DateTimeKind.Utc).AddTicks(2610),
+                            CreatedDate = new DateTime(2026, 9, 28, 6, 56, 10, 635, DateTimeKind.Utc).AddTicks(6686),
                             Description = "View gallery items",
                             DisplayOrder = 1,
                             IsActive = true,
@@ -770,7 +670,7 @@ namespace FarmStay.Infrastructure.Migrations
                         new
                         {
                             PermissionId = 2,
-                            CreatedDate = new DateTime(2026, 9, 29, 14, 15, 1, 346, DateTimeKind.Utc).AddTicks(2615),
+                            CreatedDate = new DateTime(2026, 9, 28, 6, 56, 10, 635, DateTimeKind.Utc).AddTicks(6697),
                             Description = "Create gallery items",
                             DisplayOrder = 2,
                             IsActive = true,
@@ -780,7 +680,7 @@ namespace FarmStay.Infrastructure.Migrations
                         new
                         {
                             PermissionId = 3,
-                            CreatedDate = new DateTime(2026, 9, 29, 14, 15, 1, 346, DateTimeKind.Utc).AddTicks(2617),
+                            CreatedDate = new DateTime(2026, 9, 28, 6, 56, 10, 635, DateTimeKind.Utc).AddTicks(6703),
                             Description = "Edit gallery items",
                             DisplayOrder = 3,
                             IsActive = true,
@@ -790,7 +690,7 @@ namespace FarmStay.Infrastructure.Migrations
                         new
                         {
                             PermissionId = 4,
-                            CreatedDate = new DateTime(2026, 9, 29, 14, 15, 1, 346, DateTimeKind.Utc).AddTicks(2619),
+                            CreatedDate = new DateTime(2026, 9, 28, 6, 56, 10, 635, DateTimeKind.Utc).AddTicks(6708),
                             Description = "Delete gallery items",
                             DisplayOrder = 4,
                             IsActive = true,
@@ -800,7 +700,7 @@ namespace FarmStay.Infrastructure.Migrations
                         new
                         {
                             PermissionId = 5,
-                            CreatedDate = new DateTime(2026, 9, 29, 14, 15, 1, 346, DateTimeKind.Utc).AddTicks(2621),
+                            CreatedDate = new DateTime(2026, 9, 28, 6, 56, 10, 635, DateTimeKind.Utc).AddTicks(6711),
                             Description = "View amenities",
                             DisplayOrder = 5,
                             IsActive = true,
@@ -810,7 +710,7 @@ namespace FarmStay.Infrastructure.Migrations
                         new
                         {
                             PermissionId = 6,
-                            CreatedDate = new DateTime(2026, 9, 29, 14, 15, 1, 346, DateTimeKind.Utc).AddTicks(2622),
+                            CreatedDate = new DateTime(2026, 9, 28, 6, 56, 10, 635, DateTimeKind.Utc).AddTicks(6715),
                             Description = "Create amenities",
                             DisplayOrder = 6,
                             IsActive = true,
@@ -820,7 +720,7 @@ namespace FarmStay.Infrastructure.Migrations
                         new
                         {
                             PermissionId = 7,
-                            CreatedDate = new DateTime(2026, 9, 29, 14, 15, 1, 346, DateTimeKind.Utc).AddTicks(2624),
+                            CreatedDate = new DateTime(2026, 9, 28, 6, 56, 10, 635, DateTimeKind.Utc).AddTicks(6719),
                             Description = "Edit amenities",
                             DisplayOrder = 7,
                             IsActive = true,
@@ -830,7 +730,7 @@ namespace FarmStay.Infrastructure.Migrations
                         new
                         {
                             PermissionId = 8,
-                            CreatedDate = new DateTime(2026, 9, 29, 14, 15, 1, 346, DateTimeKind.Utc).AddTicks(2626),
+                            CreatedDate = new DateTime(2026, 9, 28, 6, 56, 10, 635, DateTimeKind.Utc).AddTicks(6723),
                             Description = "Delete amenities",
                             DisplayOrder = 8,
                             IsActive = true,
@@ -840,7 +740,7 @@ namespace FarmStay.Infrastructure.Migrations
                         new
                         {
                             PermissionId = 9,
-                            CreatedDate = new DateTime(2026, 9, 29, 14, 15, 1, 346, DateTimeKind.Utc).AddTicks(2627),
+                            CreatedDate = new DateTime(2026, 9, 28, 6, 56, 10, 635, DateTimeKind.Utc).AddTicks(6727),
                             Description = "View customer feedback and reviews",
                             DisplayOrder = 9,
                             IsActive = true,
@@ -850,7 +750,7 @@ namespace FarmStay.Infrastructure.Migrations
                         new
                         {
                             PermissionId = 10,
-                            CreatedDate = new DateTime(2026, 9, 29, 14, 15, 1, 346, DateTimeKind.Utc).AddTicks(2629),
+                            CreatedDate = new DateTime(2026, 9, 28, 6, 56, 10, 635, DateTimeKind.Utc).AddTicks(6731),
                             Description = "Create customer feedback",
                             DisplayOrder = 10,
                             IsActive = true,
@@ -860,7 +760,7 @@ namespace FarmStay.Infrastructure.Migrations
                         new
                         {
                             PermissionId = 11,
-                            CreatedDate = new DateTime(2026, 9, 29, 14, 15, 1, 346, DateTimeKind.Utc).AddTicks(2630),
+                            CreatedDate = new DateTime(2026, 9, 28, 6, 56, 10, 635, DateTimeKind.Utc).AddTicks(6735),
                             Description = "Delete customer feedback",
                             DisplayOrder = 11,
                             IsActive = true,
@@ -1393,28 +1293,6 @@ namespace FarmStay.Infrastructure.Migrations
                     b.ToTable("UserRefreshTokens", (string)null);
                 });
 
-            modelBuilder.Entity("FarmStay.Domain.Entities.AboutUs", b =>
-                {
-                    b.HasOne("FarmStay.Domain.Entities.FarmHouse", "FarmHouse")
-                        .WithOne("AboutUs")
-                        .HasForeignKey("FarmStay.Domain.Entities.AboutUs", "FarmHouseId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("FarmHouse");
-                });
-
-            modelBuilder.Entity("FarmStay.Domain.Entities.AboutUsFeature", b =>
-                {
-                    b.HasOne("FarmStay.Domain.Entities.AboutUs", "AboutUs")
-                        .WithMany("Features")
-                        .HasForeignKey("AboutUsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("AboutUs");
-                });
-
             modelBuilder.Entity("FarmStay.Domain.Entities.Amenity", b =>
                 {
                     b.HasOne("FarmStay.Domain.Entities.FarmHouse", "FarmHouse")
@@ -1668,11 +1546,6 @@ namespace FarmStay.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("FarmStay.Domain.Entities.AboutUs", b =>
-                {
-                    b.Navigation("Features");
-                });
-
             modelBuilder.Entity("FarmStay.Domain.Entities.Booking", b =>
                 {
                     b.Navigation("BookingLogs");
@@ -1680,8 +1553,6 @@ namespace FarmStay.Infrastructure.Migrations
 
             modelBuilder.Entity("FarmStay.Domain.Entities.FarmHouse", b =>
                 {
-                    b.Navigation("AboutUs");
-
                     b.Navigation("Amenities");
 
                     b.Navigation("ContactUs");

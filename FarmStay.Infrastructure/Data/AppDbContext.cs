@@ -37,6 +37,12 @@ namespace FarmStay.Infrastructure.Data
 
         public DbSet<Amenity> Amenities { get; set; }
 
+        public DbSet<ContactUs> ContactDetail { get; set; }
+
+        public DbSet<AboutUs> AboutUs { get; set; }
+
+        public DbSet<AboutUsFeature> AboutUsFeatures { get; set; }
+
         // Referesh Token
         public DbSet<UserRefreshToken> UserRefreshTokens { get; set; }
         #endregion
@@ -440,6 +446,10 @@ namespace FarmStay.Infrastructure.Data
             modelBuilder.ApplyConfiguration(new GalleryConfiguration());
             modelBuilder.ApplyConfiguration(new FeedbackConfiguration());
             modelBuilder.ApplyConfiguration(new AmenityConfiguration());
+            modelBuilder.ApplyConfiguration(new ContactConfiguration());
+            modelBuilder.ApplyConfiguration(new AboutUsConfiguration());
+
+            modelBuilder.ApplyConfiguration(new AboutUsFeatureConfiguration());
         }
     }
 }

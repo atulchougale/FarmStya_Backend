@@ -18,6 +18,12 @@ namespace FarmStay.Application.Interfaces.Services.Auth
 
         Task<ApiResponse<LoginResponseDto>> LoginAsync(LoginRequestDto dto);
 
+        // ================= Login with Mobile OTP =================
+
+        Task<ApiResponse<bool>> SendLoginOtpAsync(SendLoginOtpRequestDto dto);
+
+        Task<ApiResponse<LoginResponseDto>> VerifyLoginOtpAsync(VerifyLoginOtpRequestDto dto);
+
         Task<ApiResponse<bool>> ForgotPasswordAsync(ForgotPasswordDto dto);
 
         Task<ApiResponse<bool>> ResetPasswordEmailAsync(ResetPasswordByEmailDto dto);
@@ -32,6 +38,4 @@ namespace FarmStay.Application.Interfaces.Services.Auth
 
         Task<ApiResponse<bool>> LogoutAsync(LogoutDto dto);
     }
-
-
 }

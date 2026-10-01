@@ -31,6 +31,12 @@ namespace FarmStay.API.DependencyInjection
 
             services.AddScoped<IAdminMenuService, AdminMenuService>();
 
+            services.AddScoped<IContactService, ContactService>();
+
+            services.AddScoped<IAboutUsService, AboutUsService>();
+
+            services.AddScoped<IPublicPageService, PublicPageService>();
+
 
             return services;
         }
