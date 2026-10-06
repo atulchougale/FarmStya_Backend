@@ -5,7 +5,8 @@
 
 # dotenv files
 .env
-
+# Ignore user-uploaded media files
+FarmStay/wwwroot/uploads/
 # User-specific files
 *.rsuser
 *.suo
