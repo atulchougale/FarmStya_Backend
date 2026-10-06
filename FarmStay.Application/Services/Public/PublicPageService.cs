@@ -4,6 +4,7 @@ using FarmStay.Application.DTOs.Admin;
 using FarmStay.Application.DTOs.Public;
 using FarmStay.Application.Interfaces.Repositories;
 using FarmStay.Application.Interfaces.Services.Public;
+using FarmStay.Domain.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
@@ -15,17 +16,20 @@ namespace FarmStay.Application.Services.Public
         private readonly ILogger<PublicPageService> _logger;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IFarmHouseRepository _farmHouseRepository;
+        private readonly IAboutUsRepository _aboutUsRepository;
 
         public PublicPageService(
             IPublicPageRepository publicPageRepository,
             ILogger<PublicPageService> logger,
             IHttpContextAccessor httpContextAccessor,
-            IFarmHouseRepository farmHouseRepository)
+            IFarmHouseRepository farmHouseRepository,
+            IAboutUsRepository aboutUsRepository)
         {
             _publicPageRepository = publicPageRepository;
             _logger = logger;
             _httpContextAccessor = httpContextAccessor;
             _farmHouseRepository = farmHouseRepository;
+            _aboutUsRepository = aboutUsRepository;
         }
 
         // ==========================================
@@ -309,6 +313,212 @@ namespace FarmStay.Application.Services.Public
                     Message = "Something went wrong."
                 };
             }
+        }
+
+        public async Task<ApiResponse<AboutUsResponseDto>> GetAboutUsAsync()
+        {
+            try
+            {
+                _logger.LogInformation(
+                    "Get AboutUs request received.");
+
+                // 1. Get FarmHouseId from Header
+                var farmHouseIdHeader = _httpContextAccessor.HttpContext?
+                    .Request.Headers["FarmHouseId"]
+                    .FirstOrDefault();
+
+                if (!int.TryParse(farmHouseIdHeader, out int farmHouseId))
+                {
+                    _logger.LogWarning(
+                       "FarmHouseId header is missing or invalid.");
+
+                    return new ApiResponse<AboutUsResponseDto>
+                    {
+                        Success = false,
+                        Message = "Invalid FarmHouseId.",
+                        Data = null
+                    };
+                }
+
+                // Validate FarmHouse
+                var farmHouse = await _farmHouseRepository
+                    .GetByIdAsync(farmHouseId);
+
+                if (farmHouse == null)
+                {
+                    _logger.LogWarning(
+                        "Invalid FarmHouse. FarmHouseId: {FarmHouseId}",
+                        farmHouseId);
+
+                    return new ApiResponse<AboutUsResponseDto>
+                    {
+                        Success = false,
+                        Message = "Invalid FarmHouse."
+                    };
+                }
+
+                // 2. Get AboutUs Master and Active Features
+                var aboutUs = await _aboutUsRepository
+                    .GetAboutUsByFarmHouseIdAsync(farmHouseId);
+
+                if (aboutUs == null)
+                {
+                    return new ApiResponse<AboutUsResponseDto>
+                    {
+                        Success = false,
+                        Message = "AboutUs not found.",
+                        Data = null
+                    };
+                }
+
+                // 3. Map Master and Features into one DTO
+                var response = new AboutUsResponseDto
+                {
+                    AboutUsId = aboutUs.AboutUsId,
+                    HeroTitle = aboutUs.HeroTitle,
+                    HeroSubtitle = aboutUs.HeroSubtitle,
+                    HeroImageUrl = aboutUs.HeroImageUrl,
+                    StoryTitle = aboutUs.StoryTitle,
+                    StoryDescription = aboutUs.StoryDescription,
+                    FarmHouseId = aboutUs.FarmHouseId,
+
+                    Features = aboutUs.Features
+                        .Where(f => !f.IsDelete)
+                        .OrderBy(f => f.DisplayOrder)
+                        .Select(f => new AboutUsFeatureResponseDto
+                        {
+                            FeatureId = f.FeatureId,
+                            AboutUsId = f.AboutUsId,
+                            Title = f.Title,
+                            Description = f.Description ?? string.Empty,
+                            Icon = f.Icon ?? string.Empty,
+                            DisplayOrder = f.DisplayOrder
+                        })
+                        .ToList()
+                };
+
+                // 4. Return Response
+                return new ApiResponse<AboutUsResponseDto>
+                {
+                    Success = true,
+                    Message = "AboutUs retrieved successfully.",
+                    Data = response
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while retrieving public AboutUs.");
+
+                return new ApiResponse<AboutUsResponseDto>
+                {
+                    Success = false,
+                    Message = "Something went wrong.",
+                    Data = null
+                };
+            }
+        }
+
+
+        public async Task<ApiResponse<FarmHouseResponseDto>> GetContactInfoAsync()
+        {
+            try
+            {
+                _logger.LogInformation(
+                    "Get Contact Information request received.");
+
+                // Get FarmHouseId from Header
+                var farmHouseIdHeader = _httpContextAccessor.HttpContext?
+                    .Request
+                    .Headers["FarmHouseId"]
+                    .FirstOrDefault();
+
+                if (!int.TryParse( farmHouseIdHeader, out int farmHouseId))
+                {
+                    return new ApiResponse<FarmHouseResponseDto>
+                    {
+                        Success = false,
+                        Message = "Invalid FarmHouse."
+                    };
+                }
+
+                var farmHouse =
+                    await _farmHouseRepository.GetByIdAsync(farmHouseId);
+
+                if (farmHouse == null || farmHouse.IsDeleted)
+                {
+                    _logger.LogWarning(
+                        "FarmHouse not found. FarmHouseId: {FarmHouseId}",
+                        farmHouseId);
+
+                    return new ApiResponse<FarmHouseResponseDto>
+                    {
+                        Success = false,
+                        Message = "FarmHouse not found."
+                    };
+                }
+
+                _logger.LogInformation(
+                    "FarmHouse fetched successfully. FarmHouseId: {FarmHouseId}",
+                    farmHouseId);
+
+                return new ApiResponse<FarmHouseResponseDto>
+                {
+                    Success = true,
+                    Message = "Contact information retrieved successfully.",
+                    Data = MapToResponseDto(farmHouse)
+                };
+                
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(
+                    ex,
+                    "Error occurred while fetching FarmHouse.");
+
+                return new ApiResponse<FarmHouseResponseDto>
+                {
+                    Success = false,
+                    Message = "An unexpected error occurred while fetching FarmHouse."
+                };
+            }
+        }
+
+        private static FarmHouseResponseDto MapToResponseDto(FarmHouse farmHouse)
+        {
+            return new FarmHouseResponseDto
+            {
+                FarmHouseId = farmHouse.FarmHouseId,
+                FarmHouseName = farmHouse.FarmHouseName,
+                DomainName = farmHouse.DomainName,
+                SubDomain = farmHouse.SubDomain,
+                IsPrimaryDomain = farmHouse.IsPrimaryDomain,
+                TagLine = farmHouse.TagLine,
+                Description = farmHouse.Description,
+                Address = farmHouse.Address,
+                Village = farmHouse.Village,
+                Taluka = farmHouse.Taluka,
+                District = farmHouse.District,
+                State = farmHouse.State,
+                Pincode = farmHouse.Pincode,
+                ContactPersonName = farmHouse.ContactPersonName,
+                OwnerUserId = farmHouse.OwnerUserId,
+                MobileNumber = farmHouse.MobileNumber,
+                AlternateMobileNumber = farmHouse.AlternateMobileNumber,
+                Email = farmHouse.Email,
+                LogoUrl = farmHouse.LogoUrl,
+                CoverImageUrl = farmHouse.CoverImageUrl,
+                GoogleMapUrl = farmHouse.GoogleMapUrl,
+                Latitude = farmHouse.Latitude,
+                Longitude = farmHouse.Longitude,
+                IsWebsitePublished = farmHouse.IsWebsitePublished,
+                SubscriptionPlanId = farmHouse.SubscriptionPlanId,
+                SubscriptionStartDate = farmHouse.SubscriptionStartDate,
+                SubscriptionEndDate = farmHouse.SubscriptionEndDate,
+                IsSubscriptionActive = farmHouse.IsSubscriptionActive,
+                IsActive = farmHouse.IsActive,
+                CreatedDate = farmHouse.CreatedDate,
+                ModifiedDate = farmHouse.ModifiedDate
+            };
         }
     }
 }

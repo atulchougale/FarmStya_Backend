@@ -37,8 +37,7 @@ namespace FarmStay.Application.Services.Admin
 
 
 
-        public async Task<ApiResponse<AboutUsResponseDto>> SaveAboutUsAsync(
-     AboutUsRequestDto dto)
+        public async Task<ApiResponse<AboutUsResponseDto>> SaveAboutUsAsync( AboutUsRequestDto dto)
         {
             try
             {
@@ -472,9 +471,9 @@ namespace FarmStay.Application.Services.Admin
             }
         }
 
-        
-        
-        public async Task<ApiResponse<AboutUsResponseDto>> UpdateAboutUsAsync (int aboutUsId,AboutUsRequestDto dto)
+
+
+        public async Task<ApiResponse<AboutUsResponseDto>> UpdateAboutUsAsync(AboutUsRequestDto dto)
         {
             try
             {
@@ -487,9 +486,7 @@ namespace FarmStay.Application.Services.Admin
                     .Headers["FarmHouseId"]
                     .FirstOrDefault();
 
-                if (!int.TryParse(
-                        farmHouseIdHeader,
-                        out int farmHouseId))
+                if (!int.TryParse(farmHouseIdHeader, out int farmHouseId))
                 {
                     return new ApiResponse<AboutUsResponseDto>
                     {
@@ -508,9 +505,7 @@ namespace FarmStay.Application.Services.Admin
                     .FindFirst(ClaimTypes.NameIdentifier)?
                     .Value;
 
-                if (!int.TryParse(
-                        userIdClaim,
-                        out int userId))
+                if (!int.TryParse(userIdClaim, out int userId))
                 {
                     return new ApiResponse<AboutUsResponseDto>
                     {
@@ -524,9 +519,8 @@ namespace FarmStay.Application.Services.Admin
                 // 3. VALIDATE FARMHOUSE
                 // =========================================================
 
-                var farmHouse =
-                    await _farmHouseRepository
-                        .GetByIdAsync(farmHouseId);
+                var farmHouse = await _farmHouseRepository
+                    .GetByIdAsync(farmHouseId);
 
                 if (farmHouse == null)
                 {
@@ -539,22 +533,18 @@ namespace FarmStay.Application.Services.Admin
                 }
 
                 // =========================================================
-                // 4. VALIDATE MEMBERSHIP
+                // 4. VALIDATE USER MEMBERSHIP
                 // =========================================================
 
-                var membership =
-                    await _userMembershipRepository
-                        .GetMembershipAsync(
-                            userId,
-                            farmHouseId);
+                var membership = await _userMembershipRepository
+                    .GetMembershipAsync(userId, farmHouseId);
 
                 if (membership == null)
                 {
                     return new ApiResponse<AboutUsResponseDto>
                     {
                         Success = false,
-                        Message =
-                            "You are not authorized to access this FarmHouse.",
+                        Message = "You are not authorized to access this FarmHouse.",
                         Data = null
                     };
                 }
@@ -563,9 +553,7 @@ namespace FarmStay.Application.Services.Admin
                 // 5. GET ABOUT US
                 // =========================================================
 
-                var aboutUs =
-                    await _aboutUsRepository
-                        .GetAboutUsAsync(aboutUsId);
+                var aboutUs = await _aboutUsRepository.GetAboutUsAsync(dto.AboutUsId);
 
                 if (aboutUs == null || aboutUs.IsDelete)
                 {
@@ -578,7 +566,7 @@ namespace FarmStay.Application.Services.Admin
                 }
 
                 // =========================================================
-                // 6. SECURITY CHECK
+                // 6. VALIDATE FARMHOUSE OWNERSHIP
                 // =========================================================
 
                 if (aboutUs.FarmHouseId != farmHouseId)
@@ -586,14 +574,63 @@ namespace FarmStay.Application.Services.Admin
                     return new ApiResponse<AboutUsResponseDto>
                     {
                         Success = false,
-                        Message =
-                            "AboutUs does not belong to this FarmHouse.",
+                        Message = "AboutUs does not belong to this FarmHouse.",
                         Data = null
                     };
                 }
 
                 // =========================================================
-                // 7. UPDATE ABOUT US
+                // 7. GET EXISTING ACTIVE FEATURES
+                // =========================================================
+
+                List<AboutUsFeature> existingFeatures = new();
+
+                if (dto.Features != null)
+                {
+                    existingFeatures = await _aboutUsRepository.GetFeaturesAsync(dto.AboutUsId);
+
+                    // -----------------------------------------------------
+                    // VALIDATE EXISTING FEATURE IDS BEFORE UPDATING
+                    // -----------------------------------------------------
+
+                    foreach (var featureDto in dto.Features)
+                    {
+                        // FeatureId = 0 means a new feature.
+                        if (featureDto.FeatureId == 0)
+                        {
+                            continue;
+                        }
+
+                        var existingFeature = await _aboutUsRepository
+                            .GetFeatureByIdAsync(featureDto.FeatureId);
+
+                        // Deleted features are also treated as not found.
+                        // They must NOT be reactivated automatically.
+                        if (existingFeature == null)
+                        {
+                            return new ApiResponse<AboutUsResponseDto>
+                            {
+                                Success = false,
+                                Message = $"Feature with ID {featureDto.FeatureId} not found.",
+                                Data = null
+                            };
+                        }
+
+                        // Validate that the feature belongs to this AboutUs.
+                        if (existingFeature.AboutUsId != aboutUs.AboutUsId)
+                        {
+                            return new ApiResponse<AboutUsResponseDto>
+                            {
+                                Success = false,
+                                Message = "Feature does not belong to this AboutUs.",
+                                Data = null
+                            };
+                        }
+                    }
+                }
+
+                // =========================================================
+                // 8. UPDATE ABOUT US MASTER
                 // =========================================================
 
                 aboutUs.HeroTitle = dto.HeroTitle;
@@ -606,11 +643,10 @@ namespace FarmStay.Application.Services.Admin
                 aboutUs.ModifyBy = userId;
                 aboutUs.ModifyDate = DateTime.UtcNow;
 
-                await _aboutUsRepository
-                    .UpdateAboutUsAsync(aboutUs);
+                await _aboutUsRepository.UpdateAboutUsAsync(aboutUs);
 
                 // =========================================================
-                // 8. ADD / UPDATE FEATURES
+                // 9. ADD / UPDATE FEATURES
                 // =========================================================
 
                 if (dto.Features != null)
@@ -618,7 +654,7 @@ namespace FarmStay.Application.Services.Admin
                     foreach (var featureDto in dto.Features)
                     {
                         // -------------------------------------------------
-                        // NEW FEATURE
+                        // CASE A: NEW FEATURE
                         // -------------------------------------------------
 
                         if (featureDto.FeatureId == 0)
@@ -642,87 +678,92 @@ namespace FarmStay.Application.Services.Admin
                         }
 
                         // -------------------------------------------------
-                        // EXISTING FEATURE
+                        // CASE B: UPDATE EXISTING ACTIVE FEATURE
                         // -------------------------------------------------
 
-                        var existingFeature =
-                            await _aboutUsRepository
-                                .GetFeatureByIdAsync(
-                                    featureDto.FeatureId);
+                        var existingFeature = await _aboutUsRepository
+                            .GetFeatureByIdAsync(featureDto.FeatureId);
 
+                        // Safety check: do not reactivate deleted features.
                         if (existingFeature == null)
                         {
                             return new ApiResponse<AboutUsResponseDto>
                             {
                                 Success = false,
-                                Message =
-                                    $"Feature with ID " +
-                                    $"{featureDto.FeatureId} not found.",
+                                Message = $"Feature with ID {featureDto.FeatureId} not found.",
                                 Data = null
                             };
                         }
 
-                        // Security check
-                        if (existingFeature.AboutUsId !=
-                            aboutUs.AboutUsId)
+                        if (existingFeature.AboutUsId != aboutUs.AboutUsId)
                         {
                             return new ApiResponse<AboutUsResponseDto>
                             {
                                 Success = false,
-                                Message =
-                                    "Feature does not belong to this AboutUs.",
+                                Message = "Feature does not belong to this AboutUs.",
                                 Data = null
                             };
                         }
 
-                        existingFeature.Title =
-                            featureDto.Title;
+                        existingFeature.Title = featureDto.Title;
+                        existingFeature.Description = featureDto.Description;
+                        existingFeature.Icon = featureDto.Icon;
+                        existingFeature.DisplayOrder = featureDto.DisplayOrder;
 
-                        existingFeature.Description =
-                            featureDto.Description;
+                        // IMPORTANT:
+                        // Do not set IsDelete = false here.
+                        // A soft-deleted feature must never be reactivated
+                        // through this update method.
 
-                        existingFeature.Icon =
-                            featureDto.Icon;
+                        await _aboutUsRepository.UpdateFeatureAsync(existingFeature);
+                    }
 
-                        existingFeature.DisplayOrder =
-                            featureDto.DisplayOrder;
+                    // =====================================================
+                    // 10. SOFT DELETE REMOVED FEATURES
+                    // =====================================================
 
-                        // If a previously soft-deleted feature
-                        // is updated, make it active again.
-                        existingFeature.IsDelete = false;
+                    var requestedFeatureIds = dto.Features
+                        .Where(x => x.FeatureId > 0)
+                        .Select(x => x.FeatureId)
+                        .ToHashSet();
 
-                        await _aboutUsRepository
-                            .UpdateFeatureAsync(existingFeature);
+                    foreach (var existingFeature in existingFeatures)
+                    {
+                        // If an existing active feature is missing from the
+                        // request, soft-delete it instead of permanently
+                        // deleting it from the database.
+
+                        if (!requestedFeatureIds.Contains(existingFeature.FeatureId))
+                        {
+                            await _aboutUsRepository.DeleteFeatureAsync(existingFeature.FeatureId);
+                        }
                     }
                 }
 
                 // =========================================================
-                // 9. SAVE
+                // 11. SAVE CHANGES
                 // =========================================================
 
                 await _unitOfWork.SaveChangesAsync();
 
                 // =========================================================
-                // 10. GET UPDATED DATA
+                // 12. GET UPDATED ABOUT US WITH ACTIVE FEATURES
                 // =========================================================
 
-                var updatedAboutUs =
-                    await _aboutUsRepository
-                        .GetAboutUsByFarmHouseIdAsync(farmHouseId);
+                var updatedAboutUs = await _aboutUsRepository.GetAboutUsAsync(dto.AboutUsId);
 
                 if (updatedAboutUs == null)
                 {
                     return new ApiResponse<AboutUsResponseDto>
                     {
                         Success = false,
-                        Message =
-                            "AboutUs could not be retrieved.",
+                        Message = "AboutUs could not be retrieved.",
                         Data = null
                     };
                 }
 
                 // =========================================================
-                // 11. RESPONSE
+                // 13. PREPARE RESPONSE
                 // =========================================================
 
                 var response = new AboutUsResponseDto
@@ -734,11 +775,9 @@ namespace FarmStay.Application.Services.Admin
                     HeroImageUrl = updatedAboutUs.HeroImageUrl,
 
                     StoryTitle = updatedAboutUs.StoryTitle,
-                    StoryDescription =
-                        updatedAboutUs.StoryDescription,
+                    StoryDescription = updatedAboutUs.StoryDescription,
 
-                    FarmHouseId =
-                        updatedAboutUs.FarmHouseId,
+                    FarmHouseId = updatedAboutUs.FarmHouseId,
 
                     Features = updatedAboutUs.Features
                         .Where(x => !x.IsDelete)
@@ -746,32 +785,24 @@ namespace FarmStay.Application.Services.Admin
                         .Select(x => new AboutUsFeatureResponseDto
                         {
                             FeatureId = x.FeatureId,
-
                             AboutUsId = x.AboutUsId,
 
                             Title = x.Title,
-
-                            Description =
-                                x.Description ?? string.Empty,
-
-                            Icon =
-                                x.Icon ?? string.Empty,
-
-                            DisplayOrder =
-                                x.DisplayOrder
+                            Description = x.Description ?? string.Empty,
+                            Icon = x.Icon ?? string.Empty,
+                            DisplayOrder = x.DisplayOrder
                         })
                         .ToList()
                 };
 
                 // =========================================================
-                // 12. SUCCESS
+                // 14. SUCCESS RESPONSE
                 // =========================================================
 
                 return new ApiResponse<AboutUsResponseDto>
                 {
                     Success = true,
-                    Message =
-                        "AboutUs and Features updated successfully.",
+                    Message = "AboutUs and Features updated successfully.",
                     Data = response
                 };
             }
@@ -784,21 +815,17 @@ namespace FarmStay.Application.Services.Admin
                 return new ApiResponse<AboutUsResponseDto>
                 {
                     Success = false,
-                    Message =
-                        ex.InnerException?.Message ??
-                        ex.Message,
+                    Message = ex.InnerException?.Message ?? ex.Message,
                     Data = null
                 };
             }
         }
+
         public async Task<ApiResponse<AboutUsResponseDto>> DeleteAboutUsAsync(int aboutUsId)
         {
             try
             {
-               
                 // 1. Get FarmHouseId from Header
-                
-
                 var farmHouseIdHeader = _httpContextAccessor.HttpContext?
                     .Request.Headers["FarmHouseId"]
                     .FirstOrDefault();
@@ -808,15 +835,12 @@ namespace FarmStay.Application.Services.Admin
                     return new ApiResponse<AboutUsResponseDto>
                     {
                         Success = false,
-                        Message = "Invalid FarmHouse."
+                        Message = "Invalid FarmHouseId.",
+                        Data = null
                     };
                 }
 
-
-               
                 // 2. Get UserId from JWT
-               
-
                 var userIdClaim = _httpContextAccessor.HttpContext?
                     .User?
                     .FindFirst(ClaimTypes.NameIdentifier)?
@@ -827,15 +851,12 @@ namespace FarmStay.Application.Services.Admin
                     return new ApiResponse<AboutUsResponseDto>
                     {
                         Success = false,
-                        Message = "Unauthorized."
+                        Message = "Unauthorized.",
+                        Data = null
                     };
                 }
 
-
-               
-                // 3. Check FarmHouse
-                
-
+                // 3. Check FarmHouse exists
                 var farmHouse = await _farmHouseRepository
                     .GetByIdAsync(farmHouseId);
 
@@ -844,14 +865,12 @@ namespace FarmStay.Application.Services.Admin
                     return new ApiResponse<AboutUsResponseDto>
                     {
                         Success = false,
-                        Message = "Invalid FarmHouse."
+                        Message = "Invalid FarmHouseId.",
+                        Data = null
                     };
                 }
 
-
-                
                 // 4. Check User Membership
-                
                 var membership = await _userMembershipRepository
                     .GetMembershipAsync(userId, farmHouseId);
 
@@ -860,15 +879,12 @@ namespace FarmStay.Application.Services.Admin
                     return new ApiResponse<AboutUsResponseDto>
                     {
                         Success = false,
-                        Message = "You are not authorized to access this FarmHouse."
+                        Message = "You are not authorized to access this FarmHouse.",
+                        Data = null
                     };
                 }
 
-
-               
-                // 5. Get Existing AboutUs
-                
-
+                // 5. Get Existing AboutUs with Active Features
                 var aboutUs = await _aboutUsRepository
                     .GetAboutUsAsync(aboutUsId);
 
@@ -877,28 +893,24 @@ namespace FarmStay.Application.Services.Admin
                     return new ApiResponse<AboutUsResponseDto>
                     {
                         Success = false,
-                        Message = "AboutUs not found."
+                        Message = "AboutUs not found.",
+                        Data = null
                     };
                 }
 
-
-               
-                // 6. Check AboutUs belongs to FarmHouse
-               
+                // 6. Check AboutUs belongs to the requested FarmHouse
                 if (aboutUs.FarmHouseId != farmHouseId)
                 {
                     return new ApiResponse<AboutUsResponseDto>
                     {
                         Success = false,
-                        Message = "AboutUs does not belong to this FarmHouse."
+                        Message = "AboutUs does not belong to this FarmHouse.",
+                        Data = null
                     };
                 }
 
-
-                // 7. Delete All Features First
-              
-                foreach (var feature in aboutUs.Features
-                             .Where(x => !x.IsDelete))
+                // 7. Soft Delete All Active Features First
+                foreach (var feature in aboutUs.Features.Where(x => !x.IsDelete))
                 {
                     feature.IsDelete = true;
 
@@ -906,46 +918,28 @@ namespace FarmStay.Application.Services.Admin
                         .UpdateFeatureAsync(feature);
                 }
 
-
-                
-                // 8. Delete AboutUs
-               
+                // 8. Soft Delete AboutUs Master After Features
                 aboutUs.IsDelete = true;
-
                 aboutUs.ModifyBy = userId;
-
                 aboutUs.ModifyDate = DateTime.UtcNow;
 
                 await _aboutUsRepository
                     .UpdateAboutUsAsync(aboutUs);
 
-
-               
-                // 9. Save Changes
-               
-
+                // 9. Save All Changes Together
                 await _unitOfWork.SaveChangesAsync();
 
-
-               
                 // 10. Create Response DTO
-               
-
+                // Features will be empty because all active features
+                // have been soft-deleted.
                 var response = new AboutUsResponseDto
                 {
                     AboutUsId = aboutUs.AboutUsId,
-
                     HeroTitle = aboutUs.HeroTitle,
-
                     HeroSubtitle = aboutUs.HeroSubtitle,
-
                     HeroImageUrl = aboutUs.HeroImageUrl,
-
                     StoryTitle = aboutUs.StoryTitle,
-
                     StoryDescription = aboutUs.StoryDescription,
-                       
-
                     FarmHouseId = aboutUs.FarmHouseId,
 
                     Features = aboutUs.Features
@@ -954,32 +948,20 @@ namespace FarmStay.Application.Services.Admin
                         .Select(x => new AboutUsFeatureResponseDto
                         {
                             FeatureId = x.FeatureId,
-
                             AboutUsId = x.AboutUsId,
-
                             Title = x.Title,
-
-                            Description = x.Description
-                                ?? string.Empty,
-
-                            Icon = x.Icon
-                                ?? string.Empty,
-
+                            Description = x.Description ?? string.Empty,
+                            Icon = x.Icon ?? string.Empty,
                             DisplayOrder = x.DisplayOrder
                         })
                         .ToList()
                 };
 
-
-                // 11. Success Response
-              
-
+                // 11. Return Success Response
                 return new ApiResponse<AboutUsResponseDto>
                 {
                     Success = true,
-
                     Message = "AboutUs and its Features deleted successfully.",
-
                     Data = response
                 };
             }
@@ -993,8 +975,8 @@ namespace FarmStay.Application.Services.Admin
                 return new ApiResponse<AboutUsResponseDto>
                 {
                     Success = false,
-
-                    Message = "Something went wrong while deleting AboutUs."
+                    Message = "Something went wrong while deleting AboutUs.",
+                    Data = null
                 };
             }
         }

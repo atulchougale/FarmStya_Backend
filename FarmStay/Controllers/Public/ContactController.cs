@@ -1,4 +1,5 @@
-﻿using FarmStay.Application.DTOs.Public;
+﻿using FarmStay.API.Authorization;
+using FarmStay.Application.DTOs.Public;
 using FarmStay.Application.Interfaces.Services.Public;
 using FarmStay.Application.Services.Public;
 using Microsoft.AspNetCore.Authorization;
@@ -34,9 +35,9 @@ namespace FarmStay.API.Controllers.Public
             return BadRequest(result);
         }
 
-
-        [HttpGet]
-
+        [Authorize]
+        [HasPermission("Message.View")]
+        [HttpGet("get-contact")]
         public async Task<IActionResult> GetContactAllAsync()
         {
             var result = await _contactService.GetContactAllAsync();
@@ -45,8 +46,9 @@ namespace FarmStay.API.Controllers.Public
         }
 
 
-        
-        [HttpDelete("{contactId:int}")]
+        [Authorize]
+        [HasPermission("Message.Delete")]
+        [HttpDelete("delete-contact/{contactId:int}")]
         public async Task<IActionResult> DeleteContactAsync(int contactId)
         {
             var result = await _contactService.DeleteContactAsync(contactId);

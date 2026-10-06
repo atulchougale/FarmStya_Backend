@@ -12,5 +12,6 @@ namespace FarmStay.Application.Interfaces.Repositories
         Task<List<FeedbackResponseDto>> GetFeedbacksAsync(int farmHouseId);
 
         Task<List<GalleryResponseDto>> GetGalleryAync(int farmHouseId);
+
     }
 }

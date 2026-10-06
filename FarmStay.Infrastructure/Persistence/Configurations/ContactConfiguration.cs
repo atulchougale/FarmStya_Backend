@@ -29,8 +29,12 @@ namespace FarmStay.Infrastructure.Persistence.Configurations
                 .IsRequired()
                 .HasMaxLength(500);
 
-            builder.Property(x => x.Email)
-               .IsRequired();
+            builder.Property(x => x.MobileNo)
+               .IsRequired()
+               .HasMaxLength(10);
+
+            builder.Property(x => x.Message)
+                .IsRequired();
 
 
 

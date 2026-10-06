@@ -66,5 +66,24 @@ namespace FarmStay.API.Controllers.Public
 
             return Ok(result);
         }
+
+
+        [HttpGet("aboutus")]
+        public async Task<IActionResult> GetAboutUs()
+        {
+            var result =
+                await _publicPageService.GetAboutUsAsync();
+
+            return Ok(result);
+        }
+
+        [HttpGet("contactInfo")]
+        public async Task<IActionResult> GetContactinfoOffarmhoouse()
+        {
+            var result =
+                await _publicPageService.GetContactInfoAsync();
+
+            return Ok(result);
+        }
     }
 }

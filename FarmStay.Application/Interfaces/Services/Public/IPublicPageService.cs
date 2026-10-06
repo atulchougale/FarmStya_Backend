@@ -13,5 +13,9 @@ namespace FarmStay.Application.Interfaces.Services.Public
         Task<ApiResponse<List<FeedbackResponseDto>>> GetFeedbackAsync();
 
         Task<ApiResponse<List<GalleryResponseDto>>> GetGalleryAsync();
+
+        Task<ApiResponse<AboutUsResponseDto>> GetAboutUsAsync();
+
+        Task<ApiResponse<FarmHouseResponseDto>> GetContactInfoAsync();
     }
 }

@@ -26,14 +26,16 @@ namespace FarmStay.Infrastructure.Repositories.Admin
         }
 
         // =========================================================
-        // GET ACTIVE ABOUT US BY FARMHOUSE
+        // GET ACTIVE ABOUT US WITH ACTIVE FEATURES BY FARMHOUSE
         // =========================================================
 
-        public async Task<AboutUs?>
-            GetAboutUsByFarmHouseIdAsync(
-                int farmHouseId)
+        public async Task<AboutUs?> GetAboutUsByFarmHouseIdAsync(
+            int farmHouseId)
         {
             return await _context.AboutUs
+                .Include(x => x.Features
+                    .Where(f => !f.IsDelete))
+                .AsNoTracking()
                 .FirstOrDefaultAsync(x =>
                     x.FarmHouseId == farmHouseId &&
                     !x.IsDelete);

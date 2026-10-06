@@ -98,7 +98,7 @@ namespace FarmStay.Application.Services.Public
 
                     FullName = dto.FullName,
 
-                    Email = dto.Email,
+                    MobileNo = dto.MobileNo,
 
                     Message = dto.Message,
                     CreatedDate = DateTime.Now,
@@ -128,7 +128,7 @@ namespace FarmStay.Application.Services.Public
 
                     FullName = dto.FullName,
 
-                    Email = dto.Email,
+                    MobileNo = dto.MobileNo,
 
                     Message = dto.Message,
 
@@ -203,7 +203,7 @@ namespace FarmStay.Application.Services.Public
                     ContactId = x.ContactId,
                     FarmHouseId = x.FarmHouseId,
                     FullName = x.FullName,
-                    Email = x.Email,
+                    MobileNo = x.MobileNo,
                     Message = x.Message
                 }).ToList();
 

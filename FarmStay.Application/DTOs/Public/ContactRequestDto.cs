@@ -12,9 +12,10 @@ namespace FarmStay.Application.DTOs.Public
 
         public string FullName { get; set; } = string.Empty;
 
-        public string Email { get; set; } = string.Empty;
+        public string MobileNo { get; set; } = string.Empty;
 
-        public string Message { get; set; }
+
+        public string Message { get; set; } = string.Empty;
 
         public int FarmHouseId {  get; set; }
     }

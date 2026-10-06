@@ -454,19 +454,19 @@ namespace FarmStay.Application.Services.Public
 
                 // Step 3: Check ownership
 
-                if (feedback.CreatedBy != userId)
-                {
-                    _logger.LogWarning(
-                        "User {UserId} is not authorized to delete FeedbackId: {FeedbackId}",
-                        userId,
-                        feedbackId);
+                //if (feedback.CreatedBy != userId)
+                //{
+                //    _logger.LogWarning(
+                //        "User {UserId} is not authorized to delete FeedbackId: {FeedbackId}",
+                //        userId,
+                //        feedbackId);
 
-                    return new ApiResponse<FeedbackResponseDto>
-                    {
-                        Success = false,
-                        Message = "You are not authorized to delete this feedback."
-                    };
-                }
+                //    return new ApiResponse<FeedbackResponseDto>
+                //    {
+                //        Success = false,
+                //        Message = "You are not authorized to delete this feedback."
+                //    };
+                //}
 
                 // Step 4: Soft Delete
 

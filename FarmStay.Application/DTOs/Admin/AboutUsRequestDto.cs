@@ -9,6 +9,8 @@ namespace FarmStay.Application.DTOs.Admin
 {
     public class AboutUsRequestDto
     {
+        public int AboutUsId { get; set; }
+
         [Required]
         [MaxLength(200)]
         public string HeroTitle { get; set; } = string.Empty;

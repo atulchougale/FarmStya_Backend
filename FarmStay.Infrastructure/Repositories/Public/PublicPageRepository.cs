@@ -71,7 +71,7 @@ namespace FarmStay.Infrastructure.Repositories.Public
                     )
                 .OrderByDescending(x => x.feedback.Rating)
                 .ThenByDescending(x => x.feedback.CreatedDate)
-                .Take(10)
+                //.Take(10)
                 .Select(x => new FeedbackResponseDto
                 {
                     FeedbackId = x.feedback.FeedBackId,
@@ -107,5 +107,8 @@ namespace FarmStay.Infrastructure.Repositories.Public
                 })
                 .ToListAsync();
         }
+
+
+       
     }
 }
