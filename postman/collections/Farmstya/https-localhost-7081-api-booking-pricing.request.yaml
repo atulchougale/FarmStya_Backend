@@ -1,0 +1,8 @@
+$kind: http-request
+name: https://localhost:7081/api/booking-pricing
+description: ""
+url: https://localhost:7081/api/booking-pricing
+method: GET
+headers:
+  FarmHouseId: "1"
+order: 2000

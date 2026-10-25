@@ -11,6 +11,7 @@ using FarmStay.Infrastructure.Data;
 using FarmStay.Infrastructure.Repositories.Admin;
 using FarmStay.Infrastructure.Repositories.Administration;
 using FarmStay.Infrastructure.Repositories.Auth;
+using FarmStay.Infrastructure.Repositories.Booking;
 using FarmStay.Infrastructure.Repositories.Public;
 using FarmStay.Infrastructure.Services.Auth;
 using FarmStay.Infrastructure.Services.Common;
@@ -100,6 +101,10 @@ namespace FarmStay.API.DependencyInjection
             services.AddScoped<IAboutUsRepository, AboutUsRepository>();
 
             services.AddScoped<IPublicPageRepository, PublicPageRepository>();
+
+            services.AddScoped<IFarmHousePricingRepository, FarmHousePricingRepository>();
+
+            services.AddScoped<IBookingCalendarRepository, BookingCalendarRepository>();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 

@@ -56,7 +56,7 @@ namespace FarmStay.Application.Services.Admin
 
                 MapToEntity(farmHouse, dto);
 
-                farmHouse.CreatedDate = DateTime.UtcNow;
+                farmHouse.CreatedDate = DateTime.Now;
                 farmHouse.IsDeleted = false;
 
                 await _farmHouseRepository.AddAsync(farmHouse);
@@ -132,7 +132,7 @@ namespace FarmStay.Application.Services.Admin
 
                 MapToEntity(farmHouse, dto);
 
-                farmHouse.ModifiedDate = DateTime.UtcNow;
+                farmHouse.ModifiedDate = DateTime.Now;
 
                 await _farmHouseRepository.UpdateAsync(farmHouse);
 
@@ -278,7 +278,7 @@ namespace FarmStay.Application.Services.Admin
 
                 farmHouse.IsDeleted = true;
                 farmHouse.IsActive = false;
-                farmHouse.ModifiedDate = DateTime.UtcNow;
+                farmHouse.ModifiedDate = DateTime.Now;
 
                 await _farmHouseRepository.UpdateAsync(farmHouse);
 

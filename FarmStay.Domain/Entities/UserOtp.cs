@@ -36,7 +36,7 @@ namespace FarmStay.Domain.Entities
 
         // ================= Audit =================
 
-        public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
+        public DateTime CreatedDate { get; set; } = DateTime.Now;
 
         public int? CreatedBy { get; set; }
 

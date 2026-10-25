@@ -1,0 +1,11 @@
+$kind: http-request
+name: https://localhost:7081/api/booking-calendar/availability
+description: ""
+url: https://localhost:7081/api/booking-calendar/availability?fromDate=2026-11-10&toDate=2026-11-13
+method: GET
+headers:
+  FarmHouseId: "1"
+queryParams:
+  fromDate: 2026-11-10
+  toDate: 2026-11-13
+order: 3000

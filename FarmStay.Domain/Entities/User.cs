@@ -57,7 +57,7 @@ namespace FarmStay.Domain.Entities
 
         // ================= Audit =================
 
-        public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
+        public DateTime CreatedDate { get; set; } = DateTime.Now;
 
         public int? CreatedBy { get; set; }
 
@@ -73,14 +73,6 @@ namespace FarmStay.Domain.Entities
         // One User -> One or More Memberships (Future Safe)
         public ICollection<UserMembership> UserMemberships { get; set; }
             = new List<UserMembership>();
-
-        // Properties owned by this user
-        public ICollection<Property> Properties { get; set; }
-            = new List<Property>();
-
-        // Bookings made by this user
-        public ICollection<Booking> Bookings { get; set; }
-            = new List<Booking>();
 
         // Refresh Tokens
         public ICollection<UserRefreshToken> UserRefreshTokens { get; set; }

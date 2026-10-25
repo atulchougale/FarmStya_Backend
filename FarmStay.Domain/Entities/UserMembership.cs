@@ -31,13 +31,13 @@ namespace FarmStay.Domain.Entities
 
         // ================= Activity =================
 
-        public DateTime JoinedDate { get; set; } = DateTime.UtcNow;
+        public DateTime JoinedDate { get; set; } = DateTime.Now;
 
         public DateTime? LastLoginDate { get; set; }
 
         // ================= Audit =================
 
-        public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
+        public DateTime CreatedDate { get; set; } = DateTime.Now;
 
         public int? CreatedBy { get; set; }
 

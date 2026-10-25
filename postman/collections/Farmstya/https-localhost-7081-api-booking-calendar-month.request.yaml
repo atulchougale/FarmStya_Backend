@@ -1,0 +1,11 @@
+$kind: http-request
+name: https://localhost:7081/api/booking-calendar/month
+description: ""
+url: https://localhost:7081/api/booking-calendar/month?month=11&year=2026
+method: GET
+headers:
+  FarmHouseId: "1"
+queryParams:
+  month: "11"
+  year: "2026"
+order: 4000

@@ -73,8 +73,8 @@ namespace FarmStay.Infrastructure.Services.Auth
                 issuer: _issuer,
                 audience: _audience,
                 claims: claims,
-                notBefore: DateTime.UtcNow,
-                expires: DateTime.UtcNow.AddMinutes(_expiryMinutes),
+                notBefore: DateTime.Now,
+                expires: DateTime.Now.AddMinutes(_expiryMinutes),
                 signingCredentials: credentials
             );
 

@@ -41,10 +41,43 @@ namespace FarmStay.Infrastructure.Data
 
         public DbSet<AboutUs> AboutUs { get; set; }
 
+
         public DbSet<AboutUsFeature> AboutUsFeatures { get; set; }
 
         // Referesh Token
         public DbSet<UserRefreshToken> UserRefreshTokens { get; set; }
+
+        public DbSet<Booking> Bookings { get; set; }
+
+        public DbSet<FarmHousePricing> FarmHousePricings { get; set; }
+
+        public DbSet<BookingEventDate> BookingEventDates { get; set; }
+
+        public DbSet<BookingDateReservation> BookingDateReservations{ get; set; }
+
+        public DbSet<BookingStayDate> BookingStayDates { get; set; }
+
+        public DbSet<BookingDocument> BookingDocuments { get; set; }
+
+        public DbSet<PaymentTransaction> PaymentTransactions { get; set; }
+
+        public DbSet<BookingReceipt> BookingReceipts { get; set; }
+
+        public DbSet<BookingStatusHistory> BookingStatusHistories { get; set; }
+
+        public DbSet<CheckoutDiscount> CheckoutDiscounts { get; set; }
+
+        public DbSet<FarmHouseCancellationPolicy> FarmHouseCancellationPolicies { get; set; }
+
+        public DbSet<BookingActionToken> BookingActionTokens { get; set; }
+
+        public DbSet<NotificationOutbox> NotificationOutbox { get; set; }
+
+        public DbSet<FarmHousePaymentConfiguration> FarmHousePaymentConfigurations { get; set; }
+
+
+
+
         #endregion
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -206,6 +239,33 @@ namespace FarmStay.Infrastructure.Data
 
             #endregion
 
+
+            #region FarmHouseModule
+
+            modelBuilder.Entity<FarmHouseModule>()
+                .HasOne(fhm => fhm.FarmHouse)
+                .WithMany(fh => fh.FarmHouseModules)
+                .HasForeignKey(fhm => fhm.FarmHouseId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<FarmHouseModule>()
+                .HasOne(fhm => fhm.Module)
+                .WithMany(m => m.FarmHouseModules)
+                .HasForeignKey(fhm => fhm.ModuleId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<FarmHouseModule>()
+                .HasIndex(fhm => new
+                {
+                    fhm.FarmHouseId,
+                    fhm.ModuleId
+                })
+                .IsUnique()
+                .HasFilter("[IsDeleted] = 0");
+
+            #endregion
+
+
             #region Permission
 
             modelBuilder.Entity<Permission>()
@@ -366,79 +426,6 @@ namespace FarmStay.Infrastructure.Data
 
             #endregion
 
-            #region Property
-
-            modelBuilder.Entity<Property>()
-                .Property(p => p.PricePerNight)
-                .HasPrecision(18, 2);
-
-            modelBuilder.Entity<Property>()
-                .HasOne(p => p.Owner)
-                .WithMany(u => u.Properties)
-                .HasForeignKey(p => p.OwnerId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            #endregion
-
-            #region Booking
-
-            modelBuilder.Entity<Booking>()
-                .Property(b => b.TotalAmount)
-                .HasPrecision(18, 2);
-
-            modelBuilder.Entity<Booking>()
-                .HasOne(b => b.User)
-                .WithMany(u => u.Bookings)
-                .HasForeignKey(b => b.UserId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Booking>()
-                .HasOne(b => b.Property)
-                .WithMany(p => p.Bookings)
-                .HasForeignKey(b => b.PropertyId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            #endregion
-
-            #region BookingLog
-
-            modelBuilder.Entity<BookingLog>()
-                .HasOne(bl => bl.Booking)
-                .WithMany(b => b.BookingLogs)
-                .HasForeignKey(bl => bl.BookingId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            #endregion
-
-            #region PropertyImage
-
-            modelBuilder.Entity<PropertyImage>()
-                .HasOne(pi => pi.Property)
-                .WithMany(p => p.Images)
-                .HasForeignKey(pi => pi.PropertyId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            #endregion
-
-            #region FarmHouseModule
-
-            modelBuilder.Entity<FarmHouseModule>()
-                .HasOne(fm => fm.FarmHouse)
-                .WithMany(f => f.FarmHouseModules)
-                .HasForeignKey(fm => fm.FarmHouseId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<FarmHouseModule>()
-                .HasOne(fm => fm.Module)
-                .WithMany(m => m.FarmHouseModules)
-                .HasForeignKey(fm => fm.ModuleId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<FarmHouseModule>()
-                .HasIndex(fm => new { fm.FarmHouseId, fm.ModuleId })
-                .IsUnique()
-                .HasFilter("[IsDeleted] = 0");
-            #endregion
 
 
             modelBuilder.ApplyConfiguration(new UserRefreshTokenConfiguration());
@@ -448,8 +435,22 @@ namespace FarmStay.Infrastructure.Data
             modelBuilder.ApplyConfiguration(new AmenityConfiguration());
             modelBuilder.ApplyConfiguration(new ContactConfiguration());
             modelBuilder.ApplyConfiguration(new AboutUsConfiguration());
-
             modelBuilder.ApplyConfiguration(new AboutUsFeatureConfiguration());
+            modelBuilder.ApplyConfiguration(new BookingConfiguration()); //1
+            modelBuilder.ApplyConfiguration(new FarmHousePricingConfiguration());
+            modelBuilder.ApplyConfiguration(new BookingEventDateConfiguration());
+            modelBuilder.ApplyConfiguration(new BookingDateReservationConfiguration());
+            modelBuilder.ApplyConfiguration(new BookingStayDateConfiguration());
+            modelBuilder.ApplyConfiguration(new BookingDocumentConfiguration());
+            modelBuilder.ApplyConfiguration(new PaymentTransactionConfiguration());
+            modelBuilder.ApplyConfiguration(new BookingReceiptConfiguration());
+            modelBuilder.ApplyConfiguration(new BookingStatusHistoryConfiguration());
+            modelBuilder.ApplyConfiguration(new CheckoutDiscountConfiguration());
+            modelBuilder.ApplyConfiguration(new FarmHouseCancellationPolicyConfiguration());
+            modelBuilder.ApplyConfiguration(new BookingActionTokenConfiguration());
+            modelBuilder.ApplyConfiguration(new NotificationOutboxConfiguration());
+            modelBuilder.ApplyConfiguration(new FarmHousePaymentConfigurationConfiguration());
+
         }
     }
 }

@@ -1,0 +1,7 @@
+# Use this workspace to collaborate
+workspace:
+  id: 996585d9-e5ee-42c1-adcb-a27c7b4a6571
+
+localResources:
+  specs:
+    - ../FarmStay/obj/Debug/net8.0/EndpointInfo/FarmStay.API.json

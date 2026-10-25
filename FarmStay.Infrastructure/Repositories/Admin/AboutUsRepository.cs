@@ -140,7 +140,7 @@ namespace FarmStay.Infrastructure.Repositories.Admin
                 return;
 
             aboutUs.IsDelete = true;
-            aboutUs.ModifyDate = DateTime.UtcNow;
+            aboutUs.ModifyDate = DateTime.Now;
         }
 
         // =========================================================

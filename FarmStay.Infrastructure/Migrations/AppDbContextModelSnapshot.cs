@@ -183,84 +183,595 @@ namespace FarmStay.Infrastructure.Migrations
 
             modelBuilder.Entity("FarmStay.Domain.Entities.Booking", b =>
                 {
-                    b.Property<int>("BookingId")
+                    b.Property<long>("BookingId")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("BookingId"));
+
+                    b.Property<int>("AdultCount")
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BookingId"));
+                    b.Property<decimal>("AdvanceAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("AdvanceDailyRateSnapshot")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime?>("ApprovedAtUtc")
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<decimal>("BaseAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("BookingDailyRateSnapshot")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("BookingReference")
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("nvarchar(40)");
+
+                    b.Property<string>("BookingType")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<string>("CancellationReason")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
 
                     b.Property<DateTime>("CheckInDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("date");
 
                     b.Property<DateTime>("CheckOutDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("date");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("PropertyId")
+                    b.Property<int>("ChildrenCount")
                         .HasColumnType("int");
 
-                    b.Property<string>("Remark")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<long>("CreatedBy")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<DateTime?>("CustomerDeadlineUtc")
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<string>("CustomerNotes")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<int>("CustomerUserId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<decimal>("EventAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal?>("EventDailyRateSnapshot")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("ExtensionReason")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<bool>("ExtensionUsed")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("FarmHouseId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("MobileNumber")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<long?>("ModifiedBy")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<DateTime>("OwnerDeadlineUtc")
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<int>("PersonCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("RejectionReason")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
 
                     b.Property<string>("Status")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
 
-                    b.Property<DateTime?>("StatusChangedAt")
-                        .HasColumnType("datetime2");
+                    b.Property<int>("StayDays")
+                        .HasColumnType("int");
 
                     b.Property<decimal>("TotalAmount")
-                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
 
                     b.HasKey("BookingId");
 
-                    b.HasIndex("PropertyId");
+                    b.HasIndex("BookingReference")
+                        .IsUnique();
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("CustomerUserId");
 
-                    b.ToTable("Booking");
+                    b.HasIndex("FarmHouseId", "CreatedDate");
+
+                    b.HasIndex("FarmHouseId", "Status", "CheckInDate", "CheckOutDate");
+
+                    b.ToTable("Bookings", (string)null);
                 });
 
-            modelBuilder.Entity("FarmStay.Domain.Entities.BookingLog", b =>
+            modelBuilder.Entity("FarmStay.Domain.Entities.BookingActionToken", b =>
                 {
-                    b.Property<int>("BookingLogId")
+                    b.Property<long>("BookingActionTokenId")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("BookingActionTokenId"));
+
+                    b.Property<long>("BookingId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("ConsumedAtUtc")
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<long>("CreatedBy")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<DateTime>("ExpiresAtUtc")
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<int>("FarmHouseId")
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BookingLogId"));
+                    b.Property<bool>("IsDelete")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
-                    b.Property<DateTime>("ActionDate")
-                        .HasColumnType("datetime2");
+                    b.Property<long?>("ModifiedBy")
+                        .HasColumnType("bigint");
 
-                    b.Property<string>("ActionType")
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<string>("Purpose")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
 
-                    b.Property<int>("BookingId")
+                    b.Property<string>("TokenHash")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(64)");
+
+                    b.HasKey("BookingActionTokenId");
+
+                    b.HasIndex("BookingId");
+
+                    b.HasIndex("TokenHash")
+                        .IsUnique();
+
+                    b.HasIndex("ExpiresAtUtc", "ConsumedAtUtc");
+
+                    b.HasIndex("FarmHouseId", "BookingId", "Purpose");
+
+                    b.ToTable("BookingActionTokens", (string)null);
+                });
+
+            modelBuilder.Entity("FarmStay.Domain.Entities.BookingDateReservation", b =>
+                {
+                    b.Property<long>("ReservationId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("ReservationId"));
+
+                    b.Property<DateTime>("CreatedDateUtc")
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<DateTime>("ExpiresAtUtc")
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<int>("FarmHouseId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Remark")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime>("ReservationDate")
+                        .HasColumnType("date");
+
+                    b.Property<Guid>("SelectionId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
-                    b.HasKey("BookingLogId");
-
-                    b.HasIndex("BookingId");
+                    b.HasKey("ReservationId");
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("BookingLog");
+                    b.HasIndex("SelectionId", "UserId");
+
+                    b.HasIndex("FarmHouseId", "ReservationDate", "ExpiresAtUtc");
+
+                    b.ToTable("BookingDateReservations", (string)null);
+                });
+
+            modelBuilder.Entity("FarmStay.Domain.Entities.BookingDocument", b =>
+                {
+                    b.Property<long>("BookingDocumentId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("BookingDocumentId"));
+
+                    b.Property<long>("BookingId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("ContentType")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<long>("CreatedBy")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<string>("DocumentType")
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(40)");
+
+                    b.Property<int>("FarmHouseId")
+                        .HasColumnType("int");
+
+                    b.Property<long>("FileSizeBytes")
+                        .HasColumnType("bigint");
+
+                    b.Property<bool>("IsDelete")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<long?>("ModifiedBy")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<string>("OriginalFileName")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<DateTime?>("ReuploadDeadlineUtc")
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<string>("Sha256Hash")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .IsUnicode(false)
+                        .HasColumnType("char(64)");
+
+                    b.Property<string>("StorageKey")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("VerificationReason")
+                        .HasMaxLength(1000)
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<string>("VerificationStatus")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(30)
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(30)")
+                        .HasDefaultValue("Uploaded");
+
+                    b.Property<DateTime?>("VerifiedAtUtc")
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<long?>("VerifiedBy")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("BookingDocumentId");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("BookingId", "CreatedDate");
+
+                    b.HasIndex("FarmHouseId", "BookingId", "VerificationStatus");
+
+                    b.ToTable("BookingDocuments", (string)null);
+                });
+
+            modelBuilder.Entity("FarmStay.Domain.Entities.BookingEventDate", b =>
+                {
+                    b.Property<long>("BookingEventDateId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("BookingEventDateId"));
+
+                    b.Property<long>("BookingId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("CreatedBy")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<decimal>("DailyRateSnapshot")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("EventDate")
+                        .HasColumnType("date");
+
+                    b.Property<string>("EventType")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<int>("FarmHouseId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDelete")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<long?>("ModifiedBy")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("datetime2(0)");
+
+                    b.HasKey("BookingEventDateId");
+
+                    b.HasIndex("BookingId", "EventDate")
+                        .IsUnique()
+                        .HasFilter("[IsDelete] = 0");
+
+                    b.HasIndex("FarmHouseId", "BookingId", "EventDate");
+
+                    b.ToTable("BookingEventDates", (string)null);
+                });
+
+            modelBuilder.Entity("FarmStay.Domain.Entities.BookingReceipt", b =>
+                {
+                    b.Property<long>("ReceiptId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("ReceiptId"));
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<long>("BookingId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("CreatedBy")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<string>("CurrencyCode")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(3)
+                        .IsUnicode(false)
+                        .HasColumnType("char(3)")
+                        .HasDefaultValue("INR");
+
+                    b.Property<int>("FarmHouseId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("IssuedAtUtc")
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<long?>("ModifiedBy")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<long>("PaymentTransactionId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("ReceiptNumber")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("ReceiptId");
+
+                    b.HasIndex("BookingId");
+
+                    b.HasIndex("PaymentTransactionId");
+
+                    b.HasIndex("ReceiptNumber")
+                        .IsUnique();
+
+                    b.HasIndex("FarmHouseId", "BookingId");
+
+                    b.ToTable("BookingReceipts", (string)null);
+                });
+
+            modelBuilder.Entity("FarmStay.Domain.Entities.BookingStatusHistory", b =>
+                {
+                    b.Property<long>("BookingStatusHistoryId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("BookingStatusHistoryId"));
+
+                    b.Property<string>("ActorType")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<int?>("ActorUserId")
+                        .HasColumnType("int");
+
+                    b.Property<long>("BookingId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<int>("FarmHouseId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("NewStatus")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<string>("OldStatus")
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<string>("Reason")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.HasKey("BookingStatusHistoryId");
+
+                    b.HasIndex("ActorUserId");
+
+                    b.HasIndex("BookingId", "NewStatus");
+
+                    b.HasIndex("FarmHouseId", "BookingId", "CreatedDate");
+
+                    b.ToTable("BookingStatusHistory", (string)null);
+                });
+
+            modelBuilder.Entity("FarmStay.Domain.Entities.BookingStayDate", b =>
+                {
+                    b.Property<long>("BookingStayDateId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("BookingStayDateId"));
+
+                    b.Property<long>("BookingId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("CreatedBy")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<int>("FarmHouseId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDelete")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<long?>("ModifiedBy")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<DateTime>("StayDate")
+                        .HasColumnType("date");
+
+                    b.HasKey("BookingStayDateId");
+
+                    b.HasIndex("BookingId", "StayDate");
+
+                    b.HasIndex("FarmHouseId", "StayDate")
+                        .IsUnique()
+                        .HasFilter("[IsDelete] = 0");
+
+                    b.ToTable("BookingStayDates", (string)null);
+                });
+
+            modelBuilder.Entity("FarmStay.Domain.Entities.CheckoutDiscount", b =>
+                {
+                    b.Property<long>("CheckoutDiscountId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("CheckoutDiscountId"));
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<long>("BookingId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<long>("EnteredBy")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("FarmHouseId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDelete")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<string>("Reason")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.HasKey("CheckoutDiscountId");
+
+                    b.HasIndex("BookingId");
+
+                    b.HasIndex("FarmHouseId", "BookingId", "IsDelete");
+
+                    b.ToTable("CheckoutDiscounts", (string)null);
                 });
 
             modelBuilder.Entity("FarmStay.Domain.Entities.ContactUs", b =>
@@ -456,6 +967,65 @@ namespace FarmStay.Infrastructure.Migrations
                     b.ToTable("FarmHouses");
                 });
 
+            modelBuilder.Entity("FarmStay.Domain.Entities.FarmHouseCancellationPolicy", b =>
+                {
+                    b.Property<int>("PolicyId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PolicyId"));
+
+                    b.Property<bool>("ApprovedCancelAllowed")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("ConfirmedAdvanceRefundable")
+                        .HasColumnType("bit");
+
+                    b.Property<long>("CreatedBy")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<int>("FarmHouseId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
+
+                    b.Property<bool>("IsDelete")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<long?>("ModifiedBy")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<bool>("PendingCancelAllowed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("PolicyText")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PolicyVersion")
+                        .HasColumnType("int");
+
+                    b.HasKey("PolicyId");
+
+                    b.HasIndex("FarmHouseId", "PolicyVersion")
+                        .IsUnique();
+
+                    b.HasIndex("FarmHouseId", "IsActive", "IsDelete");
+
+                    b.ToTable("FarmHouseCancellationPolicies", (string)null);
+                });
+
             modelBuilder.Entity("FarmStay.Domain.Entities.FarmHouseModule", b =>
                 {
                     b.Property<int>("FarmHouseModuleId")
@@ -497,6 +1067,144 @@ namespace FarmStay.Infrastructure.Migrations
                         .HasFilter("[IsDeleted] = 0");
 
                     b.ToTable("farmHouseModules");
+                });
+
+            modelBuilder.Entity("FarmStay.Domain.Entities.FarmHousePaymentConfiguration", b =>
+                {
+                    b.Property<long>("FarmHousePaymentConfigurationId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("FarmHousePaymentConfigurationId"));
+
+                    b.Property<long>("CreatedBy")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<string>("CredentialsSecretReference")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("CurrencyCode")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(3)
+                        .HasColumnType("char(3)")
+                        .HasDefaultValue("INR");
+
+                    b.Property<string>("Environment")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<int>("FarmHouseId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
+
+                    b.Property<bool>("IsDelete")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<string>("MerchantAccountId")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<long?>("ModifiedBy")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<string>("ProviderName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("WebhookSecretReference")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("FarmHousePaymentConfigurationId");
+
+                    b.HasIndex("FarmHouseId", "IsActive", "IsDelete");
+
+                    b.HasIndex("FarmHouseId", "ProviderName", "MerchantAccountId")
+                        .IsUnique();
+
+                    b.ToTable("FarmHousePaymentConfigurations", (string)null);
+                });
+
+            modelBuilder.Entity("FarmStay.Domain.Entities.FarmHousePricing", b =>
+                {
+                    b.Property<int>("PricingId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PricingId"));
+
+                    b.Property<long>("CreatedBy")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<string>("CurrencyCode")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(3)
+                        .IsUnicode(false)
+                        .HasColumnType("char(3)")
+                        .HasDefaultValue("INR");
+
+                    b.Property<int>("FarmHouseId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
+
+                    b.Property<bool>("IsDelete")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<long?>("ModifiedBy")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("PricingKey")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("PricingName")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.HasKey("PricingId");
+
+                    b.HasIndex("FarmHouseId", "PricingKey")
+                        .IsUnique()
+                        .HasFilter("[IsActive] = 1 AND [IsDelete] = 0");
+
+                    b.ToTable("FarmHousePricing", (string)null);
                 });
 
             modelBuilder.Entity("FarmStay.Domain.Entities.FeedBack", b =>
@@ -663,7 +1371,7 @@ namespace FarmStay.Infrastructure.Migrations
                         new
                         {
                             ModuleId = 1,
-                            CreatedDate = new DateTime(2026, 10, 3, 17, 9, 2, 799, DateTimeKind.Utc).AddTicks(5899),
+                            CreatedDate = new DateTime(2026, 10, 17, 3, 29, 25, 993, DateTimeKind.Local).AddTicks(3395),
                             DisplayName = "Dashboard",
                             DisplayOrder = 1,
                             IsActive = true,
@@ -673,7 +1381,7 @@ namespace FarmStay.Infrastructure.Migrations
                         new
                         {
                             ModuleId = 2,
-                            CreatedDate = new DateTime(2026, 10, 3, 17, 9, 2, 799, DateTimeKind.Utc).AddTicks(5905),
+                            CreatedDate = new DateTime(2026, 10, 17, 3, 29, 25, 993, DateTimeKind.Local).AddTicks(3433),
                             DisplayName = "Bookings",
                             DisplayOrder = 2,
                             IsActive = true,
@@ -683,7 +1391,7 @@ namespace FarmStay.Infrastructure.Migrations
                         new
                         {
                             ModuleId = 3,
-                            CreatedDate = new DateTime(2026, 10, 3, 17, 9, 2, 799, DateTimeKind.Utc).AddTicks(5907),
+                            CreatedDate = new DateTime(2026, 10, 17, 3, 29, 25, 993, DateTimeKind.Local).AddTicks(3439),
                             DisplayName = "Accounts / Finance",
                             DisplayOrder = 3,
                             IsActive = true,
@@ -693,7 +1401,7 @@ namespace FarmStay.Infrastructure.Migrations
                         new
                         {
                             ModuleId = 4,
-                            CreatedDate = new DateTime(2026, 10, 3, 17, 9, 2, 799, DateTimeKind.Utc).AddTicks(5909),
+                            CreatedDate = new DateTime(2026, 10, 17, 3, 29, 25, 993, DateTimeKind.Local).AddTicks(3444),
                             DisplayName = "Reporting",
                             DisplayOrder = 4,
                             IsActive = true,
@@ -703,13 +1411,190 @@ namespace FarmStay.Infrastructure.Migrations
                         new
                         {
                             ModuleId = 5,
-                            CreatedDate = new DateTime(2026, 10, 3, 17, 9, 2, 799, DateTimeKind.Utc).AddTicks(5911),
+                            CreatedDate = new DateTime(2026, 10, 17, 3, 29, 25, 993, DateTimeKind.Local).AddTicks(3449),
                             DisplayName = "Website Settings",
                             DisplayOrder = 5,
                             IsActive = true,
                             ModuleName = "WebsiteSettings",
                             Route = "/website-settings"
                         });
+                });
+
+            modelBuilder.Entity("FarmStay.Domain.Entities.NotificationOutbox", b =>
+                {
+                    b.Property<long>("NotificationOutboxId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("NotificationOutboxId"));
+
+                    b.Property<long?>("BookingId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Channel")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<int?>("FarmHouseId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("IdempotencyKey")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<string>("LastError")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<DateTime?>("NextAttemptAtUtc")
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<string>("PayloadJson")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Recipient")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<int>("RetryCount")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
+
+                    b.Property<DateTime?>("SentAtUtc")
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)")
+                        .HasDefaultValue("Pending");
+
+                    b.Property<string>("TemplateKey")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("NotificationOutboxId");
+
+                    b.HasIndex("BookingId");
+
+                    b.HasIndex("FarmHouseId");
+
+                    b.HasIndex("IdempotencyKey")
+                        .IsUnique();
+
+                    b.HasIndex("Status", "NextAttemptAtUtc", "CreatedDate");
+
+                    b.ToTable("NotificationOutbox", (string)null);
+                });
+
+            modelBuilder.Entity("FarmStay.Domain.Entities.PaymentTransaction", b =>
+                {
+                    b.Property<long>("PaymentTransactionId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("PaymentTransactionId"));
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<long>("BookingId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("CreatedBy")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<string>("CurrencyCode")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(3)
+                        .IsUnicode(false)
+                        .HasColumnType("char(3)")
+                        .HasDefaultValue("INR");
+
+                    b.Property<string>("FailureReason")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<int>("FarmHouseId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("IdempotencyKey")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<bool>("IsDelete")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<long?>("ModifiedBy")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<DateTime?>("PaidAtUtc")
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<string>("PaymentMethod")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<string>("PaymentProvider")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("PaymentStatus")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<string>("PaymentType")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<string>("ProviderOrderId")
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<string>("ProviderPaymentId")
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<string>("ProviderRefundId")
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<DateTime?>("VerifiedAtUtc")
+                        .HasColumnType("datetime2(0)");
+
+                    b.HasKey("PaymentTransactionId");
+
+                    b.HasIndex("BookingId");
+
+                    b.HasIndex("FarmHouseId", "IdempotencyKey")
+                        .IsUnique();
+
+                    b.HasIndex("FarmHouseId", "BookingId", "PaymentStatus");
+
+                    b.ToTable("PaymentTransactions", (string)null);
                 });
 
             modelBuilder.Entity("FarmStay.Domain.Entities.Permission", b =>
@@ -761,7 +1646,7 @@ namespace FarmStay.Infrastructure.Migrations
                         new
                         {
                             PermissionId = 1,
-                            CreatedDate = new DateTime(2026, 10, 3, 17, 9, 2, 799, DateTimeKind.Utc).AddTicks(6511),
+                            CreatedDate = new DateTime(2026, 10, 17, 3, 29, 25, 994, DateTimeKind.Local).AddTicks(6460),
                             Description = "View gallery items",
                             DisplayOrder = 1,
                             IsActive = true,
@@ -771,7 +1656,7 @@ namespace FarmStay.Infrastructure.Migrations
                         new
                         {
                             PermissionId = 2,
-                            CreatedDate = new DateTime(2026, 10, 3, 17, 9, 2, 799, DateTimeKind.Utc).AddTicks(6516),
+                            CreatedDate = new DateTime(2026, 10, 17, 3, 29, 25, 994, DateTimeKind.Local).AddTicks(6489),
                             Description = "Create gallery items",
                             DisplayOrder = 2,
                             IsActive = true,
@@ -781,7 +1666,7 @@ namespace FarmStay.Infrastructure.Migrations
                         new
                         {
                             PermissionId = 3,
-                            CreatedDate = new DateTime(2026, 10, 3, 17, 9, 2, 799, DateTimeKind.Utc).AddTicks(6518),
+                            CreatedDate = new DateTime(2026, 10, 17, 3, 29, 25, 994, DateTimeKind.Local).AddTicks(6495),
                             Description = "Edit gallery items",
                             DisplayOrder = 3,
                             IsActive = true,
@@ -791,7 +1676,7 @@ namespace FarmStay.Infrastructure.Migrations
                         new
                         {
                             PermissionId = 4,
-                            CreatedDate = new DateTime(2026, 10, 3, 17, 9, 2, 799, DateTimeKind.Utc).AddTicks(6520),
+                            CreatedDate = new DateTime(2026, 10, 17, 3, 29, 25, 994, DateTimeKind.Local).AddTicks(6500),
                             Description = "Delete gallery items",
                             DisplayOrder = 4,
                             IsActive = true,
@@ -801,7 +1686,7 @@ namespace FarmStay.Infrastructure.Migrations
                         new
                         {
                             PermissionId = 5,
-                            CreatedDate = new DateTime(2026, 10, 3, 17, 9, 2, 799, DateTimeKind.Utc).AddTicks(6522),
+                            CreatedDate = new DateTime(2026, 10, 17, 3, 29, 25, 994, DateTimeKind.Local).AddTicks(6504),
                             Description = "View amenities",
                             DisplayOrder = 5,
                             IsActive = true,
@@ -811,7 +1696,7 @@ namespace FarmStay.Infrastructure.Migrations
                         new
                         {
                             PermissionId = 6,
-                            CreatedDate = new DateTime(2026, 10, 3, 17, 9, 2, 799, DateTimeKind.Utc).AddTicks(6523),
+                            CreatedDate = new DateTime(2026, 10, 17, 3, 29, 25, 994, DateTimeKind.Local).AddTicks(6509),
                             Description = "Create amenities",
                             DisplayOrder = 6,
                             IsActive = true,
@@ -821,7 +1706,7 @@ namespace FarmStay.Infrastructure.Migrations
                         new
                         {
                             PermissionId = 7,
-                            CreatedDate = new DateTime(2026, 10, 3, 17, 9, 2, 799, DateTimeKind.Utc).AddTicks(6525),
+                            CreatedDate = new DateTime(2026, 10, 17, 3, 29, 25, 994, DateTimeKind.Local).AddTicks(6513),
                             Description = "Edit amenities",
                             DisplayOrder = 7,
                             IsActive = true,
@@ -831,7 +1716,7 @@ namespace FarmStay.Infrastructure.Migrations
                         new
                         {
                             PermissionId = 8,
-                            CreatedDate = new DateTime(2026, 10, 3, 17, 9, 2, 799, DateTimeKind.Utc).AddTicks(6526),
+                            CreatedDate = new DateTime(2026, 10, 17, 3, 29, 25, 994, DateTimeKind.Local).AddTicks(6517),
                             Description = "Delete amenities",
                             DisplayOrder = 8,
                             IsActive = true,
@@ -841,7 +1726,7 @@ namespace FarmStay.Infrastructure.Migrations
                         new
                         {
                             PermissionId = 9,
-                            CreatedDate = new DateTime(2026, 10, 3, 17, 9, 2, 799, DateTimeKind.Utc).AddTicks(6528),
+                            CreatedDate = new DateTime(2026, 10, 17, 3, 29, 25, 994, DateTimeKind.Local).AddTicks(6522),
                             Description = "View customer feedback and reviews",
                             DisplayOrder = 9,
                             IsActive = true,
@@ -851,7 +1736,7 @@ namespace FarmStay.Infrastructure.Migrations
                         new
                         {
                             PermissionId = 10,
-                            CreatedDate = new DateTime(2026, 10, 3, 17, 9, 2, 799, DateTimeKind.Utc).AddTicks(6616),
+                            CreatedDate = new DateTime(2026, 10, 17, 3, 29, 25, 994, DateTimeKind.Local).AddTicks(6525),
                             Description = "Create customer feedback",
                             DisplayOrder = 10,
                             IsActive = true,
@@ -861,77 +1746,13 @@ namespace FarmStay.Infrastructure.Migrations
                         new
                         {
                             PermissionId = 11,
-                            CreatedDate = new DateTime(2026, 10, 3, 17, 9, 2, 799, DateTimeKind.Utc).AddTicks(6618),
+                            CreatedDate = new DateTime(2026, 10, 17, 3, 29, 25, 994, DateTimeKind.Local).AddTicks(6530),
                             Description = "Delete customer feedback",
                             DisplayOrder = 11,
                             IsActive = true,
                             IsSystemPermission = true,
                             PermissionName = "Feedback.Delete"
                         });
-                });
-
-            modelBuilder.Entity("FarmStay.Domain.Entities.Property", b =>
-                {
-                    b.Property<int>("PropertyId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PropertyId"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("FarmHouseId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Location")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("OwnerId")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("PricePerNight")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("PropertyId");
-
-                    b.HasIndex("FarmHouseId");
-
-                    b.HasIndex("OwnerId");
-
-                    b.ToTable("Property");
-                });
-
-            modelBuilder.Entity("FarmStay.Domain.Entities.PropertyImage", b =>
-                {
-                    b.Property<int>("ImageId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ImageId"));
-
-                    b.Property<string>("ImageUrl")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("PropertyId")
-                        .HasColumnType("int");
-
-                    b.HasKey("ImageId");
-
-                    b.HasIndex("PropertyId");
-
-                    b.ToTable("PropertyImage");
                 });
 
             modelBuilder.Entity("FarmStay.Domain.Entities.Role", b =>
@@ -1429,40 +2250,196 @@ namespace FarmStay.Infrastructure.Migrations
 
             modelBuilder.Entity("FarmStay.Domain.Entities.Booking", b =>
                 {
-                    b.HasOne("FarmStay.Domain.Entities.Property", "Property")
-                        .WithMany("Bookings")
-                        .HasForeignKey("PropertyId")
+                    b.HasOne("FarmStay.Domain.Entities.User", "CustomerUser")
+                        .WithMany()
+                        .HasForeignKey("CustomerUserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("FarmStay.Domain.Entities.User", "User")
-                        .WithMany("Bookings")
-                        .HasForeignKey("UserId")
+                    b.HasOne("FarmStay.Domain.Entities.FarmHouse", "FarmHouse")
+                        .WithMany()
+                        .HasForeignKey("FarmHouseId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Property");
+                    b.Navigation("CustomerUser");
 
-                    b.Navigation("User");
+                    b.Navigation("FarmHouse");
                 });
 
-            modelBuilder.Entity("FarmStay.Domain.Entities.BookingLog", b =>
+            modelBuilder.Entity("FarmStay.Domain.Entities.BookingActionToken", b =>
                 {
                     b.HasOne("FarmStay.Domain.Entities.Booking", "Booking")
-                        .WithMany("BookingLogs")
+                        .WithMany()
                         .HasForeignKey("BookingId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("FarmStay.Domain.Entities.FarmHouse", "FarmHouse")
+                        .WithMany()
+                        .HasForeignKey("FarmHouseId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Booking");
+
+                    b.Navigation("FarmHouse");
+                });
+
+            modelBuilder.Entity("FarmStay.Domain.Entities.BookingDateReservation", b =>
+                {
+                    b.HasOne("FarmStay.Domain.Entities.FarmHouse", "FarmHouse")
+                        .WithMany()
+                        .HasForeignKey("FarmHouseId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("FarmStay.Domain.Entities.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("FarmHouse");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("FarmStay.Domain.Entities.BookingDocument", b =>
+                {
+                    b.HasOne("FarmStay.Domain.Entities.Booking", "Booking")
+                        .WithMany()
+                        .HasForeignKey("BookingId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("FarmStay.Domain.Entities.FarmHouse", "FarmHouse")
+                        .WithMany()
+                        .HasForeignKey("FarmHouseId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("FarmStay.Domain.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Booking");
 
+                    b.Navigation("FarmHouse");
+
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("FarmStay.Domain.Entities.BookingEventDate", b =>
+                {
+                    b.HasOne("FarmStay.Domain.Entities.Booking", "Booking")
+                        .WithMany()
+                        .HasForeignKey("BookingId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("FarmStay.Domain.Entities.FarmHouse", "FarmHouse")
+                        .WithMany()
+                        .HasForeignKey("FarmHouseId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Booking");
+
+                    b.Navigation("FarmHouse");
+                });
+
+            modelBuilder.Entity("FarmStay.Domain.Entities.BookingReceipt", b =>
+                {
+                    b.HasOne("FarmStay.Domain.Entities.Booking", "Booking")
+                        .WithMany()
+                        .HasForeignKey("BookingId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("FarmStay.Domain.Entities.FarmHouse", "FarmHouse")
+                        .WithMany()
+                        .HasForeignKey("FarmHouseId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("FarmStay.Domain.Entities.PaymentTransaction", "PaymentTransaction")
+                        .WithMany()
+                        .HasForeignKey("PaymentTransactionId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Booking");
+
+                    b.Navigation("FarmHouse");
+
+                    b.Navigation("PaymentTransaction");
+                });
+
+            modelBuilder.Entity("FarmStay.Domain.Entities.BookingStatusHistory", b =>
+                {
+                    b.HasOne("FarmStay.Domain.Entities.User", "ActorUser")
+                        .WithMany()
+                        .HasForeignKey("ActorUserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("FarmStay.Domain.Entities.Booking", "Booking")
+                        .WithMany()
+                        .HasForeignKey("BookingId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("FarmStay.Domain.Entities.FarmHouse", "FarmHouse")
+                        .WithMany()
+                        .HasForeignKey("FarmHouseId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("ActorUser");
+
+                    b.Navigation("Booking");
+
+                    b.Navigation("FarmHouse");
+                });
+
+            modelBuilder.Entity("FarmStay.Domain.Entities.BookingStayDate", b =>
+                {
+                    b.HasOne("FarmStay.Domain.Entities.Booking", "Booking")
+                        .WithMany()
+                        .HasForeignKey("BookingId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("FarmStay.Domain.Entities.FarmHouse", "FarmHouse")
+                        .WithMany()
+                        .HasForeignKey("FarmHouseId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Booking");
+
+                    b.Navigation("FarmHouse");
+                });
+
+            modelBuilder.Entity("FarmStay.Domain.Entities.CheckoutDiscount", b =>
+                {
+                    b.HasOne("FarmStay.Domain.Entities.Booking", "Booking")
+                        .WithMany()
+                        .HasForeignKey("BookingId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("FarmStay.Domain.Entities.FarmHouse", "FarmHouse")
+                        .WithMany()
+                        .HasForeignKey("FarmHouseId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Booking");
+
+                    b.Navigation("FarmHouse");
                 });
 
             modelBuilder.Entity("FarmStay.Domain.Entities.ContactUs", b =>
@@ -1493,6 +2470,17 @@ namespace FarmStay.Infrastructure.Migrations
                     b.Navigation("SubscriptionPlan");
                 });
 
+            modelBuilder.Entity("FarmStay.Domain.Entities.FarmHouseCancellationPolicy", b =>
+                {
+                    b.HasOne("FarmStay.Domain.Entities.FarmHouse", "FarmHouse")
+                        .WithMany()
+                        .HasForeignKey("FarmHouseId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("FarmHouse");
+                });
+
             modelBuilder.Entity("FarmStay.Domain.Entities.FarmHouseModule", b =>
                 {
                     b.HasOne("FarmStay.Domain.Entities.FarmHouse", "FarmHouse")
@@ -1510,6 +2498,28 @@ namespace FarmStay.Infrastructure.Migrations
                     b.Navigation("FarmHouse");
 
                     b.Navigation("Module");
+                });
+
+            modelBuilder.Entity("FarmStay.Domain.Entities.FarmHousePaymentConfiguration", b =>
+                {
+                    b.HasOne("FarmStay.Domain.Entities.FarmHouse", "FarmHouse")
+                        .WithMany()
+                        .HasForeignKey("FarmHouseId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("FarmHouse");
+                });
+
+            modelBuilder.Entity("FarmStay.Domain.Entities.FarmHousePricing", b =>
+                {
+                    b.HasOne("FarmStay.Domain.Entities.FarmHouse", "FarmHouse")
+                        .WithMany()
+                        .HasForeignKey("FarmHouseId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("FarmHouse");
                 });
 
             modelBuilder.Entity("FarmStay.Domain.Entities.FeedBack", b =>
@@ -1538,30 +2548,40 @@ namespace FarmStay.Infrastructure.Migrations
                     b.Navigation("FarmHouse");
                 });
 
-            modelBuilder.Entity("FarmStay.Domain.Entities.Property", b =>
+            modelBuilder.Entity("FarmStay.Domain.Entities.NotificationOutbox", b =>
                 {
-                    b.HasOne("FarmStay.Domain.Entities.FarmHouse", null)
-                        .WithMany("Properties")
-                        .HasForeignKey("FarmHouseId");
+                    b.HasOne("FarmStay.Domain.Entities.Booking", "Booking")
+                        .WithMany()
+                        .HasForeignKey("BookingId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("FarmStay.Domain.Entities.User", "Owner")
-                        .WithMany("Properties")
-                        .HasForeignKey("OwnerId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                    b.HasOne("FarmStay.Domain.Entities.FarmHouse", "FarmHouse")
+                        .WithMany()
+                        .HasForeignKey("FarmHouseId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
-                    b.Navigation("Owner");
+                    b.Navigation("Booking");
+
+                    b.Navigation("FarmHouse");
                 });
 
-            modelBuilder.Entity("FarmStay.Domain.Entities.PropertyImage", b =>
+            modelBuilder.Entity("FarmStay.Domain.Entities.PaymentTransaction", b =>
                 {
-                    b.HasOne("FarmStay.Domain.Entities.Property", "Property")
-                        .WithMany("Images")
-                        .HasForeignKey("PropertyId")
+                    b.HasOne("FarmStay.Domain.Entities.Booking", "Booking")
+                        .WithMany()
+                        .HasForeignKey("BookingId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Property");
+                    b.HasOne("FarmStay.Domain.Entities.FarmHouse", "FarmHouse")
+                        .WithMany()
+                        .HasForeignKey("FarmHouseId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Booking");
+
+                    b.Navigation("FarmHouse");
                 });
 
             modelBuilder.Entity("FarmStay.Domain.Entities.RoleModule", b =>
@@ -1674,11 +2694,6 @@ namespace FarmStay.Infrastructure.Migrations
                     b.Navigation("Features");
                 });
 
-            modelBuilder.Entity("FarmStay.Domain.Entities.Booking", b =>
-                {
-                    b.Navigation("BookingLogs");
-                });
-
             modelBuilder.Entity("FarmStay.Domain.Entities.FarmHouse", b =>
                 {
                     b.Navigation("AboutUs");
@@ -1692,8 +2707,6 @@ namespace FarmStay.Infrastructure.Migrations
                     b.Navigation("FeedBacks");
 
                     b.Navigation("Galleries");
-
-                    b.Navigation("Properties");
 
                     b.Navigation("UserMemberships");
 
@@ -1710,13 +2723,6 @@ namespace FarmStay.Infrastructure.Migrations
             modelBuilder.Entity("FarmStay.Domain.Entities.Permission", b =>
                 {
                     b.Navigation("RoleModulePermissions");
-                });
-
-            modelBuilder.Entity("FarmStay.Domain.Entities.Property", b =>
-                {
-                    b.Navigation("Bookings");
-
-                    b.Navigation("Images");
                 });
 
             modelBuilder.Entity("FarmStay.Domain.Entities.Role", b =>
@@ -1738,11 +2744,7 @@ namespace FarmStay.Infrastructure.Migrations
 
             modelBuilder.Entity("FarmStay.Domain.Entities.User", b =>
                 {
-                    b.Navigation("Bookings");
-
                     b.Navigation("Galleries");
-
-                    b.Navigation("Properties");
 
                     b.Navigation("UserMemberships");
 

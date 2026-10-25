@@ -262,7 +262,7 @@ namespace FarmStay.Application.Services.Auth
                     IsActive = true,
                     IsDeleted = false,
 
-                    CreatedDate = DateTime.UtcNow,
+                    CreatedDate = DateTime.Now,
                     FarmHouseId = farmHouse.FarmHouseId
                 };
 
@@ -372,7 +372,7 @@ namespace FarmStay.Application.Services.Auth
                 // Check Token Expiry
 
                 if (!user.VerificationTokenExpiry.HasValue ||
-                    user.VerificationTokenExpiry.Value < DateTime.UtcNow)
+                    user.VerificationTokenExpiry.Value < DateTime.Now)
                 {
                     _logger.LogWarning(
                         "Email verification token expired. UserId: {UserId}",
@@ -394,7 +394,7 @@ namespace FarmStay.Application.Services.Auth
 
                 user.VerificationTokenExpiry = null;
 
-                user.ModifiedDate = DateTime.UtcNow;
+                user.ModifiedDate = DateTime.Now;
 
                 user.ModifiedBy = user.UserId;
 
@@ -542,10 +542,10 @@ namespace FarmStay.Application.Services.Auth
                 // Step 5
                 // Check OTP Expiry
 
-                if (otp.ExpiryDate < DateTime.UtcNow)
+                if (otp.ExpiryDate < DateTime.Now)
                 {
                     otp.IsActive = false;
-                    otp.ModifiedDate = DateTime.UtcNow;
+                    otp.ModifiedDate = DateTime.Now;
                     otp.ModifiedBy = user.UserId;
 
                     await _userOtpRepository.UpdateAsync(otp);
@@ -567,13 +567,13 @@ namespace FarmStay.Application.Services.Auth
 
                 otp.IsUsed = true;
                 otp.IsActive = false;
-                otp.ModifiedDate = DateTime.UtcNow;
+                otp.ModifiedDate = DateTime.Now;
                 otp.ModifiedBy = user.UserId;
 
                 await _userOtpRepository.UpdateAsync(otp);
 
                 user.IsMobileVerified = true;
-                user.ModifiedDate = DateTime.UtcNow;
+                user.ModifiedDate = DateTime.Now;
                 user.ModifiedBy = user.UserId;
 
                 await _userRepository.UpdateAsync(user);
@@ -640,7 +640,7 @@ namespace FarmStay.Application.Services.Auth
 
                 var emailVerificationToken = Guid.NewGuid().ToString("N");
 
-                var tokenExpiry = DateTime.UtcNow.AddHours(24);
+                var tokenExpiry = DateTime.Now.AddHours(24);
 
                 _logger.LogInformation(
                     "Email verification token generated. UserId: {UserId}, Expiry: {Expiry}",
@@ -654,7 +654,7 @@ namespace FarmStay.Application.Services.Auth
 
                 user.VerificationTokenExpiry = tokenExpiry;
 
-                user.ModifiedDate = DateTime.UtcNow;
+                user.ModifiedDate = DateTime.Now;
 
                 user.ModifiedBy = user.UserId;
 
@@ -673,7 +673,7 @@ namespace FarmStay.Application.Services.Auth
                     .GetInt32(100000, 1000000)
                     .ToString();
 
-                var otpExpiry = DateTime.UtcNow.AddMinutes(5);
+                var otpExpiry = DateTime.Now.AddMinutes(5);
 
                 _logger.LogInformation(
                     "Mobile verification OTP generated. UserId: {UserId}, Expiry: {Expiry}",
@@ -689,7 +689,7 @@ namespace FarmStay.Application.Services.Auth
                 {
                     existingOtp.IsActive = false;
 
-                    existingOtp.ModifiedDate = DateTime.UtcNow;
+                    existingOtp.ModifiedDate = DateTime.Now;
                     existingOtp.ModifiedBy = user.UserId;
 
                     await _userOtpRepository.UpdateAsync(existingOtp);
@@ -720,7 +720,7 @@ namespace FarmStay.Application.Services.Auth
                     IsUsed = false,
                     IsActive = true,
                     IsDeleted = false,
-                    CreatedDate = DateTime.UtcNow,
+                    CreatedDate = DateTime.Now,
                     CreatedBy = user.UserId
                 };
 
@@ -869,7 +869,7 @@ namespace FarmStay.Application.Services.Auth
                     IsActive = true,
                     IsDeleted = false,
 
-                    CreatedDate = DateTime.UtcNow,
+                    CreatedDate = DateTime.Now,
                     CreatedBy = user.UserId
                 };
 
@@ -1106,13 +1106,13 @@ namespace FarmStay.Application.Services.Auth
                     RefreshTokenHash =
                         _passwordService.HashPassword(refreshToken),
 
-                    ExpiryDate = DateTime.UtcNow.AddDays(30),
+                    ExpiryDate = DateTime.Now.AddDays(30),
 
                     IsRevoked = false,
                     IsActive = true,
                     IsDeleted = false,
 
-                    CreatedDate = DateTime.UtcNow,
+                    CreatedDate = DateTime.Now,
                     CreatedBy = user.UserId
                 };
 
@@ -1124,7 +1124,7 @@ namespace FarmStay.Application.Services.Auth
                 // Update Last Login
                 // ============================================================
 
-                membership.LastLoginDate = DateTime.UtcNow;
+                membership.LastLoginDate = DateTime.Now;
 
                 await _userMembershipRepository
                     .UpdateAsync(membership);
@@ -1270,12 +1270,12 @@ namespace FarmStay.Application.Services.Auth
 
                     var resetToken = Guid.NewGuid().ToString("N");
 
-                    var resetTokenExpiry = DateTime.UtcNow.AddHours(1);
+                    var resetTokenExpiry = DateTime.Now.AddHours(1);
 
                     user.PasswordResetToken = resetToken;
                     user.PasswordResetTokenExpiry = resetTokenExpiry;
 
-                    user.ModifiedDate = DateTime.UtcNow;
+                    user.ModifiedDate = DateTime.Now;
                     user.ModifiedBy = user.UserId;
 
                     await _userRepository.UpdateAsync(user);
@@ -1413,7 +1413,7 @@ namespace FarmStay.Application.Services.Auth
                         .GetInt32(100000, 1000000)
                         .ToString();
 
-                    var otpExpiry = DateTime.UtcNow.AddMinutes(5);
+                    var otpExpiry = DateTime.Now.AddMinutes(5);
 
                     // --------------------------------------------------------
                     // Invalidate Existing Forgot Password OTP
@@ -1426,7 +1426,7 @@ namespace FarmStay.Application.Services.Auth
                     if (existingOtp != null)
                     {
                         existingOtp.IsActive = false;
-                        existingOtp.ModifiedDate = DateTime.UtcNow;
+                        existingOtp.ModifiedDate = DateTime.Now;
                         existingOtp.ModifiedBy = user.UserId;
 
                         await _userOtpRepository.UpdateAsync(existingOtp);
@@ -1446,7 +1446,7 @@ namespace FarmStay.Application.Services.Auth
                         IsUsed = false,
                         IsActive = true,
                         IsDeleted = false,
-                        CreatedDate = DateTime.UtcNow,
+                        CreatedDate = DateTime.Now,
                         CreatedBy = user.UserId
                     };
 
@@ -1581,7 +1581,7 @@ namespace FarmStay.Application.Services.Auth
                 // Check Token Expiry
 
                 if (!user.PasswordResetTokenExpiry.HasValue ||
-                    user.PasswordResetTokenExpiry.Value < DateTime.UtcNow)
+                    user.PasswordResetTokenExpiry.Value < DateTime.Now)
                 {
                     _logger.LogWarning(
                         "Password reset token expired. UserId: {UserId}",
@@ -1626,7 +1626,7 @@ namespace FarmStay.Application.Services.Auth
                 user.PasswordResetToken = null;
                 user.PasswordResetTokenExpiry = null;
 
-                user.ModifiedDate = DateTime.UtcNow;
+                user.ModifiedDate = DateTime.Now;
                 user.ModifiedBy = user.UserId;
 
                 await _userRepository.UpdateAsync(user);
@@ -1744,10 +1744,10 @@ namespace FarmStay.Application.Services.Auth
                 // Step 4
                 // Check OTP Expiry
 
-                if (otp.ExpiryDate < DateTime.UtcNow)
+                if (otp.ExpiryDate < DateTime.Now)
                 {
                     otp.IsActive = false;
-                    otp.ModifiedDate = DateTime.UtcNow;
+                    otp.ModifiedDate = DateTime.Now;
                     otp.ModifiedBy = user.UserId;
 
                     await _userOtpRepository.UpdateAsync(otp);
@@ -1788,7 +1788,7 @@ namespace FarmStay.Application.Services.Auth
                 user.PasswordHash =
                     _passwordService.HashPassword(dto.NewPassword);
 
-                user.ModifiedDate = DateTime.UtcNow;
+                user.ModifiedDate = DateTime.Now;
                 user.ModifiedBy = user.UserId;
 
                 // Step 7
@@ -1796,7 +1796,7 @@ namespace FarmStay.Application.Services.Auth
 
                 otp.IsUsed = true;
                 otp.IsActive = false;
-                otp.ModifiedDate = DateTime.UtcNow;
+                otp.ModifiedDate = DateTime.Now;
                 otp.ModifiedBy = user.UserId;
 
                 await _userRepository.UpdateAsync(user);
@@ -1973,7 +1973,7 @@ namespace FarmStay.Application.Services.Auth
                 user.PasswordHash =
                     _passwordService.HashPassword(dto.NewPassword);
 
-                user.ModifiedDate = DateTime.UtcNow;
+                user.ModifiedDate = DateTime.Now;
                 user.ModifiedBy = user.UserId;
 
                 await _userRepository.UpdateAsync(user);
@@ -2237,10 +2237,10 @@ namespace FarmStay.Application.Services.Auth
                 // Step 7
                 // Check Refresh Token Expiry
 
-                if (existingToken.ExpiryDate <= DateTime.UtcNow)
+                if (existingToken.ExpiryDate <= DateTime.Now)
                 {
                     existingToken.IsActive = false;
-                    existingToken.ModifiedDate = DateTime.UtcNow;
+                    existingToken.ModifiedDate = DateTime.Now;
                     existingToken.ModifiedBy = userId;
 
                     await _userRefreshTokenRepository.UpdateAsync(
@@ -2326,8 +2326,8 @@ namespace FarmStay.Application.Services.Auth
 
                 existingToken.IsRevoked = true;
                 existingToken.IsActive = false;
-                existingToken.RevokedDate = DateTime.UtcNow;
-                existingToken.ModifiedDate = DateTime.UtcNow;
+                existingToken.RevokedDate = DateTime.Now;
+                existingToken.ModifiedDate = DateTime.Now;
                 existingToken.ModifiedBy = userId;
 
                 // Step 14
@@ -2339,7 +2339,7 @@ namespace FarmStay.Application.Services.Auth
 
                     RefreshTokenHash = newRefreshTokenHash,
 
-                    ExpiryDate = DateTime.UtcNow.AddDays(30),
+                    ExpiryDate = DateTime.Now.AddDays(30),
 
                     DeviceName = existingToken.DeviceName,
                     Browser = existingToken.Browser,
@@ -2350,7 +2350,7 @@ namespace FarmStay.Application.Services.Auth
                     IsActive = true,
                     IsDeleted = false,
 
-                    CreatedDate = DateTime.UtcNow,
+                    CreatedDate = DateTime.Now,
                     CreatedBy = userId
                 };
 
@@ -2496,8 +2496,8 @@ namespace FarmStay.Application.Services.Auth
 
                 refreshToken.IsRevoked = true;
                 refreshToken.IsActive = false;
-                refreshToken.RevokedDate = DateTime.UtcNow;
-                refreshToken.ModifiedDate = DateTime.UtcNow;
+                refreshToken.RevokedDate = DateTime.Now;
+                refreshToken.ModifiedDate = DateTime.Now;
                 refreshToken.ModifiedBy = userId;
 
                 await _userRefreshTokenRepository.UpdateAsync(refreshToken);
@@ -2605,7 +2605,7 @@ namespace FarmStay.Application.Services.Auth
                 if (existingOtp != null)
                 {
                     existingOtp.IsActive = false;
-                    existingOtp.ModifiedDate = DateTime.UtcNow;
+                    existingOtp.ModifiedDate = DateTime.Now;
                     existingOtp.ModifiedBy = user.UserId;
 
                     await _userOtpRepository.UpdateAsync(existingOtp);
@@ -2622,7 +2622,7 @@ namespace FarmStay.Application.Services.Auth
                     .GetInt32(100000, 1000000)
                     .ToString();
 
-                var otpExpiry = DateTime.UtcNow.AddMinutes(5);
+                var otpExpiry = DateTime.Now.AddMinutes(5);
 
                 // Step 6
                 // Save new OTP
@@ -2637,7 +2637,7 @@ namespace FarmStay.Application.Services.Auth
                     IsUsed = false,
                     IsActive = true,
                     IsDeleted = false,
-                    CreatedDate = DateTime.UtcNow,
+                    CreatedDate = DateTime.Now,
                     CreatedBy = user.UserId
                 };
 
@@ -2791,7 +2791,7 @@ namespace FarmStay.Application.Services.Auth
                 if (existingOtp != null)
                 {
                     var secondsSinceLastOtp =
-                        (DateTime.UtcNow - existingOtp.CreatedDate).TotalSeconds;
+                        (DateTime.UtcNow- existingOtp.CreatedDate).TotalSeconds;
 
                     if (secondsSinceLastOtp < LoginOtpResendCooldownSeconds)
                     {
@@ -2811,7 +2811,7 @@ namespace FarmStay.Application.Services.Auth
                     }
 
                     existingOtp.IsActive = false;
-                    existingOtp.ModifiedDate = DateTime.UtcNow;
+                    existingOtp.ModifiedDate = DateTime.Now;
                     existingOtp.ModifiedBy = user.UserId;
 
                     await _userOtpRepository.UpdateAsync(existingOtp);
@@ -2830,12 +2830,12 @@ namespace FarmStay.Application.Services.Auth
                     MobileNumber = user.MobileNumber,
                     OtpCode = otpCode,
                     Purpose = OtpPurpose.Login,
-                    ExpiryDate = DateTime.UtcNow.AddMinutes(LoginOtpExpiryMinutes),
+                    ExpiryDate = DateTime.Now.AddMinutes(LoginOtpExpiryMinutes),
                     IsUsed = false,
                     FailedAttempts = 0,
                     IsActive = true,
                     IsDeleted = false,
-                    CreatedDate = DateTime.UtcNow,
+                    CreatedDate = DateTime.Now,
                     CreatedBy = user.UserId
                 };
 
@@ -2983,10 +2983,10 @@ namespace FarmStay.Application.Services.Auth
                 // Step 5
                 // Check OTP Expiry
 
-                if (otp.ExpiryDate < DateTime.UtcNow)
+                if (otp.ExpiryDate < DateTime.Now)
                 {
                     otp.IsActive = false;
-                    otp.ModifiedDate = DateTime.UtcNow;
+                    otp.ModifiedDate = DateTime.Now;
                     otp.ModifiedBy = user.UserId;
 
                     await _userOtpRepository.UpdateAsync(otp);
@@ -3009,7 +3009,7 @@ namespace FarmStay.Application.Services.Auth
                 if (!isOtpValid)
                 {
                     otp.FailedAttempts++;
-                    otp.ModifiedDate = DateTime.UtcNow;
+                    otp.ModifiedDate = DateTime.Now;
                     otp.ModifiedBy = user.UserId;
 
                     if (otp.FailedAttempts >= LoginOtpMaxFailedAttempts)
@@ -3039,7 +3039,7 @@ namespace FarmStay.Application.Services.Auth
 
                 otp.IsUsed = true;
                 otp.IsActive = false;
-                otp.ModifiedDate = DateTime.UtcNow;
+                otp.ModifiedDate = DateTime.Now;
                 otp.ModifiedBy = user.UserId;
 
                 await _userOtpRepository.UpdateAsync(otp);
@@ -3137,19 +3137,19 @@ namespace FarmStay.Application.Services.Auth
 
                 RefreshTokenHash = _passwordService.HashPassword(refreshToken),
 
-                ExpiryDate = DateTime.UtcNow.AddDays(30),
+                ExpiryDate = DateTime.Now.AddDays(30),
 
                 IsRevoked = false,
                 IsActive = true,
                 IsDeleted = false,
 
-                CreatedDate = DateTime.UtcNow,
+                CreatedDate = DateTime.Now,
                 CreatedBy = user.UserId
             };
 
             await _userRefreshTokenRepository.AddAsync(refreshTokenEntity);
 
-            membership.LastLoginDate = DateTime.UtcNow;
+            membership.LastLoginDate = DateTime.Now;
 
             await _userMembershipRepository.UpdateAsync(membership);
 

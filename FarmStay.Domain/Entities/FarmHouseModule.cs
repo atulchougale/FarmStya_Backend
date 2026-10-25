@@ -18,7 +18,7 @@ namespace FarmStay.Domain.Entities
 
         public bool IsDeleted { get; set; } = false;
 
-        public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
+        public DateTime CreatedDate { get; set; } = DateTime.Now;
 
         public int? CreatedBy { get; set; }
 

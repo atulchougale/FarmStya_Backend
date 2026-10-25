@@ -112,7 +112,7 @@ namespace FarmStay.Domain.Entities
 
         // ================= Audit =================
 
-        public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
+        public DateTime CreatedDate { get; set; } = DateTime.Now;
 
         public int? CreatedBy { get; set; }
 
@@ -132,9 +132,7 @@ namespace FarmStay.Domain.Entities
 
         public ICollection<User> Users { get; set; }
             = new List<User>();
-        
-        public ICollection<Property> Properties { get; set; }
-            = new List<Property>();
+
 
         public ICollection<Gallery> Galleries { get; set; } = new List<Gallery>();
 

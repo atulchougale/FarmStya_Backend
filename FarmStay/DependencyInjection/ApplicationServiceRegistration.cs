@@ -1,10 +1,12 @@
 ﻿using FarmStay.Application.Interfaces.Services.Admin;
 using FarmStay.Application.Interfaces.Services.Administration;
 using FarmStay.Application.Interfaces.Services.Auth;
+using FarmStay.Application.Interfaces.Services.Booking;
 using FarmStay.Application.Interfaces.Services.Public;
 using FarmStay.Application.Services.Admin;
 using FarmStay.Application.Services.Administration;
 using FarmStay.Application.Services.Auth;
+using FarmStay.Application.Services.Booking;
 using FarmStay.Application.Services.Public;
 
 namespace FarmStay.API.DependencyInjection
@@ -36,6 +38,11 @@ namespace FarmStay.API.DependencyInjection
             services.AddScoped<IAboutUsService, AboutUsService>();
 
             services.AddScoped<IPublicPageService, PublicPageService>();
+
+            services.AddScoped<IFarmHousePricingService, FarmHousePricingService>();
+
+            services.AddScoped<IBookingCalendarService, BookingCalendarService>();
+
 
 
             return services;

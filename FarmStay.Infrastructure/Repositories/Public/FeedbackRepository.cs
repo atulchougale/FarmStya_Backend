@@ -65,7 +65,7 @@ namespace FarmStay.Infrastructure.Repositories.Public
             {
                 feedback.IsDelete = true;
                 feedback.ModifyBy = userId;
-                feedback.ModifyDate = DateTime.UtcNow;
+                feedback.ModifyDate = DateTime.Now;
 
                 await _context.SaveChangesAsync();
             }

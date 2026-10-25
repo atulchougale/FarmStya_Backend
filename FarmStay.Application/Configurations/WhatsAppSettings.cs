@@ -11,5 +11,7 @@
         public bool IsEnabled { get; set; } = true;
 
         public string GatewayToken { get; set; } = string.Empty;
+
+        public string WebhookVerifyToken { get; set; } = string.Empty;
     }
 }

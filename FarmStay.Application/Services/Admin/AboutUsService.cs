@@ -159,10 +159,10 @@ namespace FarmStay.Application.Services.Admin
                         IsDelete = false,
 
                         CreatedBy = userId,
-                        CreatedDate = DateTime.UtcNow,
+                        CreatedDate = DateTime.Now,
 
                         ModifyBy = userId,
-                        ModifyDate = DateTime.UtcNow
+                        ModifyDate = DateTime.Now
                     };
 
                     await _aboutUsRepository
@@ -191,7 +191,7 @@ namespace FarmStay.Application.Services.Admin
                     aboutUs.IsDelete = false;
 
                     aboutUs.ModifyBy = userId;
-                    aboutUs.ModifyDate = DateTime.UtcNow;
+                    aboutUs.ModifyDate = DateTime.Now;
 
                     await _aboutUsRepository
                         .UpdateAboutUsAsync(aboutUs);
@@ -641,7 +641,7 @@ namespace FarmStay.Application.Services.Admin
                 aboutUs.StoryDescription = dto.StoryDescription;
 
                 aboutUs.ModifyBy = userId;
-                aboutUs.ModifyDate = DateTime.UtcNow;
+                aboutUs.ModifyDate = DateTime.Now;
 
                 await _aboutUsRepository.UpdateAboutUsAsync(aboutUs);
 
@@ -921,7 +921,7 @@ namespace FarmStay.Application.Services.Admin
                 // 8. Soft Delete AboutUs Master After Features
                 aboutUs.IsDelete = true;
                 aboutUs.ModifyBy = userId;
-                aboutUs.ModifyDate = DateTime.UtcNow;
+                aboutUs.ModifyDate = DateTime.Now;
 
                 await _aboutUsRepository
                     .UpdateAboutUsAsync(aboutUs);

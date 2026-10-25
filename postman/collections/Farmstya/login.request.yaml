@@ -1,0 +1,18 @@
+$kind: http-request
+description: ""
+url: https://localhost:7081/api/Auth/login
+method: POST
+headers:
+  FarmHouseId: "1"
+body:
+  type: json
+  content: "\r
+
+    {\r
+
+    \  \"email\": \"atul7chougale@gmail.com\",\r
+
+    \  \"password\": \"Atul@3733\"\r
+
+    }"
+order: 1000
