@@ -26,7 +26,7 @@ namespace FarmStay.Domain.Entities
         [Required]
         public long EnteredBy { get; set; }
 
-        public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
+        public DateTime CreatedDate { get; set; } = DateTime.Now;
 
         public bool IsDelete { get; set; } = false;
 

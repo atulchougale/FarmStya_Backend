@@ -1,4 +1,4 @@
-﻿
+
 namespace FarmStay.Application.DTOs.Booking
 {
     public class BookingCalendarMonthResponseDto
@@ -27,6 +27,6 @@ namespace FarmStay.Application.DTOs.Booking
 
         public string Status { get; set; } = "TemporarilyReserved";
 
-        public DateTime ExpiresAtUtc { get; set; }
+        public DateTime ExpiresAt { get; set; }
     }
 }

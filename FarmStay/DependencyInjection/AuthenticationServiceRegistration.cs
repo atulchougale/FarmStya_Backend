@@ -45,7 +45,10 @@ namespace FarmStay.API.DependencyInjection
             // Authorization
             // -----------------------------
 
-            services.AddAuthorization();
+            services.AddAuthorization(options => options.AddPolicy(BookingCustomerRequirement.Policy, policy =>
+                policy.RequireAuthenticatedUser().RequireRole("Customer")
+                    .AddRequirements(new BookingCustomerRequirement())));
+            services.AddScoped<IAuthorizationHandler, BookingCustomerAuthorizationHandler>();
 
             services.AddSingleton<
                 IAuthorizationPolicyProvider,

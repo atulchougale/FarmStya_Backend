@@ -16,6 +16,8 @@ namespace FarmStay.Infrastructure.Persistence.Configurations
 
             // Primary Key
             builder.HasKey(x => x.FeedBackId);
+            builder.HasIndex(x => x.BookingId).IsUnique().HasFilter("[BookingId] IS NOT NULL");
+            builder.HasOne<Booking>().WithMany().HasForeignKey(x => x.BookingId).OnDelete(DeleteBehavior.Restrict);
 
 
 

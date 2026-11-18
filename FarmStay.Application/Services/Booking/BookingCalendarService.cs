@@ -1,4 +1,4 @@
-﻿
+
 using FarmStay.Application.Common.ApiResponse;
 using FarmStay.Application.DTOs.Booking;
 using FarmStay.Application.Interfaces.Common;
@@ -101,7 +101,7 @@ namespace FarmStay.Application.Services.Booking
                     };
                 }
 
-                var currentUtc = DateTime.UtcNow;
+                var current = DateTime.Now;
 
                 var permanentDates = await _calendarRepository
                     .GetPermanentDatesAsync(
@@ -114,7 +114,7 @@ namespace FarmStay.Application.Services.Booking
                         farmHouseId,
                         fromDate,
                         toDate,
-                        currentUtc);
+                        current);
 
                 var permanentUnavailableDates = permanentDates
                     .Select(x => x.StayDate.Date)
@@ -170,7 +170,7 @@ namespace FarmStay.Application.Services.Booking
                         {
                             Date = x.ReservationDate.Date,
                             Status = "TemporarilyReserved",
-                            ExpiresAtUtc = x.ExpiresAtUtc
+                            ExpiresAt = DateTime.SpecifyKind(x.ExpiresAt, DateTimeKind.Local)
                         })
                         .OrderBy(x => x.Date)
                         .ToList()
@@ -274,7 +274,7 @@ namespace FarmStay.Application.Services.Booking
 
                 var fromDate = new DateTime(year, month, 1);
                 var toDate = fromDate.AddMonths(1);
-                var currentUtc = DateTime.UtcNow;
+                var current = DateTime.Now;
 
                 // Reuse existing repository methods.
                 var permanentDates = await _calendarRepository
@@ -288,7 +288,7 @@ namespace FarmStay.Application.Services.Booking
                         farmHouseId,
                         fromDate,
                         toDate,
-                        currentUtc);
+                        current);
 
                 // Select the latest active booking for each date.
                 // Assumption: higher BookingId means a newer booking.
@@ -311,14 +311,18 @@ namespace FarmStay.Application.Services.Booking
                     .GroupBy(x => new
                     {
                         Date = x.ReservationDate.Date,
-                        x.ExpiresAtUtc
+                        x.ExpiresAt
                     })
                     .Select(group => group.First())
                     .Select(x => new CalendarReservedDateDto
                     {
                         Date = x.ReservationDate.Date,
                         Status = "TemporarilyReserved",
-                        ExpiresAtUtc = x.ExpiresAtUtc
+                        //ExpiresAt = x.ExpiresAt
+                        ExpiresAt = DateTime.SpecifyKind(
+                                        x.ExpiresAt,
+                                        DateTimeKind.Local
+                                    )
                     })
                     .OrderBy(x => x.Date)
                     .ToList();
@@ -366,7 +370,7 @@ namespace FarmStay.Application.Services.Booking
         }
 
 
-        public async Task<ApiResponse<CreateBookingDateReservationResponseDto>> CreateReservationAsync(CreateBookingDateReservationRequestDto request)
+        public async Task<ApiResponse<CreateBookingDateReservationsDto>> CreateReservationAsync(CreateBookingDateReservationRequestDto request)
         {
             try
             {
@@ -383,7 +387,7 @@ namespace FarmStay.Application.Services.Booking
                     _logger.LogWarning(
                         "Date reservation failed. Invalid or missing FarmHouseId header.");
 
-                    return new ApiResponse<CreateBookingDateReservationResponseDto>
+                    return new ApiResponse<CreateBookingDateReservationsDto>
                     {
                         Success = false,
                         Message = "Valid FarmHouseId header is required.",
@@ -405,7 +409,7 @@ namespace FarmStay.Application.Services.Booking
                         "Date reservation failed. Authenticated UserId is missing or invalid. FarmHouseId: {FarmHouseId}",
                         farmHouseId);
 
-                    return new ApiResponse<CreateBookingDateReservationResponseDto>
+                    return new ApiResponse<CreateBookingDateReservationsDto>
                     {
                         Success = false,
                         Message = "Authenticated user is required.",
@@ -416,7 +420,7 @@ namespace FarmStay.Application.Services.Booking
                 // 3. Validate requested dates
                 var fromDate = request.FromDate.Date;
                 var toDate = request.ToDate.Date;
-                var today = DateTime.UtcNow.Date;
+                var today = DateTime.Now.Date;
 
                 if (fromDate < today)
                 {
@@ -425,7 +429,7 @@ namespace FarmStay.Application.Services.Booking
                         userId,
                         fromDate);
 
-                    return new ApiResponse<CreateBookingDateReservationResponseDto>
+                    return new ApiResponse<CreateBookingDateReservationsDto>
                     {
                         Success = false,
                         Message = "Check-in date cannot be in the past.",
@@ -441,7 +445,7 @@ namespace FarmStay.Application.Services.Booking
                         fromDate,
                         toDate);
 
-                    return new ApiResponse<CreateBookingDateReservationResponseDto>
+                    return new ApiResponse<CreateBookingDateReservationsDto>
                     {
                         Success = false,
                         Message = "Check-out date must be after check-in date.",
@@ -459,7 +463,7 @@ namespace FarmStay.Application.Services.Booking
                         "Date reservation rejected. FarmHouse not found. FarmHouseId: {FarmHouseId}",
                         farmHouseId);
 
-                    return new ApiResponse<CreateBookingDateReservationResponseDto>
+                    return new ApiResponse<CreateBookingDateReservationsDto>
                     {
                         Success = false,
                         Message = "FarmHouse not found.",
@@ -468,7 +472,7 @@ namespace FarmStay.Application.Services.Booking
                 }
 
                 // 5. Fetch permanent bookings and active temporary holds
-                var currentUtc = DateTime.UtcNow;
+                var current = DateTime.Now;
 
                 var permanentDates = await _calendarRepository
                     .GetPermanentDatesAsync(farmHouseId, fromDate, toDate);
@@ -478,7 +482,7 @@ namespace FarmStay.Application.Services.Booking
                         farmHouseId,
                         fromDate,
                         toDate,
-                        currentUtc);
+                        current);
 
                 _logger.LogInformation(
                     "Fetched existing booking dates and active holds. FarmHouseId: {FarmHouseId}, PermanentRecords: {PermanentCount}, ActiveHolds: {HoldCount}",
@@ -515,7 +519,7 @@ namespace FarmStay.Application.Services.Booking
                         string.Join(", ", unavailableDates.Select(d =>
                             d.ToString("yyyy-MM-dd"))));
 
-                    return new ApiResponse<CreateBookingDateReservationResponseDto>
+                    return new ApiResponse<CreateBookingDateReservationsDto>
                     {
                         Success = false,
                         Message = "One or more selected dates are unavailable. Please select different dates.",
@@ -525,7 +529,7 @@ namespace FarmStay.Application.Services.Booking
 
                 // 7. Create temporary reservation records
                 var selectionId = Guid.NewGuid();
-                var expiresAtUtc = currentUtc.AddMinutes(10);
+                var expiresAt = current.AddMinutes(10);
 
                 var reservations = new List<BookingDateReservation>();
 
@@ -537,18 +541,18 @@ namespace FarmStay.Application.Services.Booking
                         UserId = userId,
                         SelectionId = selectionId,
                         ReservationDate = date,
-                        ExpiresAtUtc = expiresAtUtc,
-                        CreatedDateUtc = currentUtc
+                        ExpiresAt = expiresAt,
+                        CreatedDate = current
                     });
                 }
 
                 _logger.LogInformation(
-                    "Prepared {ReservationCount} temporary reservation records. FarmHouseId: {FarmHouseId}, UserId: {UserId}, SelectionId: {SelectionId}, ExpiresAtUtc: {ExpiresAtUtc}",
+                    "Prepared {ReservationCount} temporary reservation records. FarmHouseId: {FarmHouseId}, UserId: {UserId}, SelectionId: {SelectionId}, ExpiresAt: {ExpiresAt}",
                     reservations.Count,
                     farmHouseId,
                     userId,
                     selectionId,
-                    expiresAtUtc);
+                    expiresAt);
 
                 // 8. Add records through Repository
                 await _calendarRepository.AddReservationsAsync(reservations);
@@ -569,19 +573,20 @@ namespace FarmStay.Application.Services.Booking
                     reservations.Count);
 
                 // 10. Return response
-                var responseDto = new CreateBookingDateReservationResponseDto
+                var responseDto = new CreateBookingDateReservationsDto
                 {
                     FarmHouseId = farmHouseId,
                     SelectionId = selectionId,
+                    ReservationIds = reservations.OrderBy(x => x.ReservationDate).Select(x => x.ReservationId).ToList(),
                     FromDate = fromDate,
                     ToDate = toDate,
                     ReservedDates = reservations
                         .Select(x => x.ReservationDate)
                         .ToList(),
-                    ExpiresAtUtc = expiresAtUtc
+                    ExpiresAt = expiresAt
                 };
 
-                return new ApiResponse<CreateBookingDateReservationResponseDto>
+                return new ApiResponse<CreateBookingDateReservationsDto>
                 {
                     Success = true,
                     Message = "Dates temporarily reserved for 10 minutes.",
@@ -594,10 +599,286 @@ namespace FarmStay.Application.Services.Booking
                     ex,
                     "Unexpected error while creating temporary date reservation.");
 
-                return new ApiResponse<CreateBookingDateReservationResponseDto>
+                return new ApiResponse<CreateBookingDateReservationsDto>
                 {
                     Success = false,
                     Message = "An error occurred while reserving the selected dates.",
+                    Data = null
+                };
+            }
+        }
+
+
+        public async Task<ApiResponse<DeleteBookingDateReservationResponseDto>> DeleteReservationAsync(
+    DeleteBookingDateReservationRequestDto request)
+        {
+            try
+            {
+                _logger.LogInformation("DeleteReservationAsync started.");
+
+                // 1. Get FarmHouseId from request header
+                var farmHouseHeader = _httpContextAccessor.HttpContext?
+                    .Request.Headers["FarmHouseId"].FirstOrDefault();
+
+                if (!int.TryParse(farmHouseHeader, out int farmHouseId) || farmHouseId <= 0)
+                {
+                    _logger.LogWarning("Date release failed. Invalid or missing FarmHouseId header.");
+
+                    return new ApiResponse<DeleteBookingDateReservationResponseDto>
+                    {
+                        Success = false,
+                        Message = "Valid FarmHouseId header is required.",
+                        Data = null
+                    };
+                }
+
+                // 2. Get authenticated UserId from JWT claims
+                var userIdClaim = _httpContextAccessor.HttpContext?
+                    .User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+                if (!int.TryParse(userIdClaim, out int userId) || userId <= 0)
+                {
+                    _logger.LogWarning(
+                        "Date release failed. Authenticated UserId is missing or invalid. FarmHouseId: {FarmHouseId}",
+                        farmHouseId);
+
+                    return new ApiResponse<DeleteBookingDateReservationResponseDto>
+                    {
+                        Success = false,
+                        Message = "Authenticated user is required.",
+                        Data = null
+                    };
+                }
+
+                // 3. Resolve date range. Single date => [FromDate, FromDate + 1 day)
+                var fromDate = request.FromDate.Date;
+                var toDate = request.ToDate.HasValue
+                    ? request.ToDate.Value.Date
+                    : fromDate.AddDays(1);
+
+                if (fromDate >= toDate)
+                {
+                    _logger.LogWarning(
+                        "Date release rejected because date range is invalid. UserId: {UserId}, FromDate: {FromDate}, ToDate: {ToDate}",
+                        userId,
+                        fromDate,
+                        toDate);
+
+                    return new ApiResponse<DeleteBookingDateReservationResponseDto>
+                    {
+                        Success = false,
+                        Message = "ToDate must be after FromDate.",
+                        Data = null
+                    };
+                }
+
+                // 4. Validate FarmHouse
+                var farmHouse = await _farmHouseRepository.GetByIdAsync(farmHouseId);
+
+                if (farmHouse == null)
+                {
+                    _logger.LogWarning(
+                        "Date release rejected. FarmHouse not found. FarmHouseId: {FarmHouseId}",
+                        farmHouseId);
+
+                    return new ApiResponse<DeleteBookingDateReservationResponseDto>
+                    {
+                        Success = false,
+                        Message = "FarmHouse not found.",
+                        Data = null
+                    };
+                }
+
+                // 5. Fetch only the holds owned by this user in the range
+                var holds = await _calendarRepository.GetUserHoldsForDeleteAsync(
+                    farmHouseId,
+                    userId,
+                    fromDate,
+                    toDate);
+
+                if (holds.Count == 0)
+                {
+                    _logger.LogInformation(
+                        "No reservations found to release. FarmHouseId: {FarmHouseId}, UserId: {UserId}, FromDate: {FromDate}, ToDate: {ToDate}",
+                        farmHouseId,
+                        userId,
+                        fromDate,
+                        toDate);
+
+                    return new ApiResponse<DeleteBookingDateReservationResponseDto>
+                    {
+                        Success = false,
+                        Message = "No reserved dates found for the selected date(s).",
+                        Data = null
+                    };
+                }
+
+                var releasedDates = holds
+                    .Select(x => x.ReservationDate.Date)
+                    .Distinct()
+                    .OrderBy(x => x)
+                    .ToList();
+
+                // 6. Permanently delete and commit through Unit of Work
+                _calendarRepository.RemoveReservations(holds);
+                await _unitOfWork.SaveChangesAsync();
+
+                _logger.LogInformation(
+                    "Reservations released successfully. FarmHouseId: {FarmHouseId}, UserId: {UserId}, DeletedCount: {DeletedCount}",
+                    farmHouseId,
+                    userId,
+                    holds.Count);
+
+                return new ApiResponse<DeleteBookingDateReservationResponseDto>
+                {
+                    Success = true,
+                    Message = "Selected dates released successfully.",
+                    Data = new DeleteBookingDateReservationResponseDto
+                    {
+                        FarmHouseId = farmHouseId,
+                        FromDate = fromDate,
+                        ToDate = toDate,
+                        DeletedCount = holds.Count,
+                        ReleasedDates = releasedDates
+                    }
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unexpected error while releasing reserved dates.");
+
+                return new ApiResponse<DeleteBookingDateReservationResponseDto>
+                {
+                    Success = false,
+                    Message = "An error occurred while releasing the selected dates.",
+                    Data = null
+                };
+            }
+        }
+
+
+
+
+        public async Task<ApiResponse<List<ActiveBookingDateReservationDto>>>
+            GetActiveUserReservationsAsync()
+        {
+            try
+            {
+                // 1. Get FarmHouseId from request header
+                var farmHouseHeader = _httpContextAccessor.HttpContext?
+                    .Request.Headers["FarmHouseId"].FirstOrDefault();
+
+                if (!int.TryParse(farmHouseHeader, out int farmHouseId) ||
+                    farmHouseId <= 0)
+                {
+                    _logger.LogWarning(
+                        "Active reservation recovery failed. Invalid FarmHouseId header.");
+
+                    return new ApiResponse<List<ActiveBookingDateReservationDto>>
+                    {
+                        Success = false,
+                        Message = "Valid FarmHouseId header is required.",
+                        Data = null
+                    };
+                }
+
+                // 2. Get authenticated UserId from JWT claims
+                var userIdClaim = _httpContextAccessor.HttpContext?
+                    .User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+                if (!int.TryParse(userIdClaim, out int userId) ||
+                    userId <= 0)
+                {
+                    _logger.LogWarning(
+                        "Active reservation recovery failed. Invalid authenticated UserId.");
+
+                    return new ApiResponse<List<ActiveBookingDateReservationDto>>
+                    {
+                        Success = false,
+                        Message = "Authenticated user is required.",
+                        Data = null
+                    };
+                }
+
+                // 3. Validate FarmHouse
+                var farmHouse = await _farmHouseRepository
+                    .GetByIdAsync(farmHouseId);
+
+                if (farmHouse == null)
+                {
+                    return new ApiResponse<List<ActiveBookingDateReservationDto>>
+                    {
+                        Success = false,
+                        Message = "FarmHouse not found.",
+                        Data = null
+                    };
+                }
+
+                // 4. Fetch current user's active reservations
+                var current = DateTime.Now;
+
+                var activeReservations = await _calendarRepository
+                    .GetActiveUserReservationsAsync(
+                        farmHouseId,
+                        userId,
+                        current);
+
+                // 5. Group reservations by SelectionId
+                var response = activeReservations
+                    .GroupBy(x => x.SelectionId)
+                    .Select(group =>
+                    {
+                        var reservedDates = group
+                            .Select(x => x.ReservationDate.Date)
+                            .Distinct()
+                            .OrderBy(x => x)
+                            .ToList();
+
+                        return new ActiveBookingDateReservationDto
+                        {
+                            FarmHouseId = farmHouseId,
+                            SelectionId = group.Key,
+                            ReservationIds = group.OrderBy(x => x.ReservationDate).Select(x => x.ReservationId).ToList(),
+
+                            FromDate = reservedDates.Min(),
+
+                            // Checkout date is exclusive
+                            ToDate = reservedDates.Max().AddDays(1),
+
+                            ReservedDates = reservedDates,
+
+                            ExpiresAt = DateTime.SpecifyKind(group.Max(x => x.ExpiresAt), DateTimeKind.Local)
+                        };
+                    })
+                    .OrderBy(x => x.FromDate)
+                    .ToList();
+
+                _logger.LogInformation(
+                    "Active reservations recovered. FarmHouseId: {FarmHouseId}, UserId: {UserId}, SelectionCount: {SelectionCount}",
+                    farmHouseId,
+                    userId,
+                    response.Count);
+
+                // 6. Return response
+                return new ApiResponse<List<ActiveBookingDateReservationDto>>
+                {
+                    Success = true,
+                    Message = response.Count > 0
+                        ? "Active reservations retrieved successfully."
+                        : "No active reservations found.",
+                    Data = response
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(
+                    ex,
+                    "Error recovering active date reservations.");
+
+                return new ApiResponse<List<ActiveBookingDateReservationDto>>
+                {
+                    Success = false,
+                    Message = "An error occurred while retrieving active reservations.",
                     Data = null
                 };
             }

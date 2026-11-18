@@ -1,4 +1,4 @@
-﻿
+
 using FarmStay.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -91,11 +91,11 @@ namespace FarmStay.Infrastructure.Persistence.Configurations
             builder.Property(d => d.VerifiedBy)
                 .IsRequired(false);
 
-            builder.Property(d => d.VerifiedAtUtc)
+            builder.Property(d => d.VerifiedAt)
                 .HasColumnType("datetime2(0)")
                 .IsRequired(false);
 
-            builder.Property(d => d.ReuploadDeadlineUtc)
+            builder.Property(d => d.ReuploadDeadline)
                 .HasColumnType("datetime2(0)")
                 .IsRequired(false);
 

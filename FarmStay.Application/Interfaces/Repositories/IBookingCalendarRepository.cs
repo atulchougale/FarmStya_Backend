@@ -1,4 +1,4 @@
-﻿
+
 using FarmStay.Domain.Entities;
 
 namespace FarmStay.Application.Interfaces.Repositories
@@ -14,9 +14,23 @@ namespace FarmStay.Application.Interfaces.Repositories
             int farmHouseId,
             DateTime fromDate,
             DateTime toDate,
-            DateTime currentUtc);
+            DateTime current);
 
-        Task AddReservationsAsync( List<BookingDateReservation> reservations);
+        Task AddReservationsAsync(List<BookingDateReservation> reservations);
+
+        // Returns the tracked holds owned by the user in the given date range.
+        Task<List<BookingDateReservation>> GetUserHoldsForDeleteAsync(
+            int farmHouseId,
+            int userId,
+            DateTime fromDate,
+            DateTime toDate);
+
+        void RemoveReservations(List<BookingDateReservation> reservations);
+
+        Task<List<BookingDateReservation>> GetActiveUserReservationsAsync(
+            int farmHouseId,
+            int userId,
+            DateTime current);
 
     }
 }

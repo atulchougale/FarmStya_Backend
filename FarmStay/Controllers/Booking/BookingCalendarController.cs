@@ -8,7 +8,6 @@ namespace FarmStay.Controllers.Booking
 {
     [Route("api/booking-calendar")]
     [ApiController]
-    [AllowAnonymous]
     public class BookingCalendarController : ControllerBase
     {
         private readonly IBookingCalendarService _calendarService;
@@ -19,6 +18,7 @@ namespace FarmStay.Controllers.Booking
         }
 
         [HttpGet("availability")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetAvailability(
             [FromQuery, BindRequired] DateTime fromDate,
             [FromQuery, BindRequired] DateTime toDate)
@@ -41,6 +41,7 @@ namespace FarmStay.Controllers.Booking
         }
 
         [HttpGet("month")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetMonthlyCalendar(
             [FromQuery, BindRequired] int month,
             [FromQuery, BindRequired] int year)
@@ -63,7 +64,7 @@ namespace FarmStay.Controllers.Booking
         }
 
         [HttpPost("reserve")]
-        [Authorize]
+        [Authorize(Policy = FarmStay.API.Authorization.BookingCustomerRequirement.Policy)]
         public async Task<IActionResult> CreateReservation(
             [FromBody] CreateBookingDateReservationRequestDto request)
         {
@@ -87,5 +88,56 @@ namespace FarmStay.Controllers.Booking
 
             return Ok(response);
         }
+
+        [HttpDelete("reserve")]
+        [Authorize(Policy = FarmStay.API.Authorization.BookingCustomerRequirement.Policy)]
+        public async Task<IActionResult> DeleteReservation(
+                    [FromQuery, BindRequired] DateTime fromDate,
+                    [FromQuery] DateTime? toDate)
+        {
+            // Both single date and range are supported.
+            // If toDate is not provided, only fromDate is released.
+            if (fromDate == default)
+            {
+                return BadRequest(new
+                {
+                    success = false,
+                    message = "fromDate is required.",
+                    data = (object?)null
+                });
+            }
+
+            var request = new DeleteBookingDateReservationRequestDto
+            {
+                FromDate = fromDate,
+                ToDate = toDate
+            };
+
+            var response = await _calendarService.DeleteReservationAsync(request);
+
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+
+            return Ok(response);
+        }
+
+
+        [HttpGet("reserve/active")]
+        [Authorize(Policy = FarmStay.API.Authorization.BookingCustomerRequirement.Policy)]
+        public async Task<IActionResult> GetActiveUserReservations()
+        {
+            var response = await _calendarService
+                .GetActiveUserReservationsAsync();
+
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+
+            return Ok(response);
+        }
+
     }
 }

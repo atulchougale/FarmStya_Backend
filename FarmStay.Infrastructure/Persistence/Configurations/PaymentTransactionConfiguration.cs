@@ -1,4 +1,4 @@
-﻿
+
 using FarmStay.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -87,10 +87,10 @@ namespace FarmStay.Infrastructure.Persistence.Configurations
             .IsUnique();
 
             // Payment timestamps
-            builder.Property(p => p.PaidAtUtc)
+            builder.Property(p => p.PaidAt)
                 .HasColumnType("datetime2(0)");
 
-            builder.Property(p => p.VerifiedAtUtc)
+            builder.Property(p => p.VerifiedAt)
                 .HasColumnType("datetime2(0)");
 
             builder.Property(p => p.FailureReason)

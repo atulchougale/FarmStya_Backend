@@ -2791,7 +2791,7 @@ namespace FarmStay.Application.Services.Auth
                 if (existingOtp != null)
                 {
                     var secondsSinceLastOtp =
-                        (DateTime.UtcNow- existingOtp.CreatedDate).TotalSeconds;
+                        (DateTime.Now - existingOtp.CreatedDate).TotalSeconds;
 
                     if (secondsSinceLastOtp < LoginOtpResendCooldownSeconds)
                     {

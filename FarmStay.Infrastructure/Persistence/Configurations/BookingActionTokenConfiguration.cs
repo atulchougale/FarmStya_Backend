@@ -1,4 +1,4 @@
-﻿
+
 using FarmStay.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -27,11 +27,11 @@ namespace FarmStay.Infrastructure.Persistence.Configurations
                 .HasMaxLength(30)
                 .IsRequired();
 
-            builder.Property(x => x.ExpiresAtUtc)
+            builder.Property(x => x.ExpiresAt)
                 .HasColumnType("datetime2(0)")
                 .IsRequired();
 
-            builder.Property(x => x.ConsumedAtUtc)
+            builder.Property(x => x.ConsumedAt)
                 .HasColumnType("datetime2(0)");
 
             builder.Property(x => x.CreatedDate)
@@ -66,8 +66,8 @@ namespace FarmStay.Infrastructure.Persistence.Configurations
 
             builder.HasIndex(x => new
             {
-                x.ExpiresAtUtc,
-                x.ConsumedAtUtc
+                x.ExpiresAt,
+                x.ConsumedAt
             });
         }
     }

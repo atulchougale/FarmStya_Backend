@@ -7,6 +7,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.8.0" PrivateAssets="all" />
 		<PackageReference Include="BCrypt.Net-Next" Version="4.1.0" />
 		<PackageReference Include="MailKit" Version="4.16.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.0" />
@@ -15,6 +16,7 @@
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.0">
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
+		<PackageReference Include="ReportViewerCore.NETCore" Version="15.1.27" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -24,6 +26,7 @@
 
 	<ItemGroup>
 	  <Folder Include="Migrations\" />
+      <EmbeddedResource Include="Reports\*.rdlc" />
 	</ItemGroup>
 
 </Project>

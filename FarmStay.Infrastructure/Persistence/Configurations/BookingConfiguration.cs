@@ -1,4 +1,4 @@
-﻿
+
 using FarmStay.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -9,6 +9,8 @@ namespace FarmStay.Infrastructure.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<Booking> builder)
         {
+            builder.HasIndex(b => new { b.FarmHouseId, b.CustomerUserId, b.SubmitIdempotencyKey })
+                .IsUnique().HasFilter("[SubmitIdempotencyKey] IS NOT NULL");
             // ================= Table =================
 
             builder.ToTable("Bookings");
@@ -135,15 +137,15 @@ namespace FarmStay.Infrastructure.Persistence.Configurations
 
             // ================= Approval Deadlines =================
 
-            builder.Property(b => b.OwnerDeadlineUtc)
+            builder.Property(b => b.OwnerDeadline)
                 .HasColumnType("datetime2(0)")
                 .IsRequired();
 
-            builder.Property(b => b.ApprovedAtUtc)
+            builder.Property(b => b.ApprovedAt)
                 .HasColumnType("datetime2(0)")
                 .IsRequired(false);
 
-            builder.Property(b => b.CustomerDeadlineUtc)
+            builder.Property(b => b.CustomerDeadline)
                 .HasColumnType("datetime2(0)")
                 .IsRequired(false);
 

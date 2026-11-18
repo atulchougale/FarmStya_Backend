@@ -1,4 +1,4 @@
-﻿
+
 using FarmStay.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -42,7 +42,7 @@ namespace FarmStay.Infrastructure.Persistence.Configurations
             builder.Property(x => x.RetryCount)
                 .HasDefaultValue(0);
 
-            builder.Property(x => x.NextAttemptAtUtc)
+            builder.Property(x => x.NextAttemptAt)
                 .HasColumnType("datetime2(0)");
 
             builder.Property(x => x.LastError)
@@ -56,7 +56,7 @@ namespace FarmStay.Infrastructure.Persistence.Configurations
                 .HasColumnType("datetime2(0)")
                 .IsRequired();
 
-            builder.Property(x => x.SentAtUtc)
+            builder.Property(x => x.SentAt)
                 .HasColumnType("datetime2(0)");
 
             builder.HasOne(x => x.FarmHouse)
@@ -75,7 +75,7 @@ namespace FarmStay.Infrastructure.Persistence.Configurations
             builder.HasIndex(x => new
             {
                 x.Status,
-                x.NextAttemptAtUtc,
+                x.NextAttemptAt,
                 x.CreatedDate
             });
         }

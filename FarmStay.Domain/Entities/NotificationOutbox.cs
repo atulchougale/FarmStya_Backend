@@ -1,4 +1,4 @@
-﻿
+
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -36,7 +36,7 @@ namespace FarmStay.Domain.Entities
 
         public int RetryCount { get; set; } = 0;
 
-        public DateTime? NextAttemptAtUtc { get; set; }
+        public DateTime? NextAttemptAt { get; set; }
 
         [MaxLength(1000)]
         public string? LastError { get; set; }
@@ -45,9 +45,9 @@ namespace FarmStay.Domain.Entities
         [MaxLength(150)]
         public string IdempotencyKey { get; set; } = string.Empty;
 
-        public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
+        public DateTime CreatedDate { get; set; } = DateTime.Now;
 
-        public DateTime? SentAtUtc { get; set; }
+        public DateTime? SentAt { get; set; }
 
         // Navigation properties
         [ForeignKey(nameof(FarmHouseId))]

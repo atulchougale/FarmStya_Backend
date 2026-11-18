@@ -1,4 +1,4 @@
-﻿
+
 using FarmStay.Application.Interfaces.Repositories;
 using FarmStay.Domain.Entities;
 using FarmStay.Infrastructure.Data;
@@ -25,6 +25,7 @@ namespace FarmStay.Infrastructure.Repositories.Booking
 
             return await _context.BookingStayDates
                 .AsNoTracking()
+                .Include(stayDate => stayDate.Booking)
                 .Where(stayDate =>
                     stayDate.FarmHouseId == farmHouseId &&
                     !stayDate.IsDelete &&
@@ -35,7 +36,9 @@ namespace FarmStay.Infrastructure.Repositories.Booking
                     (
                         stayDate.Booking.Status == "Pending" ||
                         stayDate.Booking.Status == "Approved" ||
-                        stayDate.Booking.Status == "Confirmed"
+                        stayDate.Booking.Status == "Confirmed" ||
+                        stayDate.Booking.Status == "CheckedIn" ||
+                        stayDate.Booking.Status == "CheckedOut"
                     ))
                 .ToListAsync();
         }
@@ -44,7 +47,7 @@ namespace FarmStay.Infrastructure.Repositories.Booking
             int farmHouseId,
             DateTime fromDate,
             DateTime toDate,
-            DateTime currentUtc)
+            DateTime current)
         {
             var startDate = fromDate.Date;
             var endDate = toDate.Date;
@@ -55,14 +58,54 @@ namespace FarmStay.Infrastructure.Repositories.Booking
                     reservation.FarmHouseId == farmHouseId &&
                     reservation.ReservationDate >= startDate &&
                     reservation.ReservationDate < endDate &&
-                    reservation.ExpiresAtUtc > currentUtc)
+                    reservation.ExpiresAt > current)
                 .ToListAsync();
         }
 
 
-        public async Task AddReservationsAsync( List<BookingDateReservation> reservations)
+        public async Task AddReservationsAsync(List<BookingDateReservation> reservations)
         {
             await _context.BookingDateReservations.AddRangeAsync(reservations);
         }
+
+        public async Task<List<BookingDateReservation>> GetUserHoldsForDeleteAsync(
+                    int farmHouseId,
+                    int userId,
+                    DateTime fromDate,
+                    DateTime toDate)
+        {
+            var startDate = fromDate.Date;
+            var endDate = toDate.Date;
+
+            // Tracked entities (no AsNoTracking) because they will be removed.
+            return await _context.BookingDateReservations
+                .Where(reservation =>
+                    reservation.FarmHouseId == farmHouseId &&
+                    reservation.UserId == userId &&
+                    reservation.ReservationDate >= startDate &&
+                    reservation.ReservationDate < endDate)
+                .ToListAsync();
+        }
+
+        public void RemoveReservations(List<BookingDateReservation> reservations)
+        {
+            _context.BookingDateReservations.RemoveRange(reservations);
+        }
+
+
+        public async Task<List<BookingDateReservation>> GetActiveUserReservationsAsync(
+                int farmHouseId,
+                int userId,
+                DateTime current)
+            {
+                return await _context.BookingDateReservations
+                    .AsNoTracking()
+                    .Where(reservation =>
+                        reservation.FarmHouseId == farmHouseId &&
+                        reservation.UserId == userId &&
+                        reservation.ExpiresAt > current)
+                    .OrderBy(reservation => reservation.ReservationDate)
+                    .ToListAsync();
+            }
     }
 }

@@ -10,6 +10,11 @@ namespace FarmStay.Infrastructure.Repositories.Public
     {
         private readonly AppDbContext _context;
 
+        public Task<bool> CanReviewBookingAsync(long bookingId, int farmHouseId, int userId) =>
+            _context.Bookings.AnyAsync(b => b.BookingId == bookingId && b.FarmHouseId == farmHouseId &&
+                b.CustomerUserId == userId && !b.IsDelete && b.Status == "CheckedOut" &&
+                !_context.FeedBacks.Any(f => f.BookingId == bookingId));
+
         public FeedbackRepository(AppDbContext context)
         {
             _context = context;

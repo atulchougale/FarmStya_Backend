@@ -42,6 +42,7 @@ namespace FarmStay.API.DependencyInjection
             services.AddScoped<IFarmHousePricingService, FarmHousePricingService>();
 
             services.AddScoped<IBookingCalendarService, BookingCalendarService>();
+            services.AddScoped<IBookingListService, BookingListService>();
 
 
 

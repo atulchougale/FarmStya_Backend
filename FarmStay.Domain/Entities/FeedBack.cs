@@ -10,6 +10,7 @@ namespace FarmStay.Domain.Entities
 
         [Required]
         public int FarmHouseId { get; set; }
+        public long? BookingId { get; set; }
 
         [Required]
         public string Review { get; set; } = string.Empty;

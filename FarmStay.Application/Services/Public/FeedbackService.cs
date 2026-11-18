@@ -131,6 +131,15 @@ namespace FarmStay.Application.Services.Public
                     };
                 }
 
+                var review = dto.Review?.Trim();
+                if (string.IsNullOrEmpty(review) || review.Length > 500)
+                    return new() { Message = "Enter a feedback message of 1 to 500 characters." };
+
+                if (dto.BookingId is long bookingId &&
+                    (dto.Rating % 1m != 0 || dto.Rating < 1m || dto.Rating > 5m ||
+                     !await _feedbackRepository.CanReviewBookingAsync(bookingId, farmHouseId, userId)))
+                    return new() { Message = "Feedback requires an owned, checked-out booking without existing feedback and a rating of 1 to 5 stars." };
+
                 //Rating validation
 
                 if (dto.Rating < 0.5m ||
@@ -150,7 +159,8 @@ namespace FarmStay.Application.Services.Public
                 var feedback = new FeedBack
                 {
                     FarmHouseId = farmHouseId,
-                    Review = dto.Review,
+                    BookingId = dto.BookingId,
+                    Review = review,
                     Rating = dto.Rating,
                     CreatedBy = userId,
                     CreatedDate = DateTime.Now,

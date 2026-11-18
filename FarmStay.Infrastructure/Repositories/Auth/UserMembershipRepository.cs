@@ -30,6 +30,7 @@ namespace FarmStay.Infrastructure.Repositories.Auth
         public async Task<List<UserMembership>> GetByUserIdAsync(int userId)
         {
             return await _context.UserMemberships
+                .Include(x => x.User)
                 .Include(x => x.Role)
                 .Include(x => x.FarmHouse)
                 .Where(x =>

@@ -1,4 +1,4 @@
-﻿
+
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -53,15 +53,15 @@ namespace FarmStay.Domain.Entities
 
         public long? VerifiedBy { get; set; }
 
-        public DateTime? VerifiedAtUtc { get; set; }
+        public DateTime? VerifiedAt { get; set; }
 
-        public DateTime? ReuploadDeadlineUtc { get; set; }
+        public DateTime? ReuploadDeadline { get; set; }
 
         public bool IsDelete { get; set; } = false;
 
         public long CreatedBy { get; set; }
 
-        public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
+        public DateTime CreatedDate { get; set; } = DateTime.Now;
 
         public long? ModifiedBy { get; set; }
 

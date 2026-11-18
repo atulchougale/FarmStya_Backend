@@ -1,4 +1,4 @@
-﻿
+
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -30,11 +30,11 @@ namespace FarmStay.Domain.Entities
         [MaxLength(3)]
         public string CurrencyCode { get; set; } = "INR";
 
-        public DateTime IssuedAtUtc { get; set; } = DateTime.UtcNow;
+        public DateTime IssuedAt { get; set; } = DateTime.Now;
 
         public long CreatedBy { get; set; }
 
-        public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
+        public DateTime CreatedDate { get; set; } = DateTime.Now;
 
         public long? ModifiedBy { get; set; }
 

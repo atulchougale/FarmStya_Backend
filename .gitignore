@@ -483,3 +483,25 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+
+# Local builds and verification
+/.build-*/
+/.receipt-verification/
+/.postman/
+/postman/
+**/Logs/
+**/App_Data/
+**/uploads/
+**/Uploads/
+*.log
+*.zip
+# Machine-specific credentials and overrides
+.env
+.env.*
+!.env.example
+**/appsettings.Local.json
+**/appsettings.*.local.json
+**/secrets.json
+*.pfx
+*.p12
+*.pem

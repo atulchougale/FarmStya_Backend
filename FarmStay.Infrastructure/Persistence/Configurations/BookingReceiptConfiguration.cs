@@ -1,4 +1,4 @@
-﻿
+
 using FarmStay.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -69,7 +69,7 @@ namespace FarmStay.Infrastructure.Persistence.Configurations
                 .IsRequired();
 
             // Issued timestamp
-            builder.Property(r => r.IssuedAtUtc)
+            builder.Property(r => r.IssuedAt)
                 .HasColumnType("datetime2(0)")
                 .IsRequired();
 

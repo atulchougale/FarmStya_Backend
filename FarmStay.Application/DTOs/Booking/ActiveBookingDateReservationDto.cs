@@ -1,11 +1,11 @@
-﻿
 namespace FarmStay.Application.DTOs.Booking
 {
-    public class CreateBookingDateReservationResponseDto
+    public class ActiveBookingDateReservationDto
     {
         public int FarmHouseId { get; set; }
 
         public Guid SelectionId { get; set; }
+        public List<long> ReservationIds { get; set; } = new();
 
         public DateTime FromDate { get; set; }
 
@@ -13,6 +13,6 @@ namespace FarmStay.Application.DTOs.Booking
 
         public List<DateTime> ReservedDates { get; set; } = new();
 
-        public DateTime ExpiresAtUtc { get; set; }
+        public DateTime ExpiresAt { get; set; }
     }
 }

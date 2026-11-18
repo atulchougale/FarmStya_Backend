@@ -1,4 +1,4 @@
-﻿
+
 using FarmStay.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -48,12 +48,12 @@ namespace FarmStay.Infrastructure.Persistence.Configurations
                 .IsRequired();
 
             // Hold Expiry
-            builder.Property(r => r.ExpiresAtUtc)
+            builder.Property(r => r.ExpiresAt)
                 .HasColumnType("datetime2(0)")
                 .IsRequired();
 
             // Creation Timestamp
-            builder.Property(r => r.CreatedDateUtc)
+            builder.Property(r => r.CreatedDate)
                 .HasColumnType("datetime2(0)")
                 .IsRequired();
 
@@ -62,7 +62,7 @@ namespace FarmStay.Infrastructure.Persistence.Configurations
             {
                 r.FarmHouseId,
                 r.ReservationDate,
-                r.ExpiresAtUtc
+                r.ExpiresAt
             });
 
             // Retrieve all dates in a selection

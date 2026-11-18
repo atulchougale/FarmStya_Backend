@@ -1,4 +1,4 @@
-﻿
+
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -23,6 +23,17 @@ namespace FarmStay.Domain.Entities
         [Required]
         [MaxLength(40)]
         public string BookingReference { get; set; } = string.Empty;
+
+        public Guid? SubmitIdempotencyKey { get; set; }
+
+        [MaxLength(64)]
+        public string? SubmitRequestHash { get; set; }
+
+        [MaxLength(3)]
+        public string? CurrencyCode { get; set; }
+
+        [MaxLength(64)]
+        public string? PricingVersion { get; set; }
 
         [Required]
         [MaxLength(150)]
@@ -58,6 +69,9 @@ namespace FarmStay.Domain.Entities
 
         [Required]
         public DateTime CheckOutDate { get; set; }
+        public DateTime? ActualCheckInAt { get; set; }
+        public DateTime? ActualCheckOutAt { get; set; }
+        public DateTime? CheckoutPaidAt { get; set; }
 
         [Range(1, int.MaxValue)]
         public int StayDays { get; set; }
@@ -91,13 +105,13 @@ namespace FarmStay.Domain.Entities
 
         // ==================== Owner Approval Deadline ====================
 
-        public DateTime OwnerDeadlineUtc { get; set; }
+        public DateTime OwnerDeadline { get; set; }
 
-        public DateTime? ApprovedAtUtc { get; set; }
+        public DateTime? ApprovedAt { get; set; }
 
         // ==================== Customer Deadline ====================
 
-        public DateTime? CustomerDeadlineUtc { get; set; }
+        public DateTime? CustomerDeadline { get; set; }
 
         public bool ExtensionUsed { get; set; }
 
@@ -118,7 +132,7 @@ namespace FarmStay.Domain.Entities
 
         public long CreatedBy { get; set; }
 
-        public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
+        public DateTime CreatedDate { get; set; } = DateTime.Now;
 
         public long? ModifiedBy { get; set; }
 

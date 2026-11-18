@@ -1,5 +1,6 @@
 ﻿
 using FarmStay.Application.Interfaces.Services.Booking;
+using FarmStay.Application.DTOs.Booking;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,7 +8,6 @@ namespace FarmStay.API.Controllers.Booking
 {
     [Route("api/booking-pricing")]
     [ApiController]
-    [AllowAnonymous]
     public class BookingPricingController : ControllerBase
     {
         private readonly IFarmHousePricingService _pricingService;
@@ -22,6 +22,7 @@ namespace FarmStay.API.Controllers.Booking
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> GetActivePricing()
         {
             _logger.LogInformation(
@@ -40,6 +41,14 @@ namespace FarmStay.API.Controllers.Booking
             }
 
             return Ok(result);
+        }
+
+        [HttpPost("quote")]
+        [Authorize(Policy = FarmStay.API.Authorization.BookingCustomerRequirement.Policy)]
+        public async Task<IActionResult> GetQuote(BookingQuoteRequest request)
+        {
+            var result = await _pricingService.GetQuoteAsync(request);
+            return result.Success ? Ok(result) : BadRequest(result);
         }
     }
 }

@@ -6,6 +6,7 @@ namespace FarmStay.Application.Interfaces.Repositories
     public interface IFeedbackRepository
     {
         Task AddAsync(FeedBack feedback);
+        Task<bool> CanReviewBookingAsync(long bookingId, int farmHouseId, int userId);
 
         Task<FeedBack?> GetByIdAsync(int feedbackId);
 

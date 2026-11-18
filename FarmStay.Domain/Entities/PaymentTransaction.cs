@@ -1,4 +1,4 @@
-﻿
+
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -53,9 +53,9 @@ namespace FarmStay.Domain.Entities
         [MaxLength(150)]
         public string IdempotencyKey { get; set; } = string.Empty;
 
-        public DateTime? PaidAtUtc { get; set; }
+        public DateTime? PaidAt { get; set; }
 
-        public DateTime? VerifiedAtUtc { get; set; }
+        public DateTime? VerifiedAt { get; set; }
 
         [MaxLength(1000)]
         public string? FailureReason { get; set; }
@@ -64,7 +64,7 @@ namespace FarmStay.Domain.Entities
 
         public long CreatedBy { get; set; }
 
-        public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
+        public DateTime CreatedDate { get; set; } = DateTime.Now;
 
         public long? ModifiedBy { get; set; }
 

@@ -33,6 +33,15 @@ namespace FarmStay.API.Controllers.Public
             return BadRequest(result);
         }
 
+        [Authorize(Policy = BookingCustomerRequirement.Policy)]
+        [HttpPost("booking/{bookingId:long}")]
+        public async Task<IActionResult> SaveBookingFeedbackAsync(long bookingId, FeedbackRequestDto dto)
+        {
+            dto.BookingId = bookingId;
+            var result = await _feedbackService.SaveFeedbackAsync(dto);
+            return result.Success ? Ok(result) : BadRequest(result);
+        }
+
         [Authorize]
         [HasPermission("Feedback.View")]
         [HttpGet("get-byid-feedback/{feedbackId:int}")]

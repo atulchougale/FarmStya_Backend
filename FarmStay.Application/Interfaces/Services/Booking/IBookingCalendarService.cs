@@ -16,7 +16,12 @@ namespace FarmStay.Application.Interfaces.Services.Booking
                 int month,
                 int year);
 
-        Task<ApiResponse<CreateBookingDateReservationResponseDto>> CreateReservationAsync(
+        Task<ApiResponse<CreateBookingDateReservationsDto>> CreateReservationAsync(
                 CreateBookingDateReservationRequestDto request);
+
+        Task<ApiResponse<DeleteBookingDateReservationResponseDto>> DeleteReservationAsync(
+                DeleteBookingDateReservationRequestDto request);
+
+        Task<ApiResponse<List<ActiveBookingDateReservationDto>>> GetActiveUserReservationsAsync();
     }
 }

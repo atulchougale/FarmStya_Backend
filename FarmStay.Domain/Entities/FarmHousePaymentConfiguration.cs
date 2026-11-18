@@ -42,7 +42,7 @@ namespace FarmStay.Domain.Entities
 
         public long CreatedBy { get; set; }
 
-        public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
+        public DateTime CreatedDate { get; set; } = DateTime.Now;
 
         public long? ModifiedBy { get; set; }
 

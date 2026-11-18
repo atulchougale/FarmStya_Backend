@@ -1,4 +1,4 @@
-﻿
+
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -23,9 +23,9 @@ namespace FarmStay.Domain.Entities
         public DateTime ReservationDate { get; set; }
 
         [Required]
-        public DateTime ExpiresAtUtc { get; set; }
+        public DateTime ExpiresAt { get; set; }
 
-        public DateTime CreatedDateUtc { get; set; } = DateTime.UtcNow;
+        public DateTime CreatedDate { get; set; } = DateTime.Now;
 
         // Navigation properties
         [ForeignKey(nameof(FarmHouseId))]
