@@ -21,10 +21,9 @@ namespace FarmStay.Domain.Entities
         [MaxLength(150)]
         public string FullName { get; set; } = string.Empty;
 
-        [Required]
         [EmailAddress]
         [MaxLength(150)]
-        public string Email { get; set; } = string.Empty;
+        public string? Email { get; set; }
 
         [Required]
         [MaxLength(15)]

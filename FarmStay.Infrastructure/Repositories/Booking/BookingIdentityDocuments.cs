@@ -18,11 +18,11 @@ public sealed class BookingIdentityDocuments(AppDbContext db, IConfiguration con
 
     public async Task<BookingIdentityDocument?> GetAsync(int farmHouseId, long bookingId, int? ownerId, CancellationToken ct)
     {
-        var document = await Current(farmHouseId, bookingId).AsNoTracking()
+        var documents = await Current(farmHouseId, bookingId).AsNoTracking()
             .Where(doc => doc.Booking != null && !doc.Booking.IsDelete &&
                 (!ownerId.HasValue || doc.Booking.CustomerUserId == ownerId.Value))
-            .OrderByDescending(doc => doc.BookingDocumentId).FirstOrDefaultAsync(ct);
-        return document == null ? null : Map(document);
+            .OrderBy(doc => doc.BookingDocumentId).ToListAsync(ct);
+        return documents.Count == 0 ? null : Map(documents);
     }
 
     public async Task<(Stream Content, string ContentType)?> OpenAsync(int farmHouseId, long bookingId,
@@ -44,53 +44,65 @@ public sealed class BookingIdentityDocuments(AppDbContext db, IConfiguration con
     }
 
     public async Task<BookingIdentityDocument?> UploadAsync(int farmHouseId, long bookingId, int ownerId,
-        string fileName, string contentType, byte[] bytes, CancellationToken ct)
+        string documentType, string? otherDocumentType, IReadOnlyList<IdentityProofUpload> files, CancellationToken ct)
+        => await UploadCoreAsync(farmHouseId, bookingId, ownerId, ownerId, documentType, otherDocumentType, files, ct);
+
+    public Task<BookingIdentityDocument?> UploadForCustomerAsync(int farmHouseId, long bookingId, int actorId,
+        string documentType, string? otherDocumentType, IReadOnlyList<IdentityProofUpload> files, CancellationToken ct)
+        => UploadCoreAsync(farmHouseId, bookingId, null, actorId, documentType, otherDocumentType, files, ct);
+
+    private async Task<BookingIdentityDocument?> UploadCoreAsync(int farmHouseId, long bookingId, int? ownerId, int actorId,
+        string documentType, string? otherDocumentType, IReadOnlyList<IdentityProofUpload> files, CancellationToken ct)
     {
         await using var transaction = await db.Database.BeginTransactionAsync(ct);
         await LockAsync(bookingId, ct);
         var booking = await db.Bookings.AsNoTracking().SingleOrDefaultAsync(b => !b.IsDelete &&
-            b.BookingId == bookingId && b.FarmHouseId == farmHouseId && b.CustomerUserId == ownerId, ct);
+            b.BookingId == bookingId && b.FarmHouseId == farmHouseId && (!ownerId.HasValue || b.CustomerUserId == ownerId), ct);
         if (booking == null)
             return null;
 
-        var previous = await Current(farmHouseId, bookingId)
-            .OrderByDescending(doc => doc.BookingDocumentId).FirstOrDefaultAsync(ct);
+        if (files.Count is < 1 or > 2) return null;
+        var previous = await Current(farmHouseId, bookingId).ToListAsync(ct);
         var now = DateTime.Now;
         var awaitingConfirmation = booking.Status == "Approved" && booking.CustomerDeadline > now;
-        var replacementRequested = booking.Status == "Confirmed" && previous?.VerificationStatus == "ReuploadRequested";
+        var replacementRequested = booking.Status == "Confirmed" && previous.Any(doc => doc.VerificationStatus == "ReuploadRequested");
         if (!awaitingConfirmation && !replacementRequested)
             return null;
 
-        var key = Guid.NewGuid().ToString("N");
-        var path = FilePath(key);
-        Directory.CreateDirectory(Path.GetDirectoryName(path)!);
-        var document = new BookingDocument
+        var created = files.Select(file => new BookingDocument
         {
-            FarmHouseId = farmHouseId, BookingId = bookingId, UserId = ownerId, CreatedBy = ownerId,
-            DocumentType = IdentityProof, StorageKey = key, OriginalFileName = fileName,
-            ContentType = contentType, FileSizeBytes = bytes.LongLength,
-            Sha256Hash = Convert.ToHexString(SHA256.HashData(bytes)), CreatedDate = now
-        };
+            FarmHouseId = farmHouseId, BookingId = bookingId, UserId = booking.CustomerUserId, CreatedBy = actorId,
+            DocumentType = IdentityProof, IdentityProofType = documentType,
+            OtherDocumentType = documentType == "Other" ? otherDocumentType?.Trim() : null,
+            StorageKey = Guid.NewGuid().ToString("N"), OriginalFileName = file.FileName,
+            ContentType = file.ContentType, FileSizeBytes = file.Bytes.LongLength,
+            Sha256Hash = Convert.ToHexString(SHA256.HashData(file.Bytes)), CreatedDate = now
+        }).ToList();
         var commitAttempted = false;
         try
         {
-            await File.WriteAllBytesAsync(path, bytes, ct);
-            if (previous != null)
+            for (var index = 0; index < created.Count; index++)
             {
-                previous.VerificationStatus = "Superseded";
-                previous.ModifiedDate = now;
-                previous.ModifiedBy = ownerId;
+                var path = FilePath(created[index].StorageKey);
+                Directory.CreateDirectory(Path.GetDirectoryName(path)!);
+                await File.WriteAllBytesAsync(path, files[index].Bytes, ct);
             }
-            db.BookingDocuments.Add(document);
+            foreach (var old in previous)
+            {
+                old.VerificationStatus = "Superseded";
+                old.ModifiedDate = now;
+                old.ModifiedBy = actorId;
+            }
+            db.BookingDocuments.AddRange(created);
             await db.SaveChangesAsync(ct);
             commitAttempted = true;
             await transaction.CommitAsync(ct);
-            return Map(document);
+            return Map(created);
         }
         catch
         {
             if (!commitAttempted)
-                File.Delete(path);
+                foreach (var doc in created) File.Delete(FilePath(doc.StorageKey));
             throw;
         }
     }
@@ -107,12 +119,16 @@ public sealed class BookingIdentityDocuments(AppDbContext db, IConfiguration con
             return false;
 
         var now = DateTime.Now;
-        document.VerificationStatus = reason == null ? "Verified" : "ReuploadRequested";
-        document.VerificationReason = reason;
-        document.VerifiedBy = reviewerId;
-        document.VerifiedAt = now;
-        document.ModifiedBy = reviewerId;
-        document.ModifiedDate = now;
+        var group = await Current(farmHouseId, bookingId).ToListAsync(ct);
+        foreach (var item in group)
+        {
+            item.VerificationStatus = reason == null ? "Verified" : "ReuploadRequested";
+            item.VerificationReason = reason;
+            item.VerifiedBy = reviewerId;
+            item.VerifiedAt = now;
+            item.ModifiedBy = reviewerId;
+            item.ModifiedDate = now;
+        }
         if (reason != null)
             await notifications.StageAsync(document.Booking, BookingNotificationEvent.DocumentReuploadRequested,
                 cancellationToken: ct, eventInstance: documentId, detail: reason);
@@ -134,6 +150,12 @@ public sealed class BookingIdentityDocuments(AppDbContext db, IConfiguration con
             Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "FarmStay", "BookingIdentity"),
         key);
 
-    private static BookingIdentityDocument Map(BookingDocument doc) =>
-        new(doc.BookingDocumentId, doc.OriginalFileName, doc.ContentType, doc.VerificationStatus, doc.VerificationReason);
+    private static BookingIdentityDocument Map(IReadOnlyList<BookingDocument> documents)
+    {
+        var doc = documents[0];
+        return new(doc.BookingDocumentId, doc.OriginalFileName, doc.ContentType, doc.VerificationStatus,
+            doc.VerificationReason, doc.IdentityProofType ?? "ID proof", doc.OtherDocumentType,
+            documents.Select(file => new IdentityProofFile(file.BookingDocumentId, file.OriginalFileName, file.ContentType)).ToArray(),
+            doc.CreatedBy, doc.CreatedDate, doc.CreatedBy != doc.UserId);
+    }
 }

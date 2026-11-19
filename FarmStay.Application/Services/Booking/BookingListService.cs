@@ -25,6 +25,9 @@ public sealed class BookingListService(IBookingListRepository bookings, IUserMem
     public Task<bool> CanDecideAsync(int userId, int farmHouseId) =>
         HasAdministrationAccessAsync(userId, farmHouseId, BookingPermissions.Decide);
 
+    public Task<bool> CanConfirmAsync(int userId, int farmHouseId) =>
+        HasAdministrationAccessAsync(userId, farmHouseId, "Bookings.Confirm");
+
     public async Task<bool> IsGlobalAdministratorAsync(int userId) =>
         (await memberships.GetByUserIdAsync(userId)).Any(m =>
             m.Role is { RoleName: "Super Admin", IsActive: true, IsDeleted: false } &&
@@ -62,6 +65,7 @@ public sealed class BookingListService(IBookingListRepository bookings, IUserMem
         var payments = await bookings.GetPaymentTotalsAsync(farmHouseId, bookingId);
         result.TotalPaid = payments.TotalPaid;
         result.AdvancePaid = payments.AdvancePaid;
+        result.HasPendingAdvanceOrder = payments.PendingAdvance;
         result.DiscountAmount = payments.Discount;
         result.RemainingAmount = Math.Max(0, booking.TotalAmount - payments.Discount - payments.TotalPaid);
         var events = await bookings.GetEventDatesAsync(farmHouseId, [bookingId]);
@@ -84,7 +88,8 @@ public sealed class BookingListService(IBookingListRepository bookings, IUserMem
     private static BookingListResponseDto Map(BookingEntity b) => new()
     {
         BookingId = b.BookingId, BookingReference = b.BookingReference, FullName = b.FullName,
-        Email = b.Email, MobileNumber = b.MobileNumber, AdultCount = b.AdultCount,
+        Email = b.Email, BookingSource = b.BookingSource, CreatedBy = b.CreatedBy,
+        MobileNumber = b.MobileNumber, AdultCount = b.AdultCount,
         ChildrenCount = b.ChildrenCount, PersonCount = b.PersonCount, CustomerNotes = b.CustomerNotes,
         CheckInDate = b.CheckInDate, CheckOutDate = b.CheckOutDate, StayDays = b.StayDays,
         ActualCheckInAt = b.ActualCheckInAt, ActualCheckOutAt = b.ActualCheckOutAt, CheckoutPaidAt = b.CheckoutPaidAt,

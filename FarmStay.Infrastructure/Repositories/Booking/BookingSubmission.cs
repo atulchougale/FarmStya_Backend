@@ -28,8 +28,16 @@ public sealed class BookingSubmission(AppDbContext db, IFarmHousePricingService 
         return bookings.Select(ToResponse).ToArray();
     }
 
-    public async Task<BookingSubmissionResult> SubmitAsync(int farmHouseId, int userId,
-        SubmitBookingRequest request, CancellationToken cancellationToken)
+    public Task<BookingSubmissionResult> SubmitAsync(int farmHouseId, int userId,
+        SubmitBookingRequest request, CancellationToken cancellationToken) =>
+        SubmitCoreAsync(farmHouseId, userId, userId, "Online", request, cancellationToken);
+
+    public Task<BookingSubmissionResult> SubmitForCustomerAsync(int farmHouseId, int customerId, int administrationId,
+        string source, SubmitBookingRequest request, CancellationToken cancellationToken) =>
+        SubmitCoreAsync(farmHouseId, customerId, administrationId, source, request, cancellationToken);
+
+    private async Task<BookingSubmissionResult> SubmitCoreAsync(int farmHouseId, int userId, int actorId,
+        string source, SubmitBookingRequest request, CancellationToken cancellationToken)
     {
         var requestHash = Convert.ToHexString(SHA256.HashData(JsonSerializer.SerializeToUtf8Bytes(request with
         {
@@ -39,7 +47,7 @@ public sealed class BookingSubmission(AppDbContext db, IFarmHousePricingService 
         var existing = db.Bookings.AsNoTracking().Where(b => b.FarmHouseId == farmHouseId &&
             b.CustomerUserId == userId && b.SubmitIdempotencyKey == request.IdempotencyKey);
         var pendingHolds = db.BookingDateReservations.Where(r => r.FarmHouseId == farmHouseId &&
-            r.UserId == userId && r.SelectionId == request.SelectionId);
+            r.UserId == actorId && r.SelectionId == request.SelectionId);
         logger.LogInformation("Booking submit started for farmhouse {FarmHouseId}, customer {UserId}, selection {SelectionId}.",
             farmHouseId, userId, request.SelectionId);
         BookingEntity booking;
@@ -59,7 +67,8 @@ public sealed class BookingSubmission(AppDbContext db, IFarmHousePricingService 
             var authorized = await db.UserMemberships.AnyAsync(m => m.UserId == userId &&
                 m.FarmHouseId == farmHouseId && m.IsActive && !m.IsDeleted &&
                 m.User!.IsActive && !m.User.IsDeleted && m.Role!.IsActive && !m.Role.IsDeleted &&
-                m.Role.RoleName == "Customer" && m.FarmHouse!.IsActive && !m.FarmHouse.IsDeleted, cancellationToken);
+                m.Role.RoleName == "Customer" && m.User.IsMobileVerified &&
+                (m.User.Email == null || m.User.IsEmailVerified) && m.FarmHouse!.IsActive && !m.FarmHouse.IsDeleted, cancellationToken);
             var enabled = authorized && await db.farmHouseModules.AnyAsync(m => m.FarmHouseId == farmHouseId &&
                 m.IsEnabled && !m.IsDeleted && m.Module!.IsActive && m.Module.ModuleName == "Bookings", cancellationToken);
             if (!enabled)
@@ -110,6 +119,10 @@ public sealed class BookingSubmission(AppDbContext db, IFarmHousePricingService 
                 if (!string.Equals(price.PricingVersion, request.PricingVersion, StringComparison.OrdinalIgnoreCase))
                     return new(409, "Pricing changed. Review the updated quote before submitting again.", "PRICING_CHANGED", Quote: price);
 
+                var customer = await db.Users.AsNoTracking().SingleAsync(u => u.UserId == userId, cancellationToken);
+                if (request.MobileNumber.Trim() != customer.MobileNumber ||
+                    !string.Equals(request.Email?.Trim() ?? "", customer.Email ?? "", StringComparison.OrdinalIgnoreCase))
+                    return new(422, "Use the customer's registered mobile number and email.", "CONTACT_MISMATCH");
                 var now = DateTime.Now;
                 if (held.Any(r => r.ExpiresAt <= now || r.CreatedDate.AddMinutes(30) <= now))
                     return new(409, "Your date reservation has expired. Please select the dates again.", "HOLD_EXPIRED");
@@ -117,7 +130,8 @@ public sealed class BookingSubmission(AppDbContext db, IFarmHousePricingService 
                 {
                     FarmHouseId = farmHouseId, CustomerUserId = userId,
                     BookingReference = await NextBookingReferenceAsync(referenceYear, cancellationToken),
-                    FullName = request.FullName.Trim(), Email = request.Email.Trim(), MobileNumber = request.MobileNumber.Trim(),
+                    FullName = request.FullName.Trim(), Email = customer.Email, MobileNumber = customer.MobileNumber,
+                    BookingSource = source,
                     CheckInDate = start, CheckOutDate = end, StayDays = days, BookingType = request.BookingType,
                     AdultCount = request.AdultCount, ChildrenCount = request.ChildrenCount, PersonCount = request.PersonCount,
                     CustomerNotes = request.CustomerNotes?.Trim(), BaseAmount = price.StayAmount, EventAmount = price.EventAmount,
@@ -126,23 +140,23 @@ public sealed class BookingSubmission(AppDbContext db, IFarmHousePricingService 
                     EventDailyRateSnapshot = eventDates.Length == 0 ? null : price.EventRate,
                     PricingVersion = price.PricingVersion, SubmitIdempotencyKey = request.IdempotencyKey,
                     SubmitRequestHash = requestHash, Status = "Pending",
-                    OwnerDeadline = now.AddHours(48), CreatedBy = userId, CreatedDate = now
+                    OwnerDeadline = now.AddHours(48), CreatedBy = actorId, CreatedDate = now
                 };
                 db.Bookings.Add(booking);
                 db.BookingStayDates.AddRange(held.Select(r => new BookingStayDate
                 {
                     Booking = booking, FarmHouseId = farmHouseId, StayDate = r.ReservationDate,
-                    CreatedBy = userId, CreatedDate = now
+                    CreatedBy = actorId, CreatedDate = now
                 }));
                 db.BookingEventDates.AddRange(eventDates.Select(d => new BookingEventDate
                 {
                     Booking = booking, FarmHouseId = farmHouseId, EventDate = d.ToDateTime(TimeOnly.MinValue),
-                    DailyRateSnapshot = price.EventRate, EventType = request.BookingType, CreatedBy = userId, CreatedDate = now
+                    DailyRateSnapshot = price.EventRate, EventType = request.BookingType, CreatedBy = actorId, CreatedDate = now
                 }));
                 db.BookingStatusHistories.Add(new BookingStatusHistory
                 {
-                    Booking = booking, FarmHouseId = farmHouseId, ActorUserId = userId,
-                    ActorType = "Customer", NewStatus = "Pending", CreatedDate = now
+                    Booking = booking, FarmHouseId = farmHouseId, ActorUserId = actorId,
+                    ActorType = actorId == userId ? "Customer" : "Administration", NewStatus = "Pending", CreatedDate = now
                 });
                 await db.SaveChangesAsync(cancellationToken);
                 await notifications.StageAsync(booking, BookingNotificationEvent.Submitted, cancellationToken: cancellationToken);

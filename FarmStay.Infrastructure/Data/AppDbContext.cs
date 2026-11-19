@@ -89,7 +89,7 @@ namespace FarmStay.Infrastructure.Data
             modelBuilder.Entity<User>()
                 .HasIndex(u => new { u.FarmHouseId, u.Email })
                 .IsUnique()
-                .HasFilter("[IsDeleted] = 0");
+                .HasFilter("[IsDeleted] = 0 AND [Email] IS NOT NULL");
 
             modelBuilder.Entity<User>()
                 .HasIndex(u => new { u.FarmHouseId, u.MobileNumber })

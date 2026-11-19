@@ -11,6 +11,10 @@ namespace FarmStay.Application.DTOs.Booking
     public class BookingListResponseDto
     {
         public long BookingId { get; set; }
+        public string BookingSource { get; set; } = "Online";
+        public long CreatedBy { get; set; }
+        public bool CanManageConfirmation { get; set; }
+        public bool HasPendingAdvanceOrder { get; set; }
         public string? BookingReference { get; set; }
         public string? FullName { get; set; }
         public string? MobileNumber { get; set; }
@@ -38,6 +42,9 @@ namespace FarmStay.Application.DTOs.Booking
         public decimal DiscountAmount { get; set; }
         public decimal RemainingAmount { get; set; }
         public bool HasIdentityDocument { get; set; }
+        public string? IdentityDocumentType { get; set; }
+        public string? OtherIdentityDocumentType { get; set; }
+        public int IdentityFileCount { get; set; }
 
 
 

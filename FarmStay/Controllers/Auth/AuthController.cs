@@ -132,6 +132,21 @@ namespace FarmStay.API.Controllers.Auth
         }
 
 
+        [Authorize]
+        [HttpPut("profile/email")]
+        public async Task<IActionResult> UpdateEmail(UpdateEmailRequest request)
+        {
+            var result = await _userService.UpdateEmailAsync(request);
+            return result.Success ? Ok(result) : BadRequest(result);
+        }
+
+        [HttpGet("verification-status")]
+        public async Task<IActionResult> VerificationStatus(int farmHouseId, int userId)
+        {
+            var result = await _userService.VerificationStatusAsync(farmHouseId, userId);
+            return result.Success ? Ok(result) : NotFound(result);
+        }
+
         [HttpPost("refresh-token")]
         public async Task<IActionResult> RefreshToken( [FromBody] RefreshTokenDto dto)
         {

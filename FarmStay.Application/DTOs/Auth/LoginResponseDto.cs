@@ -3,6 +3,8 @@
     public class LoginResponseDto
     {
         // JWT Access Token
+        public bool HasEmail { get; set; }
+
         public string AccessToken { get; set; } = string.Empty;
 
         // Refresh Token

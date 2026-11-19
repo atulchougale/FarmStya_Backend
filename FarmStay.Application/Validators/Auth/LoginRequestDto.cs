@@ -10,9 +10,10 @@ namespace FarmStay.Application.Validators.Auth
             RuleFor(x => x.Email)
                 .Cascade(CascadeMode.Stop)
                 .NotEmpty()
-                .WithMessage("Email is required")
-                .EmailAddress()
-                .WithMessage("Invalid email format");
+                .WithMessage("Email or mobile number is required")
+                .Must(value => System.Text.RegularExpressions.Regex.IsMatch(value ?? "", @"^[0-9]{10}$") ||
+                    new System.ComponentModel.DataAnnotations.EmailAddressAttribute().IsValid(value))
+                .WithMessage("Enter a valid email or 10-digit mobile number");
 
             RuleFor(x => x.Password)
                 .NotEmpty()

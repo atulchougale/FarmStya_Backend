@@ -212,6 +212,11 @@ namespace FarmStay.Infrastructure.Migrations
                         .HasMaxLength(40)
                         .HasColumnType("nvarchar(40)");
 
+                    b.Property<string>("BookingSource")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
                     b.Property<string>("BookingType")
                         .IsRequired()
                         .HasMaxLength(30)
@@ -261,7 +266,6 @@ namespace FarmStay.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
 
@@ -471,6 +475,14 @@ namespace FarmStay.Infrastructure.Migrations
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2(0)");
+
+                    b.Property<string>("IdentityProofType")
+                        .HasMaxLength(40)
+                        .HasColumnType("nvarchar(40)");
+
+                    b.Property<string>("OtherDocumentType")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("DocumentType")
                         .IsRequired()
@@ -1979,7 +1991,6 @@ namespace FarmStay.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
 
@@ -2036,7 +2047,7 @@ namespace FarmStay.Infrastructure.Migrations
 
                     b.HasIndex("FarmHouseId", "Email")
                         .IsUnique()
-                        .HasFilter("[IsDeleted] = 0");
+                        .HasFilter("[IsDeleted] = 0 AND [Email] IS NOT NULL");
 
                     b.HasIndex("FarmHouseId", "MobileNumber")
                         .IsUnique()

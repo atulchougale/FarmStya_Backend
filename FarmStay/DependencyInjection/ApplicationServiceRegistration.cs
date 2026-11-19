@@ -17,6 +17,7 @@ namespace FarmStay.API.DependencyInjection
         {
             // Application Services
 
+            services.AddScoped<IAdminBookingCustomers, FarmStay.Application.Services.Booking.AdminBookingCustomers>();
             services.AddScoped<IUserService, UserService>();
 
             services.AddScoped<IFarmHouseService, FarmHouseService>();

@@ -1,4 +1,4 @@
-﻿using FarmStay.Application.BackgroundJobs;
+using FarmStay.Application.BackgroundJobs;
 using FarmStay.Application.Common.ApiResponse;
 using FarmStay.Application.Common.Constants;
 using FarmStay.Application.DTOs.Auth;
@@ -13,7 +13,7 @@ using System.Security.Cryptography;
 
 namespace FarmStay.Application.Services.Auth
 {
-    public class UserService : IUserService
+    public partial class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
         private readonly IUserMembershipRepository _userMembershipRepository;
@@ -127,37 +127,37 @@ namespace FarmStay.Application.Services.Auth
                 // Step 2
                 // Check Existing Email and Mobile
 
-                var email = dto.Email.Trim().ToLower();
+                var email = dto.Email?.Trim().ToLowerInvariant();
                 var mobile = dto.MobileNumber.Trim();
 
-                var emailUser = await _userRepository.GetByEmailAsync(email, farmHouseId);
+                var emailUser = string.IsNullOrEmpty(email) ? null : await _userRepository.GetByEmailAsync(email ?? "", farmHouseId);
 
                 var mobileUser = await _userRepository.GetByMobileNumberAsync(mobile, farmHouseId);
 
                 // Step 3
                 // Both Email and Mobile Exist
 
-                if (emailUser != null && mobileUser != null)
+                if (mobileUser != null)
                 {
                     // Same User
 
-                    if (emailUser.UserId == mobileUser.UserId)
+                    if (emailUser == null || mobileUser.UserId == mobileUser.UserId)
                     {
                         _logger.LogInformation(
                             "Existing user found with both email and mobile. UserId: {UserId}",
-                            emailUser.UserId);
+                            mobileUser.UserId);
 
                         // Check Membership
 
                         var membership = await _userMembershipRepository.GetMembershipAsync(
-                            emailUser.UserId,
+                            mobileUser.UserId,
                             farmHouseId);
 
                         if (membership != null)
                         {
                             _logger.LogWarning(
                                 "User is already registered in FarmHouse. UserId: {UserId}, FarmHouseId: {FarmHouseId}",
-                                emailUser.UserId,
+                                mobileUser.UserId,
                                 farmHouseId);
 
                             return new ApiResponse<RegisterResponseDto>
@@ -169,28 +169,29 @@ namespace FarmStay.Application.Services.Auth
 
                         _logger.LogInformation(
                             "Membership not found. Starting verification flow. UserId: {UserId}, FarmHouseId: {FarmHouseId}",
-                            emailUser.UserId,
+                            mobileUser.UserId,
                             farmHouseId);
 
-                        await StartVerificationFlowAsync(emailUser, farmHouse);
+                        await StartVerificationFlowAsync(mobileUser, farmHouse);
 
                         return new ApiResponse<RegisterResponseDto>
                         {
                             Success = true,
-                            Message = "Verification initiated. Please verify your email and mobile number.",
+                            Message = "Verification initiated. Verify your mobile number and any supplied email.",
                             Data = new RegisterResponseDto
                             {
-                                UserId = emailUser.UserId,
-                                FullName = emailUser.FullName,
-                                Email = emailUser.Email,
-                                MobileNumber = emailUser.MobileNumber,
-                                FarmHouseId = emailUser.FarmHouseId,
-                                IsEmailVerificationSent = true,
+                                UserId = mobileUser.UserId,
+                                FullName = mobileUser.FullName,
+                                Email = mobileUser.Email ?? "",
+                                MobileNumber = mobileUser.MobileNumber,
+                                FarmHouseId = mobileUser.FarmHouseId,
+                                IsEmailVerificationSent = !string.IsNullOrWhiteSpace(mobileUser.Email),
                                 IsMobileOtpSent = true,
-                                IsEmailVerified = emailUser.IsEmailVerified,
-                                IsMobileVerified = emailUser.IsMobileVerified,
+                                HasEmail = !string.IsNullOrWhiteSpace(mobileUser.Email),
+                                IsEmailVerified = mobileUser.IsEmailVerified,
+                                IsMobileVerified = mobileUser.IsMobileVerified,
 
-                                Message = "Please verify your email and mobile number."
+                                Message = "Verify your mobile number and any supplied email."
                             }
                         };
                     }
@@ -251,7 +252,7 @@ namespace FarmStay.Application.Services.Auth
                 var user = new User
                 {
                     FullName = dto.FullName.Trim(),
-                    Email = email,
+                    Email = string.IsNullOrEmpty(email) ? null : email,
                     MobileNumber = mobile,
 
                     PasswordHash = _passwordService.HashPassword(dto.Password),
@@ -287,19 +288,20 @@ namespace FarmStay.Application.Services.Auth
                 return new ApiResponse<RegisterResponseDto>
                 {
                     Success = true,
-                    Message = "Registration successful. Please verify your email and mobile number.",
+                    Message = "Registration successful. Verify your mobile number and any supplied email.",
                     Data = new RegisterResponseDto
                     {
                         UserId = user.UserId,
                         FullName = user.FullName,
-                        Email = user.Email,
+                        Email = user.Email ?? "",
                         MobileNumber = user.MobileNumber,
                         FarmHouseId = user.FarmHouseId,
-                        IsEmailVerificationSent = true,
+                        IsEmailVerificationSent = !string.IsNullOrWhiteSpace(user.Email),
                         IsMobileOtpSent = true,
+                        HasEmail = !string.IsNullOrWhiteSpace(user.Email),
                         IsEmailVerified = user.IsEmailVerified,
                         IsMobileVerified = user.IsMobileVerified,
-                        Message = "Please verify your email and mobile number."
+                        Message = "Verify your mobile number and any supplied email."
                     }
                 };
             }
@@ -429,6 +431,7 @@ namespace FarmStay.Application.Services.Auth
                     Message = "Email verified successfully.",
                     Data = new VerificationStatusResponseDto
                     {
+                        HasEmail = !string.IsNullOrWhiteSpace(user.Email),
                         IsEmailVerified = user.IsEmailVerified,
                         IsMobileVerified = user.IsMobileVerified
                     }
@@ -501,6 +504,7 @@ namespace FarmStay.Application.Services.Auth
 
                 if (user.IsMobileVerified)
                 {
+                    await CreateCustomerMembershipAsync(user, farmHouse);
                     _logger.LogWarning(
                         "OTP verification requested for already verified mobile. UserId: {UserId}",
                         user.UserId);
@@ -511,7 +515,8 @@ namespace FarmStay.Application.Services.Auth
                         Message = "Mobile number is already verified.",
                         Data = new VerificationStatusResponseDto
                         {
-                            IsEmailVerified = user.IsEmailVerified,
+                            HasEmail = !string.IsNullOrWhiteSpace(user.Email),
+                        IsEmailVerified = user.IsEmailVerified,
                             IsMobileVerified = user.IsMobileVerified
                         }
                     };
@@ -586,9 +591,9 @@ namespace FarmStay.Application.Services.Auth
                     user.FarmHouseId);
 
                 // Step 7
-                // If Email Already Verified, Create Membership
+                // Mobile verification creates membership independently of email.
 
-                if (user.IsEmailVerified)
+                if (user.IsMobileVerified)
                 {
                     await CreateCustomerMembershipAsync(user, farmHouse);
 
@@ -607,6 +612,7 @@ namespace FarmStay.Application.Services.Auth
                     Message = "Mobile number verified successfully.",
                     Data = new VerificationStatusResponseDto
                     {
+                        HasEmail = !string.IsNullOrWhiteSpace(user.Email),
                         IsEmailVerified = user.IsEmailVerified,
                         IsMobileVerified = user.IsMobileVerified
                     }
@@ -732,12 +738,15 @@ namespace FarmStay.Application.Services.Auth
                     "New registration OTP saved successfully. UserId: {UserId}",
                     user.UserId);
 
+                if (!string.IsNullOrWhiteSpace(user.Email))
+                {
                 // Step 6
                 // Build Email Verification Link and Queue Email
 
                 //var verificationLink = $"https://localhost:7081/api/Auth/verify-email?farmHouseId={farmHouse.FarmHouseId}&userId={user.UserId}&token={emailVerificationToken}";
 
-                var verificationLink = $"http://localhost:4200/verify-email?farmHouseId={farmHouse.FarmHouseId}&userId={user.UserId}&token={emailVerificationToken}";
+                var baseUrl = _httpContextAccessor.HttpContext?.Request.Host.Host == "localhost" ? "http://localhost:4200" : $"https://{farmHouse.DomainName}";
+                var verificationLink = $"{baseUrl}/verify-email?farmHouseId={farmHouse.FarmHouseId}&userId={user.UserId}&token={emailVerificationToken}";
 
                 var emailSubject = "Verify Your FarmStay Account";
 
@@ -782,6 +791,8 @@ namespace FarmStay.Application.Services.Auth
                 _logger.LogInformation(
                     "Email verification link queued successfully. UserId: {UserId}",
                     user.UserId);
+
+                }
 
                 // Step 7
                 // Queue WhatsApp OTP
@@ -950,10 +961,11 @@ namespace FarmStay.Application.Services.Auth
                 // Find User
                 // ============================================================
 
-                var email = dto.Email.Trim().ToLower();
+                var email = dto.Email?.Trim().ToLowerInvariant();
 
-                var user = await _userRepository
-                    .GetByEmailAsync(email, farmHouseId);
+                var user = !string.IsNullOrWhiteSpace(email) && System.Text.RegularExpressions.Regex.IsMatch(email, "^[0-9]{10}$")
+                    ? await _userRepository.GetByMobileNumberAsync(email, farmHouseId)
+                    : await _userRepository.GetByEmailAsync(email ?? "", farmHouseId);
 
                 if (user == null)
                 {
@@ -965,7 +977,7 @@ namespace FarmStay.Application.Services.Auth
                     return new ApiResponse<LoginResponseDto>
                     {
                         Success = false,
-                        Message = "Invalid email or password."
+                        Message = "Invalid email/mobile number or password."
                     };
                 }
 
@@ -1005,7 +1017,7 @@ namespace FarmStay.Application.Services.Auth
                     return new ApiResponse<LoginResponseDto>
                     {
                         Success = false,
-                        Message = "Invalid email or password."
+                        Message = "Invalid email/mobile number or password."
                     };
                 }
 
@@ -1041,18 +1053,19 @@ namespace FarmStay.Application.Services.Auth
                     return new ApiResponse<LoginResponseDto>
                     {
                         Success = false,
-                        Message = "Please verify your email and mobile number to activate your account.",
+                        Message = "Verify your mobile number to activate membership. Any supplied email must be verified before booking.",
                         Data = new LoginResponseDto
                         {
                             UserId = user.UserId,
                             FullName = user.FullName,
-                            Email = user.Email,
+                            Email = user.Email ?? "",
                             MobileNumber = user.MobileNumber,
 
                             FarmHouseId = farmHouse.FarmHouseId,
                             FarmHouseName = farmHouse.FarmHouseName,
 
-                            IsEmailVerified = user.IsEmailVerified,
+                            HasEmail = !string.IsNullOrWhiteSpace(user.Email),
+                        IsEmailVerified = user.IsEmailVerified,
                             IsMobileVerified = user.IsMobileVerified,
                             RequiresVerification = true
                         }
@@ -1151,7 +1164,7 @@ namespace FarmStay.Application.Services.Auth
 
                         UserId = user.UserId,
                         FullName = user.FullName,
-                        Email = user.Email,
+                        Email = user.Email ?? "",
                         MobileNumber = user.MobileNumber,
 
                         FarmHouseId = farmHouse.FarmHouseId,
@@ -1162,6 +1175,7 @@ namespace FarmStay.Application.Services.Auth
 
                         IsOwner = role.RoleName == "FarmOwner",
 
+                        HasEmail = !string.IsNullOrWhiteSpace(user.Email),
                         IsEmailVerified = user.IsEmailVerified,
                         IsMobileVerified = user.IsMobileVerified
                     }
@@ -1236,7 +1250,7 @@ namespace FarmStay.Application.Services.Auth
 
                 if (dto.Method == ForgotPasswordMethod.Email)
                 {
-                    var email = dto.Email.Trim().ToLower();
+                    var email = dto.Email?.Trim().ToLowerInvariant();
 
                     var user = await _userRepository.GetByEmailAsync(
                         email,
@@ -2096,7 +2110,10 @@ namespace FarmStay.Application.Services.Auth
                 {
                     UserId = membership.User.UserId,
                     FullName = membership.User.FullName,
-                    Email = membership.User.Email,
+                    Email = membership.User.Email ?? "",
+                        HasEmail = !string.IsNullOrWhiteSpace(membership.User.Email),
+                        IsEmailVerified = membership.User.IsEmailVerified,
+                        IsMobileVerified = membership.User.IsMobileVerified,
                     MobileNumber = membership.User.MobileNumber,
 
                     FarmHouseId = membership.FarmHouse.FarmHouseId,
@@ -2388,7 +2405,10 @@ namespace FarmStay.Application.Services.Auth
 
                         UserId = membership.User.UserId,
                         FullName = membership.User.FullName,
-                        Email = membership.User.Email,
+                        Email = membership.User.Email ?? "",
+                        HasEmail = !string.IsNullOrWhiteSpace(membership.User.Email),
+                        IsEmailVerified = membership.User.IsEmailVerified,
+                        IsMobileVerified = membership.User.IsMobileVerified,
 
                         FarmHouseId =
                             membership.FarmHouse.FarmHouseId,
@@ -2583,6 +2603,11 @@ namespace FarmStay.Application.Services.Auth
 
                 if (user.IsMobileVerified)
                 {
+                    if (!string.IsNullOrWhiteSpace(user.Email) && !user.IsEmailVerified)
+                    {
+                        await StartVerificationFlowAsync(user, farmHouse);
+                        return new ApiResponse<bool> { Success=true, Data=true, Message="Verification email sent." };
+                    }
                     _logger.LogWarning(
                         "Resend OTP requested for already verified mobile. UserId: {UserId}",
                         user.UserId);
@@ -3045,8 +3070,10 @@ namespace FarmStay.Application.Services.Auth
                 await _userOtpRepository.UpdateAsync(otp);
                 await _unitOfWork.SaveChangesAsync();
 
-                // Step 8
-                // Complete login (membership, role, tokens)
+                user.IsMobileVerified = true;
+                await _userRepository.UpdateAsync(user);
+                await _unitOfWork.SaveChangesAsync();
+                await CreateCustomerMembershipAsync(user, farmHouse);
 
                 return await CompleteLoginAsync(user, farmHouse);
             }
@@ -3075,7 +3102,7 @@ namespace FarmStay.Application.Services.Auth
                 user.UserId,
                 farmHouse.FarmHouseId);
 
-            // Membership is created only after both email and mobile are verified,
+            // Membership is created after mobile verification,
             // so this behaves exactly like the password login.
             if (membership == null)
             {
@@ -3089,17 +3116,18 @@ namespace FarmStay.Application.Services.Auth
                 return new ApiResponse<LoginResponseDto>
                 {
                     Success = false,
-                    Message = "Please verify your email and mobile number to activate your account.",
+                    Message = "Verify your mobile number to activate membership. Any supplied email must be verified before booking.",
                     Data = new LoginResponseDto
                     {
                         UserId = user.UserId,
                         FullName = user.FullName,
-                        Email = user.Email,
+                        Email = user.Email ?? "",
                         MobileNumber = user.MobileNumber,
 
                         FarmHouseId = farmHouse.FarmHouseId,
                         FarmHouseName = farmHouse.FarmHouseName,
 
+                        HasEmail = !string.IsNullOrWhiteSpace(user.Email),
                         IsEmailVerified = user.IsEmailVerified,
                         IsMobileVerified = user.IsMobileVerified,
                         RequiresVerification = true
@@ -3171,7 +3199,7 @@ namespace FarmStay.Application.Services.Auth
 
                     UserId = user.UserId,
                     FullName = user.FullName,
-                    Email = user.Email,
+                    Email = user.Email ?? "",
                     MobileNumber = user.MobileNumber,
 
                     FarmHouseId = farmHouse.FarmHouseId,
@@ -3182,7 +3210,8 @@ namespace FarmStay.Application.Services.Auth
 
                     IsOwner = role.RoleName == "FarmOwner",
 
-                    IsEmailVerified = user.IsEmailVerified,
+                    HasEmail = !string.IsNullOrWhiteSpace(user.Email),
+                        IsEmailVerified = user.IsEmailVerified,
                     IsMobileVerified = user.IsMobileVerified
                 }
             };

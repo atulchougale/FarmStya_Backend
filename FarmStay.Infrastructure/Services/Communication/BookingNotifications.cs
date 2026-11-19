@@ -34,6 +34,7 @@ public sealed class BookingNotifications(AppDbContext db, ILogger<BookingNotific
             BookingNotificationEvent.CustomerConfirmationReminder => (true, false, "Approved"),
             BookingNotificationEvent.CheckoutPaymentRequested => (true, false, "CheckedIn"),
             BookingNotificationEvent.CheckedOut => (true, false, "CheckedOut"),
+            BookingNotificationEvent.AdvancePaymentRequested => (true, false, "Approved"),
             _ => throw new ArgumentOutOfRangeException(nameof(notification))
         };
 
@@ -55,7 +56,7 @@ public sealed class BookingNotifications(AppDbContext db, ILogger<BookingNotific
                    membership.Role.RoleName == "FarmOwner"))))
             .Select(membership => new
             {
-                membership.User!.Email,
+                Email = membership.User!.IsEmailVerified || membership.Role!.RoleName != "Customer" ? membership.User.Email : null,
                 membership.User.MobileNumber,
                 IsAdministration = administration && membership.Role!.IsActive && !membership.Role.IsDeleted &&
                     (membership.Role.RoleName == "Admin" || membership.Role.RoleName == "Farm Owner" ||
@@ -90,7 +91,7 @@ public sealed class BookingNotifications(AppDbContext db, ILogger<BookingNotific
         var existing = existingKeys.Concat(db.NotificationOutbox.Local.Select(job => job.IdempotencyKey)).ToHashSet();
         db.NotificationOutbox.AddRange(jobs.Values.Where(job => !existing.Contains(job.IdempotencyKey)));
 
-        void AddJob(string channel, string contact, string payload)
+        void AddJob(string channel, string? contact, string payload)
         {
             if (string.IsNullOrWhiteSpace(contact))
                 return;
@@ -128,6 +129,9 @@ public sealed class BookingNotifications(AppDbContext db, ILogger<BookingNotific
             (BookingNotificationEvent.Submitted, false) => ("Booking request received", "बुकिंग विनंती प्राप्त झाली",
                 "We received your booking request. It is awaiting approval from the farmhouse. Please wait for the decision before making any payment.",
                 "तुमची बुकिंग विनंती मिळाली आहे. फार्महाऊसच्या मंजुरीची प्रतीक्षा आहे. निर्णय येईपर्यंत कोणतेही पेमेंट करू नका."),
+            (BookingNotificationEvent.AdvancePaymentRequested, _) => ("Advance payment requested", "आगाऊ पेमेंटची विनंती",
+                "Your ID proof is uploaded. Open your booking in My Bookings and pay the advance to confirm. If you already paid online, verify that payment before paying again.",
+                "तुमचे ओळखपत्र अपलोड झाले आहे. बुकिंग निश्चित करण्यासाठी My Bookings मधील बुकिंग उघडून आगाऊ रक्कम भरा. ऑनलाइन पेमेंट आधीच केले असल्यास पुन्हा पैसे भरण्याआधी पेमेंट तपासा."),
             (BookingNotificationEvent.Approved, _) => ("Booking request approved", "बुकिंग विनंती मंजूर झाली",
                 "Your request was approved. Open your booking to complete the confirmation steps and pay the advance by the specified deadline.",
                 "तुमची विनंती मंजूर झाली आहे. बुकिंग उघडा आणि दिलेल्या मुदतीत पुष्टीकरणाची प्रक्रिया पूर्ण करून आगाऊ रक्कम भरा."),
@@ -167,7 +171,7 @@ public sealed class BookingNotifications(AppDbContext db, ILogger<BookingNotific
         {
             BookingNotificationEvent.Submitted when administration => booking.OwnerDeadline,
             BookingNotificationEvent.OwnerApprovalReminder => booking.OwnerDeadline,
-            BookingNotificationEvent.Approved or BookingNotificationEvent.CustomerConfirmationReminder => booking.CustomerDeadline,
+            BookingNotificationEvent.Approved or BookingNotificationEvent.CustomerConfirmationReminder or BookingNotificationEvent.AdvancePaymentRequested => booking.CustomerDeadline,
             _ => null
         };
         var englishStay = FormattableString.Invariant($"{booking.CheckInDate:dd MMM yyyy} to {booking.CheckOutDate:dd MMM yyyy}");
@@ -195,6 +199,7 @@ public sealed class BookingNotifications(AppDbContext db, ILogger<BookingNotific
             message += $"\n\nReason / कारण: {detail}";
         var path = notification switch
         {
+            BookingNotificationEvent.AdvancePaymentRequested => $"/my-bookings/{booking.BookingId}",
             BookingNotificationEvent.Approved => $"/my-bookings?reference={Uri.EscapeDataString(booking.BookingReference)}",
             BookingNotificationEvent.DocumentReuploadRequested => $"/my-bookings?reference={Uri.EscapeDataString(booking.BookingReference)}",
             BookingNotificationEvent.Rejected => "/booking",
@@ -208,7 +213,7 @@ public sealed class BookingNotifications(AppDbContext db, ILogger<BookingNotific
             message += $"\n\nDownload payment receipt / पेमेंट पावती डाउनलोड करा\nhttps://{domain}/my-bookings/{booking.BookingId}?receipts=true";
         if (path != null && Uri.CheckHostName(domain) == UriHostNameType.Dns)
         {
-            var label = notification is BookingNotificationEvent.Approved or BookingNotificationEvent.DocumentReuploadRequested
+            var label = notification is BookingNotificationEvent.Approved or BookingNotificationEvent.DocumentReuploadRequested or BookingNotificationEvent.AdvancePaymentRequested
                 ? "View My Bookings / माझी बुकिंग पहा"
                 : "Start a new booking / नवीन बुकिंग करा";
             message += $"\n\n{label}\nhttps://{domain}{path}";

@@ -39,10 +39,9 @@ namespace FarmStay.Domain.Entities
         [MaxLength(150)]
         public string FullName { get; set; } = string.Empty;
 
-        [Required]
-        [MaxLength(255)]
+        [MaxLength(150)]
         [EmailAddress]
-        public string Email { get; set; } = string.Empty;
+        public string? Email { get; set; }
 
         [Required]
         [MaxLength(30)]
@@ -102,6 +101,9 @@ namespace FarmStay.Domain.Entities
         [Required]
         [MaxLength(30)]
         public string Status { get; set; } = "Pending";
+
+        [MaxLength(20)]
+        public string BookingSource { get; set; } = "Online";
 
         // ==================== Owner Approval Deadline ====================
 

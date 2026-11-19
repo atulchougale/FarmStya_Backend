@@ -14,7 +14,8 @@ public enum BookingNotificationEvent
     OwnerApprovalTimedOut,
     DocumentReuploadRequested,
     CheckoutPaymentRequested,
-    CheckedOut
+    CheckedOut,
+    AdvancePaymentRequested
 }
 
 public interface IBookingNotifications

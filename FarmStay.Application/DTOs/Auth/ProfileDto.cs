@@ -3,6 +3,10 @@
     public class ProfileDto
     {
         // User Information
+        public bool HasEmail { get; set; }
+        public bool IsEmailVerified { get; set; }
+        public bool IsMobileVerified { get; set; }
+
         public int UserId { get; set; }
 
         public string FullName { get; set; } = string.Empty;

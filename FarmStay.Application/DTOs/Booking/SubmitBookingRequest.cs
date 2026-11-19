@@ -3,7 +3,7 @@ using FluentValidation;
 namespace FarmStay.Application.DTOs.Booking;
 
 public record SubmitBookingRequest(Guid SelectionId, long[] ReservationIds, string FullName,
-    string MobileNumber, string Email, DateOnly CheckInDate, DateOnly CheckOutDate,
+    string MobileNumber, string? Email, DateOnly CheckInDate, DateOnly CheckOutDate,
     string BookingType, DateOnly[] EventDates, int AdultCount, int ChildrenCount,
     int PersonCount, string? CustomerNotes, Guid IdempotencyKey, string PricingVersion);
 
@@ -21,7 +21,7 @@ public sealed class SubmitBookingValidator : AbstractValidator<SubmitBookingRequ
             ids != null && ids.All(id => id > 0) && ids.Distinct().Count() == ids.Length);
         RuleFor(x => x.FullName).NotEmpty().MaximumLength(150);
         RuleFor(x => x.MobileNumber).NotEmpty().MaximumLength(30).Matches(@"^\+?[0-9 ()-]{7,29}$");
-        RuleFor(x => x.Email).NotEmpty().MaximumLength(255).EmailAddress();
+        RuleFor(x => x.Email).MaximumLength(150).EmailAddress().When(x => !string.IsNullOrWhiteSpace(x.Email));
         RuleFor(x => x.CheckInDate).NotEmpty();
         RuleFor(x => x.CheckOutDate).GreaterThan(x => x.CheckInDate);
         RuleFor(x => x.AdultCount).GreaterThan(0);

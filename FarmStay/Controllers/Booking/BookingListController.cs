@@ -15,6 +15,7 @@ namespace FarmStay.API.Controllers.Booking;
 public sealed class BookingListController(IBookingListService service, IBookingDecisionService decisions,
     IBookingIdentityDocuments documents,
     IAdvancePaymentOrders paymentOrders,
+    IAdminBookingConfirmation confirmation,
     IBookingStayOperations stays,
     IBookingReceipts receipts,
     ILogger<BookingListController> logger) : ControllerBase
@@ -171,7 +172,7 @@ public sealed class BookingListController(IBookingListService service, IBookingD
         var (error, farmHouseId, userId) = await GetScope(administration: false);
         if (error != null) return error;
         var document = await documents.GetAsync(farmHouseId, bookingId, userId, ct);
-        if (document == null || document.Id != documentId) return NotFound();
+        if (document == null || !document.Files.Any(file => file.Id == documentId)) return NotFound();
         var file = await documents.OpenAsync(farmHouseId, bookingId, documentId, ct);
         if (file == null) return NotFound();
         Response.Headers.CacheControl = "no-store";
@@ -181,29 +182,73 @@ public sealed class BookingListController(IBookingListService service, IBookingD
 
     [HttpPost("my-bookings/{bookingId:long}/id-proof")]
     [Authorize(Policy = BookingCustomerRequirement.Policy)]
-    [RequestSizeLimit(MaxDocumentBytes + 16384)]
-    public async Task<IActionResult> UploadIdentity(long bookingId, IFormFile file, CancellationToken ct)
-    {
-        var (error, farmHouseId, userId) = await GetScope(administration: false);
-        if (error != null) return error;
-        if (file.Length is <= 0 or > MaxDocumentBytes)
-            return BadRequest(new ApiResponse<object> { Message = "Upload an ID proof up to 5 MB." });
-        var fileName = Path.GetFileName(file.FileName.Replace('\\', '/'));
-        if (fileName.Length is <= 0 or > 255)
-            return BadRequest(new ApiResponse<object> { Message = "The file name is too long or missing." });
-        using var buffer = new MemoryStream((int)file.Length);
-        await file.CopyToAsync(buffer, ct);
-        var bytes = buffer.ToArray();
-        var contentType = IdentityContentType(fileName, bytes);
-        if (contentType == null || !string.Equals(contentType, file.ContentType, StringComparison.OrdinalIgnoreCase))
-            return BadRequest(new ApiResponse<object> { Message = "Choose a valid PDF, JPEG or PNG file." });
+    [RequestSizeLimit(2 * MaxDocumentBytes + 32768)]
+    public async Task<IActionResult> UploadIdentity(long bookingId, [FromForm] List<IFormFile> files,
+        [FromForm] string documentType, [FromForm] string? otherDocumentType, CancellationToken ct)
+        => await UploadIdentityCore(bookingId, files, documentType, otherDocumentType, false, ct);
 
-        var document = await documents.UploadAsync(farmHouseId, bookingId, userId, fileName, contentType, bytes, ct);
+    [HttpPost("{bookingId:long}/id-proof")]
+    [Authorize(Roles = StaffRoles)]
+    [RequestSizeLimit(2 * MaxDocumentBytes + 32768)]
+    public Task<IActionResult> UploadCustomerIdentity(long bookingId, [FromForm] List<IFormFile> files,
+        [FromForm] string documentType, [FromForm] string? otherDocumentType, CancellationToken ct)
+        => UploadIdentityCore(bookingId, files, documentType, otherDocumentType, true, ct);
+
+    private async Task<IActionResult> UploadIdentityCore(long bookingId, List<IFormFile> files,
+        string documentType, string? otherDocumentType, bool administration, CancellationToken ct)
+    {
+        var (error, farmHouseId, userId) = await GetScope(administration, confirm: administration);
+        if (error != null) return error;
+        string[] types = ["Aadhaar Card", "PAN Card", "Passport", "Driving Licence", "Voter ID", "Government-issued Photo ID", "Other"];
+        if (!types.Contains(documentType) || (documentType == "Other" &&
+            (string.IsNullOrWhiteSpace(otherDocumentType) || otherDocumentType.Trim().Length > 100)))
+            return BadRequest(new ApiResponse<object> { Message = "Select a document type. For Other, enter a type up to 100 characters." });
+        if (files.Count is < 1 or > 2)
+            return BadRequest(new ApiResponse<object> { Message = "Upload one or two files for the same document type." });
+        var uploads = new List<IdentityProofUpload>();
+        foreach (var file in files)
+        {
+            if (file.Length is <= 0 or > MaxDocumentBytes)
+                return BadRequest(new ApiResponse<object> { Message = "Each file must be a PDF, JPG or PNG up to 5 MB." });
+            var fileName = Path.GetFileName(file.FileName.Replace('\\', '/'));
+            if (fileName.Length is <= 0 or > 255)
+                return BadRequest(new ApiResponse<object> { Message = "The file name is too long or missing." });
+            using var buffer = new MemoryStream((int)file.Length);
+            await file.CopyToAsync(buffer, ct);
+            var bytes = buffer.ToArray();
+            var contentType = IdentityContentType(fileName, bytes);
+            if (contentType == null || !string.Equals(contentType, file.ContentType, StringComparison.OrdinalIgnoreCase))
+                return BadRequest(new ApiResponse<object> { Message = "Choose a valid PDF, JPEG or PNG file." });
+            uploads.Add(new(fileName, contentType, bytes));
+        }
+        var document = administration
+            ? await documents.UploadForCustomerAsync(farmHouseId, bookingId, userId, documentType, otherDocumentType, uploads, ct)
+            : await documents.UploadAsync(farmHouseId, bookingId, userId, documentType, otherDocumentType, uploads, ct);
         if (document == null)
             return Conflict(new ApiResponse<object> { Message = "This booking cannot accept an ID upload now." });
-        logger.LogInformation("ID proof {DocumentId} uploaded for booking {BookingId} in farmhouse {FarmHouseId}.",
-            document.Id, bookingId, farmHouseId);
+        logger.LogInformation("ID proof type {DocumentType} uploaded with {FileCount} files for booking {BookingId} in farmhouse {FarmHouseId}.",
+            documentType, uploads.Count, bookingId, farmHouseId);
         return Ok(new ApiResponse<BookingIdentityDocument> { Success = true, Data = document });
+    }
+
+    [HttpPost("{bookingId:long}/advance-cash")]
+    [Authorize(Roles = StaffRoles)]
+    public async Task<IActionResult> CollectAdvance(long bookingId, AdminAdvanceRequest request, CancellationToken ct)
+    {
+        var (error, farm, actor) = await GetScope(true, confirm: true);
+        if (error != null) return error;
+        var result = await confirmation.CollectCashAsync(farm, bookingId, actor, request, ct);
+        return StatusCode(result.Status, new ApiResponse<object> { Success = result.Status == 200, Message = result.Message });
+    }
+
+    [HttpPost("{bookingId:long}/advance-reminder")]
+    [Authorize(Roles = StaffRoles)]
+    public async Task<IActionResult> AdvanceReminder(long bookingId, CancellationToken ct)
+    {
+        var (error, farm, actor) = await GetScope(true, confirm: true);
+        if (error != null) return error;
+        var result = await confirmation.SendPaymentReminderAsync(farm, bookingId, actor, ct);
+        return StatusCode(result.Status, new ApiResponse<object> { Success = result.Status == 200, Message = result.Message });
     }
 
     private static string? IdentityContentType(string fileName, ReadOnlySpan<byte> bytes) =>
@@ -320,7 +365,15 @@ public sealed class BookingListController(IBookingListService service, IBookingD
 
         var booking = await service.FindAsync(farmHouseId, administration ? null : userId, bookingId);
         if (booking != null && administration)
-            booking.HasIdentityDocument = await documents.GetAsync(farmHouseId, bookingId, null, HttpContext.RequestAborted) != null;
+        {
+            booking.CanManageConfirmation = await service.CanConfirmAsync(userId, farmHouseId) &&
+                ((booking.Status == "Approved" && booking.CustomerDeadline > DateTime.Now) || booking.Status == "Confirmed");
+            var identity = await documents.GetAsync(farmHouseId, bookingId, null, HttpContext.RequestAborted);
+            booking.HasIdentityDocument = identity != null;
+            booking.IdentityDocumentType = identity?.DocumentType;
+            booking.OtherIdentityDocumentType = identity?.OtherDocumentType;
+            booking.IdentityFileCount = identity?.Files.Count ?? 0;
+        }
         if (booking != null && administration && booking.Status is "Pending" or "Confirmed" or "CheckedIn")
         {
             var now = DateTime.Now;
@@ -335,7 +388,7 @@ public sealed class BookingListController(IBookingListService service, IBookingD
             : Ok(new ApiResponse<BookingListResponseDto> { Success = true, Data = booking });
     }
 
-    private async Task<(IActionResult? Error, int FarmHouseId, int UserId)> GetScope(bool administration, bool decide = false)
+    private async Task<(IActionResult? Error, int FarmHouseId, int UserId)> GetScope(bool administration, bool decide = false, bool confirm = false)
     {
         if (!int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out var userId) || userId <= 0)
             return (Unauthorized(), 0, 0);
@@ -347,7 +400,8 @@ public sealed class BookingListController(IBookingListService service, IBookingD
         if (!matchingTenant && !(administration && User.IsInRole("Super Admin") &&
             await service.IsGlobalAdministratorAsync(userId)))
             return (Forbid(), 0, 0);
-        var permitted = decide ? await service.CanDecideAsync(userId, farmHouseId)
+        var permitted = confirm ? await service.CanConfirmAsync(userId, farmHouseId)
+            : decide ? await service.CanDecideAsync(userId, farmHouseId)
             : await service.CanViewAsync(userId, farmHouseId, administration);
         if (!permitted)
             return (Forbid(), 0, 0);

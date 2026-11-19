@@ -126,6 +126,9 @@ namespace FarmStay.API.DependencyInjection
             services.AddScoped<IBookingReceipts, FarmStay.Infrastructure.Services.Reporting.BookingReceipts>();
             services.AddScoped<IBookingIdentityDocuments, BookingIdentityDocuments>();
             services.AddScoped<IAdvancePaymentOrders, RazorpayAdvancePaymentOrders>();
+            services.AddScoped<IAdminBookingConfirmation, AdminBookingConfirmation>();
+            services.AddScoped<FarmStay.Application.Reporting.IReportingService, FarmStay.Infrastructure.Reporting.ReportingService>();
+            services.AddScoped<FarmStay.Application.Reporting.IReportAccess, FarmStay.Infrastructure.Reporting.ReportAccess>();
             services.AddScoped<IBookingSubmission, BookingSubmission>();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();

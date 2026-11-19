@@ -2,6 +2,8 @@
 {
     public class RegisterResponseDto
     {
+        public bool HasEmail { get; set; }
+
         public int UserId { get; set; }
 
         public string FullName { get; set; } = string.Empty;

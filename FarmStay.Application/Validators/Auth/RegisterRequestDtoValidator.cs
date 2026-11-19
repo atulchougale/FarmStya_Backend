@@ -14,10 +14,10 @@ namespace FarmStay.Application.Validators.Auth
                 .WithMessage("Full name cannot exceed 100 characters");
 
             RuleFor(x => x.Email)
-                .NotEmpty()
-                .WithMessage("Email is required")
                 .EmailAddress()
-                .WithMessage("Invalid email format");
+                .WithMessage("Invalid email format")
+                .MaximumLength(150)
+                .When(x => !string.IsNullOrWhiteSpace(x.Email));
 
             RuleFor(x => x.Password)
                 .Cascade(CascadeMode.Stop)

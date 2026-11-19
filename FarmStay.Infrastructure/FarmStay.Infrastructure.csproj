@@ -27,6 +27,8 @@
 	<ItemGroup>
 	  <Folder Include="Migrations\" />
       <EmbeddedResource Include="Reports\*.rdlc" />
+      <EmbeddedResource Include="Reporting\Templates\*.rdlc" />
+      <EmbeddedResource Include="Reporting\Sql\*.sql" />
 	</ItemGroup>
 
 </Project>

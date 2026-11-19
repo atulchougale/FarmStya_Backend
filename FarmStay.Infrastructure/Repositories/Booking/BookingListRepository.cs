@@ -73,7 +73,7 @@ namespace FarmStay.Infrastructure.Repositories.Booking
         }
 
         // Get booking status history
-        public async Task<(decimal TotalPaid, decimal AdvancePaid, decimal Discount)> GetPaymentTotalsAsync(int farmHouseId, long bookingId)
+        public async Task<(decimal TotalPaid, decimal AdvancePaid, decimal Discount, bool PendingAdvance)> GetPaymentTotalsAsync(int farmHouseId, long bookingId)
         {
             var paid = _context.PaymentTransactions.AsNoTracking().Where(p =>
                 p.FarmHouseId == farmHouseId && p.BookingId == bookingId && !p.IsDelete && p.PaymentStatus == "Success");
@@ -82,7 +82,10 @@ namespace FarmStay.Infrastructure.Repositories.Booking
             var discount = await _context.CheckoutDiscounts.AsNoTracking().Where(d =>
                 d.FarmHouseId == farmHouseId && d.BookingId == bookingId && !d.IsDelete)
                 .SumAsync(d => (decimal?)d.Amount) ?? 0;
-            return (total, advance, discount);
+            var pendingAdvance = await _context.PaymentTransactions.AsNoTracking().AnyAsync(p =>
+                p.FarmHouseId == farmHouseId && p.BookingId == bookingId && !p.IsDelete &&
+                p.PaymentType == "Advance" && p.PaymentMethod == "Online" && p.PaymentStatus == "Pending");
+            return (total, advance, discount, pendingAdvance);
         }
 
         public async Task<List<BookingStatusHistory>>

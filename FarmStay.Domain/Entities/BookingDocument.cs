@@ -24,6 +24,12 @@ namespace FarmStay.Domain.Entities
         [MaxLength(40)]
         public string DocumentType { get; set; } = string.Empty;
 
+        [MaxLength(40)]
+        public string? IdentityProofType { get; set; }
+
+        [MaxLength(100)]
+        public string? OtherDocumentType { get; set; }
+
         // Private storage reference, not a public URL.
         [Required]
         [MaxLength(500)]

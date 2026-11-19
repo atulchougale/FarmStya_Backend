@@ -70,6 +70,13 @@ public sealed class RazorpayAdvancePaymentOrders(AppDbContext db, IHttpClientFac
             return (409, "No captured test payment was found yet.");
 
         await using var transaction = await db.Database.BeginTransactionAsync(ct);
+        foreach (var resource in new[] { $"FarmStay:AdvanceOrder:{bookingId}", $"FarmStay:BookingIdentity:{bookingId}" })
+            await db.Database.ExecuteSqlInterpolatedAsync($"""
+                DECLARE @result int;
+                EXEC @result = sys.sp_getapplock @Resource = {resource}, @LockMode = 'Exclusive',
+                    @LockOwner = 'Transaction', @LockTimeout = 15000;
+                IF @result < 0 THROW 50013, 'Advance verification lock unavailable.', 1;
+                """, ct);
         var now = DateTime.Now;
         var updated = await bookings.Where(b => b.Status == "Approved" && b.CustomerDeadline > now &&
                 db.BookingDocuments.Any(d => d.BookingId == bookingId && d.FarmHouseId == farmHouseId &&
