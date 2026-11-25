@@ -1,4 +1,4 @@
-﻿using FarmStay.Domain.Entities;
+using FarmStay.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
@@ -51,6 +51,9 @@ namespace FarmStay.Infrastructure.Persistence.Configurations
                .WithMany(x => x.ContactUs)
                 .HasForeignKey(x => x.FarmHouseId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Property(x => x.Email).HasMaxLength(254);
+            builder.Property(x => x.EnquiryType).IsRequired().HasMaxLength(50).HasDefaultValue("General question");
 
             // Index
             builder.HasIndex(x => x.FarmHouseId);

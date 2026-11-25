@@ -140,6 +140,30 @@ namespace FarmStay.API.Controllers.Auth
             return result.Success ? Ok(result) : BadRequest(result);
         }
 
+        [Authorize]
+        [HttpPost("profile/contact/send-code")]
+        public async Task<IActionResult> SendProfileContactCode(ProfileContactRequest request)
+        {
+            var result = await _userService.RequestProfileContactAsync(request);
+            return result.Success ? Ok(result) : BadRequest(result);
+        }
+
+        [Authorize]
+        [HttpPost("profile/contact/verify-code")]
+        public async Task<IActionResult> VerifyProfileContactCode(VerifyProfileContactRequest request)
+        {
+            var result = await _userService.VerifyProfileContactAsync(request);
+            return result.Success ? Ok(result) : BadRequest(result);
+        }
+
+        [Authorize]
+        [HttpPut("profile")]
+        public async Task<IActionResult> UpdateProfile(UpdateProfileRequest request)
+        {
+            var result = await _userService.UpdateProfileAsync(request);
+            return result.Success ? Ok(result) : BadRequest(result);
+        }
+
         [HttpGet("verification-status")]
         public async Task<IActionResult> VerificationStatus(int farmHouseId, int userId)
         {

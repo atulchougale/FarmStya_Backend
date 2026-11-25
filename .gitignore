@@ -505,3 +505,6 @@ $RECYCLE.BIN/
 *.pfx
 *.p12
 *.pem
+
+# Generated Accounts verification exports
+/docs/Accounts/evidence/

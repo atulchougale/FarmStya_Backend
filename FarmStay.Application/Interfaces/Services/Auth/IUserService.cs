@@ -5,6 +5,9 @@ namespace FarmStay.Application.Interfaces.Services.Auth
 {
     public interface IUserService
     {
+        Task<ApiResponse<bool>> RequestProfileContactAsync(ProfileContactRequest request);
+        Task<ApiResponse<bool>> VerifyProfileContactAsync(VerifyProfileContactRequest request);
+        Task<ApiResponse<bool>> UpdateProfileAsync(UpdateProfileRequest request);
         Task<ApiResponse<VerificationStatusResponseDto>> UpdateEmailAsync(UpdateEmailRequest request);
         Task<ApiResponse<VerificationStatusResponseDto>> VerificationStatusAsync(int farmHouseId, int userId);
         // ================= Authentication =================

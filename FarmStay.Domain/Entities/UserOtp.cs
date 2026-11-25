@@ -23,6 +23,14 @@ namespace FarmStay.Domain.Entities
         [Required]
         public OtpPurpose Purpose { get; set; }
 
+        [MaxLength(150)]
+        public string? Target { get; set; }
+
+        [MaxLength(64)]
+        public string? OtpHash { get; set; }
+
+        public DateTime? VerifiedAt { get; set; }
+
         public DateTime ExpiryDate { get; set; }
 
         public bool IsUsed { get; set; } = false;

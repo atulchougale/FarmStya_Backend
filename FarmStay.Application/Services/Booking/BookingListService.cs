@@ -10,6 +10,11 @@ public sealed class BookingListService(IBookingListRepository bookings, IUserMem
     IFarmHouseRepository farmHouses, IPermissionRepository permissions)
     : IBookingListService
 {
+    public async Task<AdministrationBookingList> SearchAdministrationAsync(int farmHouseId, AdministrationBookingFilter filter, CancellationToken ct)
+    {
+        var result = await bookings.SearchAdministrationAsync(farmHouseId, filter, ct);
+        return new(result.Items.Select(Map).ToArray(), result.TotalCount, result.Summary);
+    }
     public async Task<bool> CanViewAsync(int userId, int farmHouseId, bool administration)
     {
         if (administration)
@@ -47,10 +52,10 @@ public sealed class BookingListService(IBookingListRepository bookings, IUserMem
     }
 
     public async Task<IReadOnlyList<BookingListResponseDto>> ListAsync(int farmHouseId, int? customerUserId,
-        int page, int pageSize)
+        int page, int pageSize, string? status = null)
     {
         var records = customerUserId.HasValue
-            ? await bookings.GetMyBookingsAsync(customerUserId.Value, farmHouseId, page, pageSize)
+            ? await bookings.GetMyBookingsAsync(customerUserId.Value, farmHouseId, page, pageSize, status)
             : await bookings.GetAllBookingsAsync(farmHouseId, page, pageSize);
         return records.Select(Map).ToArray();
     }

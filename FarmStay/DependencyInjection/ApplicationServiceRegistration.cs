@@ -16,6 +16,7 @@ namespace FarmStay.API.DependencyInjection
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
             // Application Services
+            services.AddScoped<FarmStay.Application.Accounts.IAccountsService, FarmStay.Application.Accounts.AccountsService>();
 
             services.AddScoped<IAdminBookingCustomers, FarmStay.Application.Services.Booking.AdminBookingCustomers>();
             services.AddScoped<IUserService, UserService>();
@@ -33,6 +34,7 @@ namespace FarmStay.API.DependencyInjection
             services.AddScoped<IPermissionService, PermissionService>();
 
             services.AddScoped<IAdminMenuService, AdminMenuService>();
+            services.AddScoped<IDashboardService, DashboardService>();
 
             services.AddScoped<IContactService, ContactService>();
 
@@ -44,6 +46,15 @@ namespace FarmStay.API.DependencyInjection
 
             services.AddScoped<IBookingCalendarService, BookingCalendarService>();
             services.AddScoped<IBookingListService, BookingListService>();
+            services.AddScoped<FarmStay.Application.Interfaces.Services.Reports.IBookingReportService,
+                FarmStay.Application.Services.Reports.Booking.BookingReportService>();
+            services.AddScoped<FarmStay.Application.Interfaces.Services.Reports.IRevenueReportService,
+                FarmStay.Application.Services.Reports.Revenue.RevenueReportService>();
+            services.AddScoped<FarmStay.Application.Interfaces.Services.Reports.ICustomerReportService,
+                FarmStay.Application.Services.Reports.Customer.CustomerReportService>();
+            services.AddScoped<FarmStay.Application.Interfaces.Services.Reports.IOccupancyReportService,
+                FarmStay.Application.Services.Reports.Occupancy.OccupancyReportService>();
+            services.AddScoped<FarmStay.Application.Reporting.IReportingService, FarmStay.Application.Services.Reports.ReportingService>();
 
 
 

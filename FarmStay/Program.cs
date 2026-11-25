@@ -13,6 +13,11 @@ builder.Host.AddSerilogServices();
 // Framework Services
 // -------------------------------------
 builder.Services.AddControllers();
+builder.Services.AddRateLimiter(options => { options.RejectionStatusCode=429; options.AddPolicy("Accounts", context =>
+    System.Threading.RateLimiting.RateLimitPartition.GetFixedWindowLimiter(
+        context.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value ?? context.Connection.RemoteIpAddress?.ToString() ?? "anonymous",
+        _ => new System.Threading.RateLimiting.FixedWindowRateLimiterOptions {
+            PermitLimit = 120, Window = TimeSpan.FromMinutes(1), QueueLimit = 0 })); });
 
 builder.Services.AddCorsServices();
 
@@ -64,6 +69,7 @@ app.UseMiddleware<GlobalExceptionMiddleware>();
 app.UseAuthentication();
 
 app.UseAuthorization();
+app.UseRateLimiter();
 
 app.MapControllers();
 

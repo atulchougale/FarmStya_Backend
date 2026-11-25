@@ -15,6 +15,28 @@ namespace FarmStay.Infrastructure.Repositories.Booking
             _context = context;
         }
 
+        public async Task<(List<FarmStay.Domain.Entities.Booking> Items, long TotalCount, FarmStay.Application.DTOs.Booking.AdministrationBookingSummary Summary)> SearchAdministrationAsync(
+            int farmHouseId, FarmStay.Application.DTOs.Booking.AdministrationBookingFilter filter, CancellationToken ct)
+        {
+            var scope = _context.Bookings.AsNoTracking().Where(b => b.FarmHouseId == farmHouseId && !b.IsDelete);
+            var counts = await scope.GroupBy(b => b.Status).Select(g => new { Status = g.Key, Count = g.LongCount() }).ToListAsync(ct);
+            long Count(string status) => counts.Where(c => c.Status == status).Sum(c => c.Count);
+            var summary = new FarmStay.Application.DTOs.Booking.AdministrationBookingSummary(counts.Sum(c => c.Count), Count("Confirmed"), Count("CheckedIn"), Count("CheckedOut"), Count("Pending"));
+            var query = scope;
+            var search = filter.Search?.Trim();
+            if (!string.IsNullOrEmpty(search))
+                query = query.Where(b => b.BookingReference.Contains(search) || b.FullName.Contains(search) || b.MobileNumber.Contains(search));
+            if (!string.IsNullOrEmpty(filter.Status)) query = query.Where(b => b.Status == filter.Status);
+            if (!string.IsNullOrEmpty(filter.Source)) query = query.Where(b => b.BookingSource == filter.Source);
+            // A stay overlaps the inclusive filter range; checkout is exclusive.
+            if (filter.From.HasValue) query = query.Where(b => b.CheckOutDate > filter.From.Value.Date);
+            if (filter.To.HasValue) query = query.Where(b => b.CheckInDate <= filter.To.Value.Date);
+            var total = await query.LongCountAsync(ct);
+            var items = await query.OrderByDescending(b => b.CreatedDate).ThenByDescending(b => b.BookingId)
+                .Skip((filter.Page - 1) * filter.PageSize).Take(filter.PageSize).ToListAsync(ct);
+            return (items, total, summary);
+        }
+
         // Get all bookings with pagination
         public async Task<List<FarmStay.Domain.Entities.Booking>>
             GetAllBookingsAsync(
@@ -109,7 +131,7 @@ namespace FarmStay.Infrastructure.Repositories.Booking
      int customerUserId,
      int farmHouseId,
      int page,
-     int pageSize)
+     int pageSize, string? status = null)
         {
             page = Math.Max(page, 1);
             pageSize = Math.Clamp(pageSize, 1, 100);
@@ -119,7 +141,8 @@ namespace FarmStay.Infrastructure.Repositories.Booking
                 .Where(b =>
                     b.CustomerUserId == customerUserId &&
                     b.FarmHouseId == farmHouseId &&
-                    !b.IsDelete)
+                    !b.IsDelete &&
+                    (status == null || b.Status == status))
                 .OrderByDescending(b => b.CreatedDate)
                 .ThenByDescending(b => b.BookingId)
                 .Skip((page - 1) * pageSize)

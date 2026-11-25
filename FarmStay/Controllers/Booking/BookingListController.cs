@@ -104,6 +104,23 @@ public sealed class BookingListController(IBookingListService service, IBookingD
         });
     }
 
+    [HttpGet("administration-list")]
+    [Authorize(Roles = StaffRoles)]
+    public async Task<IActionResult> AdministrationList([FromQuery] AdministrationBookingFilter filter, CancellationToken ct)
+    {
+        var (error, farmHouseId, userId) = await GetScope(true);
+        if (error != null) return error;
+        string[] statuses = ["Pending", "Approved", "Confirmed", "CheckedIn", "CheckedOut", "Cancelled", "Rejected", "Completed"];
+        if (filter.Page < 1 || filter.PageSize is < 1 or > 100 || (long)(filter.Page - 1) * filter.PageSize > int.MaxValue ||
+            filter.Search?.Length > 150 || (!string.IsNullOrEmpty(filter.Status) && !statuses.Contains(filter.Status)) ||
+            (!string.IsNullOrEmpty(filter.Source) && filter.Source is not ("Online" or "Phone" or "WalkIn")) ||
+            (filter.From.HasValue && filter.To.HasValue && filter.From.Value.Date > filter.To.Value.Date))
+            return BadRequest(new ApiResponse<object> { Message = "Invalid booking filters." });
+        var result = await service.SearchAdministrationAsync(farmHouseId, filter, ct);
+        logger.LogInformation("Administration booking list read by user {UserId} in farmhouse {FarmHouseId}; page {Page}, {Count} matches.", userId, farmHouseId, filter.Page, result.TotalCount);
+        return Ok(new ApiResponse<AdministrationBookingList> { Success = true, Data = result });
+    }
+
     [HttpGet("list")]
     [Authorize(Roles = StaffRoles)]
     public Task<IActionResult> List([FromQuery] int page = 1, [FromQuery] int pageSize = 10) =>
@@ -119,8 +136,12 @@ public sealed class BookingListController(IBookingListService service, IBookingD
 
     [HttpGet("my-bookings")]
     [Authorize(Policy = BookingCustomerRequirement.Policy)]
-    public Task<IActionResult> Mine([FromQuery] int page = 1, [FromQuery] int pageSize = 10) =>
-        ReadList(false, page, pageSize);
+    public Task<IActionResult> Mine([FromQuery] int page = 1, [FromQuery] int pageSize = 5, [FromQuery] string? status = null)
+    {
+        if (status != null && status is not ("Confirmed" or "CheckedOut"))
+            return Task.FromResult<IActionResult>(BadRequest(new { message = "Invalid booking filter." }));
+        return ReadList(false, page, pageSize, status);
+    }
 
     [HttpGet("my-bookings/{bookingId:long}")]
     [Authorize(Policy = BookingCustomerRequirement.Policy)]
@@ -342,7 +363,7 @@ public sealed class BookingListController(IBookingListService service, IBookingD
         };
     }
 
-    private async Task<IActionResult> ReadList(bool administration, int page, int pageSize)
+    private async Task<IActionResult> ReadList(bool administration, int page, int pageSize, string? status = null)
     {
         var (error, farmHouseId, userId) = await GetScope(administration);
         if (error != null)
@@ -353,7 +374,7 @@ public sealed class BookingListController(IBookingListService service, IBookingD
         return Ok(new ApiResponse<IReadOnlyList<BookingListResponseDto>>
         {
             Success = true,
-            Data = await service.ListAsync(farmHouseId, administration ? null : userId, page, pageSize)
+            Data = await service.ListAsync(farmHouseId, administration ? null : userId, page, pageSize, status)
         });
     }
 

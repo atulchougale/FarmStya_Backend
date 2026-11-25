@@ -6,6 +6,8 @@
         EmailVerification = 2,
         ForgotPassword = 3,
         Login = 4,
-        ChangeMobile = 5
+        ChangeMobile = 5,
+        ProfileMobile = 6,
+        ProfileEmail = 7
     }
 }

@@ -9,6 +9,7 @@ namespace FarmStay.Application.Interfaces.Repositories
 {
     public interface IBookingListRepository
     {
+        Task<(List<Booking> Items, long TotalCount, FarmStay.Application.DTOs.Booking.AdministrationBookingSummary Summary)> SearchAdministrationAsync(int farmHouseId, FarmStay.Application.DTOs.Booking.AdministrationBookingFilter filter, CancellationToken ct);
         Task<(decimal TotalPaid, decimal AdvancePaid, decimal Discount, bool PendingAdvance)> GetPaymentTotalsAsync(int farmHouseId, long bookingId);
         Task<List<Booking>> GetAllBookingsAsync(int farmHouseId,int page,int pageSize);
 
@@ -23,6 +24,6 @@ namespace FarmStay.Application.Interfaces.Repositories
       int customerUserId,
       int farmHouseId,
       int page,
-      int pageSize);
+      int pageSize, string? status = null);
     }
 }

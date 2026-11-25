@@ -83,6 +83,7 @@ namespace FarmStay.Infrastructure.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            FarmStay.Infrastructure.Accounts.AccountingModel.Configure(modelBuilder);
 
             #region User
 
@@ -450,6 +451,7 @@ namespace FarmStay.Infrastructure.Data
             modelBuilder.ApplyConfiguration(new BookingActionTokenConfiguration());
             modelBuilder.ApplyConfiguration(new NotificationOutboxConfiguration());
             modelBuilder.ApplyConfiguration(new FarmHousePaymentConfigurationConfiguration());
+            FarmStay.Infrastructure.Reporting.Mapping.ReportResultConfiguration.Configure(modelBuilder);
 
         }
     }

@@ -14,6 +14,16 @@ namespace FarmStay.Infrastructure.Repositories.Administration
             _context = context;
         }
 
+        private static string ResolveSubMenuRoute(string moduleName, string moduleRoute, string submenuName)
+        {
+            if (moduleName == "Accounts" && submenuName == "Accounts") return "/accounts/overview";
+            // Bookings is a permission group; its list uses the canonical Angular route.
+            if (string.Equals(moduleName, "Bookings", StringComparison.OrdinalIgnoreCase) &&
+                string.Equals(submenuName, "Bookings", StringComparison.OrdinalIgnoreCase))
+                return "/booking";
+            return $"{moduleRoute.TrimEnd('/')}/{submenuName.ToLowerInvariant()}";
+        }
+
         public async Task<AdminMenuResponseDto> GetMenuAsync(
             int userId,
             int farmHouseId)
@@ -152,9 +162,7 @@ namespace FarmStay.Infrastructure.Repositories.Administration
                         module.SubMenus.Add(new AdminSubMenuDto
                         {
                             Name = submenuName,
-                            Route =
-                                $"{module.Route.TrimEnd('/')}/" +
-                                submenuName.ToLowerInvariant(),
+                            Route = ResolveSubMenuRoute(module.ModuleName, module.Route, submenuName),
                             Permissions = submenuPermissions
                         });
                     }
@@ -289,9 +297,7 @@ namespace FarmStay.Infrastructure.Repositories.Administration
                     module.SubMenus.Add(new AdminSubMenuDto
                     {
                         Name = submenuName,
-                        Route =
-                            $"{module.Route.TrimEnd('/')}/" +
-                            submenuName.ToLowerInvariant(),
+                        Route = ResolveSubMenuRoute(module.ModuleName, module.Route, submenuName),
                         Permissions = submenuPermissions
                     });
                 }

@@ -27,8 +27,22 @@
 	<ItemGroup>
 	  <Folder Include="Migrations\" />
       <EmbeddedResource Include="Reports\*.rdlc" />
+      <EmbeddedResource Include="Accounts\*.rdlc" />
+      <EmbeddedResource Include="Accounts\Sql\*.sql" />
       <EmbeddedResource Include="Reporting\Templates\*.rdlc" />
-      <EmbeddedResource Include="Reporting\Sql\*.sql" />
+      <EmbeddedResource Include="Reporting\Sql\**\*.sql" />
 	</ItemGroup>
 
+
+  <!-- Explicit patched floors for vulnerable transitive dependencies; existing framework majors are preserved. -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="7.7.3" />
+    <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.3.14" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.7.3" />
+    <PackageReference Include="Azure.Identity" Version="1.21.0" />
+    <PackageReference Include="System.Security.Cryptography.Xml" Version="8.0.5" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.9" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="8.0.1" />
+    <PackageReference Include="System.Security.Cryptography.Pkcs" Version="8.0.2" />
+  </ItemGroup>
 </Project>

@@ -30,6 +30,8 @@ public partial class UserService
         var email = string.IsNullOrWhiteSpace(request.Email) ? null : request.Email.Trim().ToLowerInvariant();
         if (email != null && (email.Length > 150 || !new System.ComponentModel.DataAnnotations.EmailAddressAttribute().IsValid(email)))
             return new() { Message = "Enter a valid email address." };
+        if (!string.Equals(user.Email, email, StringComparison.OrdinalIgnoreCase))
+            return new() { Message = "Use Edit Profile to verify and save a new email address." };
         var duplicate = email == null ? null : await _userRepository.GetByEmailAsync(email, farmHouseId);
         if (duplicate != null && duplicate.UserId != userId)
             return new() { Message = "Email is already registered. Please use a different email." };

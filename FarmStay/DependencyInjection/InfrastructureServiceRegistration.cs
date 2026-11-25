@@ -89,6 +89,9 @@ namespace FarmStay.API.DependencyInjection
             // Repositories
             // -----------------------------
 
+            services.AddScoped<FarmStay.Application.Accounts.IAccountsRepository, FarmStay.Infrastructure.Accounts.AccountsRepository>();
+            services.AddScoped<FarmStay.Application.Accounts.IAccountsScope, FarmStay.Infrastructure.Accounts.AccountsScope>();
+            services.AddHostedService<FarmStay.Infrastructure.Accounts.AccountingWorker>();
             services.AddScoped<IUserRepository, UserRepository>();
 
             services.AddScoped<IFarmHouseRepository, FarmHouseRepository>();
@@ -121,14 +124,24 @@ namespace FarmStay.API.DependencyInjection
 
             services.AddScoped<IBookingCalendarRepository, BookingCalendarRepository>();
             services.AddScoped<IBookingListRepository, BookingListRepository>();
+            services.AddScoped<IDashboardRepository, FarmStay.Infrastructure.Repositories.Administration.DashboardRepository>();
             services.AddScoped<IBookingDecisionService, BookingDecisionService>();
             services.AddScoped<IBookingStayOperations, BookingStayOperations>();
             services.AddScoped<IBookingReceipts, FarmStay.Infrastructure.Services.Reporting.BookingReceipts>();
             services.AddScoped<IBookingIdentityDocuments, BookingIdentityDocuments>();
             services.AddScoped<IAdvancePaymentOrders, RazorpayAdvancePaymentOrders>();
             services.AddScoped<IAdminBookingConfirmation, AdminBookingConfirmation>();
-            services.AddScoped<FarmStay.Application.Reporting.IReportingService, FarmStay.Infrastructure.Reporting.ReportingService>();
             services.AddScoped<FarmStay.Application.Reporting.IReportAccess, FarmStay.Infrastructure.Reporting.ReportAccess>();
+            services.AddScoped<FarmStay.Application.Interfaces.Repositories.Reports.IBookingReportRepository,
+                FarmStay.Infrastructure.Repositories.Reports.Booking.BookingReportRepository>();
+            services.AddScoped<FarmStay.Application.Interfaces.Repositories.Reports.IRevenueReportRepository,
+                FarmStay.Infrastructure.Repositories.Reports.Revenue.RevenueReportRepository>();
+            services.AddScoped<FarmStay.Application.Interfaces.Repositories.Reports.ICustomerReportRepository,
+                FarmStay.Infrastructure.Repositories.Reports.Customer.CustomerReportRepository>();
+            services.AddScoped<FarmStay.Application.Interfaces.Repositories.Reports.IOccupancyReportRepository,
+                FarmStay.Infrastructure.Repositories.Reports.Occupancy.OccupancyReportRepository>();
+            services.AddScoped<FarmStay.Application.Interfaces.Services.Reports.IReportFileRenderer,
+                FarmStay.Infrastructure.Reporting.ReportFileRenderer>();
             services.AddScoped<IBookingSubmission, BookingSubmission>();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();

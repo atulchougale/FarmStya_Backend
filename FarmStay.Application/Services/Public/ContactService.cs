@@ -1,4 +1,4 @@
-﻿using FarmStay.Application.Common.ApiResponse;
+using FarmStay.Application.Common.ApiResponse;
 using FarmStay.Application.DTOs.Public;
 using FarmStay.Application.Interfaces.Common;
 using FarmStay.Application.Interfaces.Repositories;
@@ -45,6 +45,22 @@ namespace FarmStay.Application.Services.Public
             {
                 _logger.LogInformation(
                    "Contact  Save request received.");
+
+                dto.FullName = dto.FullName?.Trim() ?? string.Empty;
+                dto.MobileNo = dto.MobileNo?.Trim() ?? string.Empty;
+                dto.Message = dto.Message?.Trim() ?? string.Empty;
+                dto.Email = string.IsNullOrWhiteSpace(dto.Email) ? null : dto.Email.Trim();
+                dto.EnquiryType = dto.EnquiryType?.Trim() ?? string.Empty;
+                var allowedTypes = new[] { "Stay enquiry", "Event enquiry", "General question", "Other" };
+                if (dto.FullName.Length is < 1 or > 100 ||
+                    !System.Text.RegularExpressions.Regex.IsMatch(dto.MobileNo, @"^[0-9]{10}$") ||
+                    dto.Message.Length is < 1 or > 1000 ||
+                    !allowedTypes.Contains(dto.EnquiryType) ||
+                    (dto.Email != null && (dto.Email.Length > 254 || !new System.ComponentModel.DataAnnotations.EmailAddressAttribute().IsValid(dto.Email))))
+                {
+                    _logger.LogWarning("Contact enquiry validation failed.");
+                    return new ApiResponse<ContactResponseDto> { Success = false, Message = "Please provide a valid name, mobile number, email, enquiry type and message." };
+                }
 
                 // Get FarmHouseId from Header
 
@@ -99,6 +115,8 @@ namespace FarmStay.Application.Services.Public
                     FullName = dto.FullName,
 
                     MobileNo = dto.MobileNo,
+                    Email = dto.Email,
+                    EnquiryType = dto.EnquiryType,
 
                     Message = dto.Message,
                     CreatedDate = DateTime.Now,
@@ -114,7 +132,7 @@ namespace FarmStay.Application.Services.Public
 
 
                 _logger.LogInformation(
-                  "Feedback created successfully. FarmHouseId: {FarmHouseId}, ContactId: {ContactId}",
+                  "Contact enquiry created successfully. FarmHouseId: {FarmHouseId}, ContactId: {ContactId}",
                   farmHouseId,
                   contact.ContactId);
 
@@ -123,12 +141,14 @@ namespace FarmStay.Application.Services.Public
 
                 var response = new ContactResponseDto
                 {
-                    ContactId = dto.ContactId,
+                    ContactId = contact.ContactId,
                     FarmHouseId = farmHouseId,
 
                     FullName = dto.FullName,
 
                     MobileNo = dto.MobileNo,
+                    Email = dto.Email,
+                    EnquiryType = dto.EnquiryType,
 
                     Message = dto.Message,
 
@@ -139,7 +159,7 @@ namespace FarmStay.Application.Services.Public
                 return new ApiResponse<ContactResponseDto>
                 {
                     Success = true,
-                    Message = "Feedback saved successfully.",
+                    Message = "Contact enquiry saved successfully.",
                     Data = response
                 };
             }
@@ -204,6 +224,8 @@ namespace FarmStay.Application.Services.Public
                     FarmHouseId = x.FarmHouseId,
                     FullName = x.FullName,
                     MobileNo = x.MobileNo,
+                    Email = x.Email,
+                    EnquiryType = x.EnquiryType,
                     Message = x.Message
                 }).ToList();
 

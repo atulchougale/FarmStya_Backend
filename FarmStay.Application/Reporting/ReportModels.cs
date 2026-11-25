@@ -65,6 +65,4 @@ public static class ReportCatalog
     public static ReportDefinition Find(string key) => All.SingleOrDefault(r => r.Key == key)
         ?? throw new ArgumentException("Unknown report.");
 }
-public sealed record ReportPage(IReadOnlyList<ReportColumn> Columns, IReadOnlyList<Dictionary<string, object?>> Rows,
-    long Total, int Page, int PageSize, string PeriodLabel);
 public sealed record ReportDownload(byte[] Content, string ContentType, string FileName);

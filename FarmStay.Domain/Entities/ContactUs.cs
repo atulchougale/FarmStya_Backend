@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -16,6 +16,10 @@ namespace FarmStay.Domain.Entities
 
         [Required]
         public string FullName { get; set; } =string.Empty;
+
+        public string? Email { get; set; }
+
+        public string EnquiryType { get; set; } = "General question";
 
         [Required]
         public string MobileNo { get; set; } = string.Empty;
