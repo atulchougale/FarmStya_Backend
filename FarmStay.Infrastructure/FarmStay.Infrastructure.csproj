@@ -27,10 +27,10 @@
 	<ItemGroup>
 	  <Folder Include="Migrations\" />
       <EmbeddedResource Include="Reports\*.rdlc" />
-      <EmbeddedResource Include="Accounts\*.rdlc" />
-      <EmbeddedResource Include="Accounts\Sql\*.sql" />
-      <EmbeddedResource Include="Reporting\Templates\*.rdlc" />
-      <EmbeddedResource Include="Reporting\Sql\**\*.sql" />
+      <EmbeddedResource Include="Reports\Accounts\*.rdlc"><LogicalName>FarmStay.Infrastructure.Accounts.%(Filename)%(Extension)</LogicalName></EmbeddedResource>
+      <EmbeddedResource Include="SQL\Accounts\*.sql"><LogicalName>FarmStay.Infrastructure.Accounts.Sql.%(Filename)%(Extension)</LogicalName></EmbeddedResource>
+
+
 	</ItemGroup>
 
 
@@ -45,4 +45,30 @@
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="8.0.1" />
     <PackageReference Include="System.Security.Cryptography.Pkcs" Version="8.0.2" />
   </ItemGroup>
+<ItemGroup>
+<EmbeddedResource Include="SQL\Reports\Bookings.sql"><LogicalName>FarmStay.Infrastructure.Reporting.Sql.Bookings.sql</LogicalName></EmbeddedResource>
+<EmbeddedResource Include="SQL\Reports\Customers.sql"><LogicalName>FarmStay.Infrastructure.Reporting.Sql.Customers.sql</LogicalName></EmbeddedResource>
+<EmbeddedResource Include="SQL\Reports\Occupancy.sql"><LogicalName>FarmStay.Infrastructure.Reporting.Sql.Occupancy.sql</LogicalName></EmbeddedResource>
+<EmbeddedResource Include="SQL\Reports\Revenue.sql"><LogicalName>FarmStay.Infrastructure.Reporting.Sql.Revenue.sql</LogicalName></EmbeddedResource>
+<EmbeddedResource Include="SQL\Reports\SeedAndIndexes.sql"><LogicalName>FarmStay.Infrastructure.Reporting.Sql.SeedAndIndexes.sql</LogicalName></EmbeddedResource>
+<EmbeddedResource Include="SQL\Reports\Dashboard\BookingSources.sql"><LogicalName>FarmStay.Infrastructure.Reporting.Sql.Dashboard.BookingSources.sql</LogicalName></EmbeddedResource>
+<EmbeddedResource Include="SQL\Reports\Dashboard\Calendar.sql"><LogicalName>FarmStay.Infrastructure.Reporting.Sql.Dashboard.Calendar.sql</LogicalName></EmbeddedResource>
+<EmbeddedResource Include="SQL\Reports\Dashboard\Permissions.sql"><LogicalName>FarmStay.Infrastructure.Reporting.Sql.Dashboard.Permissions.sql</LogicalName></EmbeddedResource>
+<EmbeddedResource Include="SQL\Reports\Dashboard\RevenueTrend.sql"><LogicalName>FarmStay.Infrastructure.Reporting.Sql.Dashboard.RevenueTrend.sql</LogicalName></EmbeddedResource>
+<EmbeddedResource Include="SQL\Reports\Dashboard\Summary.sql"><LogicalName>FarmStay.Infrastructure.Reporting.Sql.Dashboard.Summary.sql</LogicalName></EmbeddedResource>
+<EmbeddedResource Include="SQL\Reports\Standard\Booking_GetReport.sql"><LogicalName>FarmStay.Infrastructure.Reporting.Sql.Standard.Booking_GetReport.sql</LogicalName></EmbeddedResource>
+<EmbeddedResource Include="SQL\Reports\Standard\Booking_GetSummary.sql"><LogicalName>FarmStay.Infrastructure.Reporting.Sql.Standard.Booking_GetSummary.sql</LogicalName></EmbeddedResource>
+<EmbeddedResource Include="SQL\Reports\Standard\Customer_GetReport.sql"><LogicalName>FarmStay.Infrastructure.Reporting.Sql.Standard.Customer_GetReport.sql</LogicalName></EmbeddedResource>
+<EmbeddedResource Include="SQL\Reports\Standard\Customer_GetSummary.sql"><LogicalName>FarmStay.Infrastructure.Reporting.Sql.Standard.Customer_GetSummary.sql</LogicalName></EmbeddedResource>
+<EmbeddedResource Include="SQL\Reports\Standard\Occupancy_GetReport.sql"><LogicalName>FarmStay.Infrastructure.Reporting.Sql.Standard.Occupancy_GetReport.sql</LogicalName></EmbeddedResource>
+<EmbeddedResource Include="SQL\Reports\Standard\Occupancy_GetSummary.sql"><LogicalName>FarmStay.Infrastructure.Reporting.Sql.Standard.Occupancy_GetSummary.sql</LogicalName></EmbeddedResource>
+<EmbeddedResource Include="SQL\Reports\Standard\Revenue_GetReport.sql"><LogicalName>FarmStay.Infrastructure.Reporting.Sql.Standard.Revenue_GetReport.sql</LogicalName></EmbeddedResource>
+<EmbeddedResource Include="SQL\Reports\Standard\Revenue_GetSummary.sql"><LogicalName>FarmStay.Infrastructure.Reporting.Sql.Standard.Revenue_GetSummary.sql</LogicalName></EmbeddedResource>
+<EmbeddedResource Include="Reports\Operational\bookings.rdlc"><LogicalName>FarmStay.Infrastructure.Reporting.Templates.bookings.rdlc</LogicalName></EmbeddedResource>
+<EmbeddedResource Include="Reports\Operational\customers.rdlc"><LogicalName>FarmStay.Infrastructure.Reporting.Templates.customers.rdlc</LogicalName></EmbeddedResource>
+<EmbeddedResource Include="Reports\Operational\occupancy.rdlc"><LogicalName>FarmStay.Infrastructure.Reporting.Templates.occupancy.rdlc</LogicalName></EmbeddedResource>
+<EmbeddedResource Include="Reports\Operational\revenue.rdlc"><LogicalName>FarmStay.Infrastructure.Reporting.Templates.revenue.rdlc</LogicalName></EmbeddedResource>
+</ItemGroup>
+<ItemGroup><EmbeddedResource Include="SQL\Reports\Consolidation\*.sql" /></ItemGroup>
+<ItemGroup><EmbeddedResource Include="SQL\Accounts\Phase4\*.sql" /></ItemGroup>
 </Project>

@@ -1,0 +1,35 @@
+Disposable database: FSReporting_Phase2_32e64c0dd99e4d829499dcdd6bd62d3d
+PASS Clean database migrates and rolls back without assignments
+PASS Consolidation keeps one active Reporting identity
+PASS Migration rerun is idempotent
+PASS Rollback restores exact original assignment rows
+PASS Rollback refuses to overwrite later metadata edits
+PASS Unsafe merge that would gain tenant permissions is rolled back
+PASS Report grants survive migration on exact authenticated membership
+PASS bookings bounded list via canonical stored procedure
+PASS bookings pdf export
+PASS bookings excel export
+PASS revenue bounded list via canonical stored procedure
+PASS revenue pdf export
+PASS revenue excel export
+PASS customers bounded list via canonical stored procedure
+PASS customers pdf export
+PASS customers excel export
+PASS occupancy bounded list via canonical stored procedure
+PASS occupancy pdf export
+PASS occupancy excel export
+PASS Collections exclude other farmhouse payments
+PASS Receipt renders using EF Core FromSql
+PASS Cross-tenant receipt blocked before SQL
+PASS Cross-tenant report access blocked
+PASS Collection title does not claim earned revenue
+PASS View-only report membership cannot export
+PASS Inactive membership cannot read reporting
+PASS Report dates and pagination reject invalid filters
+PASS HTTP anonymous reporting denied
+PASS HTTP administration reporting catalog
+PASS HTTP canonical report list
+PASS HTTP PDF export
+PASS HTTP tenant header spoof rejected
+PASS HTTP tenant query spoof rejected
+TOTAL passed=33 failed=0

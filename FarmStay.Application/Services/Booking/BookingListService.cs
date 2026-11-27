@@ -7,11 +7,12 @@ using BookingEntity = FarmStay.Domain.Entities.Booking;
 namespace FarmStay.Application.Services.Booking;
 
 public sealed class BookingListService(IBookingListRepository bookings, IUserMembershipRepository memberships,
-    IFarmHouseRepository farmHouses, IPermissionRepository permissions)
+    IFarmHouseRepository farmHouses, IPermissionRepository permissions, IBookingActorContext access, IBookingIdentityDocuments documents)
     : IBookingListService
 {
     public async Task<AdministrationBookingList> SearchAdministrationAsync(int farmHouseId, AdministrationBookingFilter filter, CancellationToken ct)
     {
+        await access.AdministrationAsync("Bookings.View",farmHouseId,ct:ct);
         var result = await bookings.SearchAdministrationAsync(farmHouseId, filter, ct);
         return new(result.Items.Select(Map).ToArray(), result.TotalCount, result.Summary);
     }
@@ -54,6 +55,7 @@ public sealed class BookingListService(IBookingListRepository bookings, IUserMem
     public async Task<IReadOnlyList<BookingListResponseDto>> ListAsync(int farmHouseId, int? customerUserId,
         int page, int pageSize, string? status = null)
     {
+        await ReadScope(farmHouseId,customerUserId);
         var records = customerUserId.HasValue
             ? await bookings.GetMyBookingsAsync(customerUserId.Value, farmHouseId, page, pageSize, status)
             : await bookings.GetAllBookingsAsync(farmHouseId, page, pageSize);
@@ -62,6 +64,7 @@ public sealed class BookingListService(IBookingListRepository bookings, IUserMem
 
     public async Task<BookingListResponseDto?> FindAsync(int farmHouseId, int? customerUserId, long bookingId)
     {
+        var actor = await ReadScope(farmHouseId,customerUserId);
         var booking = await bookings.GetBookingByIdAsync(bookingId, farmHouseId, customerUserId);
         if (booking == null)
             return null;
@@ -69,10 +72,12 @@ public sealed class BookingListService(IBookingListRepository bookings, IUserMem
         var result = Map(booking);
         var payments = await bookings.GetPaymentTotalsAsync(farmHouseId, bookingId);
         result.TotalPaid = payments.TotalPaid;
+        result.RefundedAmount = payments.Refunded;
         result.AdvancePaid = payments.AdvancePaid;
         result.HasPendingAdvanceOrder = payments.PendingAdvance;
         result.DiscountAmount = payments.Discount;
-        result.RemainingAmount = Math.Max(0, booking.TotalAmount - payments.Discount - payments.TotalPaid);
+        result.Discounts = await bookings.GetDiscountDetailsAsync(farmHouseId, bookingId);
+        result.RemainingAmount = booking.Status=="CheckedOut" ? 0 : Math.Max(0, booking.TotalAmount - payments.Discount - payments.TotalPaid);
         var events = await bookings.GetEventDatesAsync(farmHouseId, [bookingId]);
         result.EventDates = events.Select(e => new BookingListResponseDto.EventDateDetails
         {
@@ -87,7 +92,28 @@ public sealed class BookingListService(IBookingListRepository bookings, IUserMem
             OldStatus = h.OldStatus, NewStatus = h.NewStatus, Reason = h.Reason,
             ActorType = h.ActorType, CreatedDate = DateTime.SpecifyKind(h.CreatedDate, DateTimeKind.Local)
         }).ToList();
+        if (!customerUserId.HasValue)
+        {
+            result.CanManageConfirmation = await CanConfirmAsync(actor.UserId, farmHouseId) &&
+                ((result.Status == "Approved" && result.CustomerDeadline > DateTime.Now) || result.Status == "Confirmed");
+            var identity = await documents.GetAsync(farmHouseId,bookingId,null,default);
+            result.HasIdentityDocument = identity != null;
+            result.IdentityDocumentType = identity?.DocumentType;
+            result.OtherIdentityDocumentType = identity?.OtherDocumentType;
+            result.IdentityFileCount = identity?.Files.Count ?? 0;
+            var now = DateTime.Now;
+            var authorized = await CanDecideAsync(actor.UserId,farmHouseId);
+            result.CanDecide = authorized && result.Status == "Pending" && result.OwnerDeadline > now;
+            result.CanCheckIn = authorized && result.Status == "Confirmed" && now.Date >= result.CheckInDate.Date && now.Date <= result.CheckOutDate.Date;
+            result.CanCheckout = authorized && result.Status == "CheckedIn";
+        }
         return result;
+    }
+
+    private async Task<FarmStay.Application.Interfaces.Common.VerifiedTenant> ReadScope(int farmhouse,int? customer)
+    {
+        return customer.HasValue ? await access.CustomerAsync(farmhouse,customer.Value)
+            : await access.AdministrationAsync("Bookings.View",farmhouse);
     }
 
     private static BookingListResponseDto Map(BookingEntity b) => new()

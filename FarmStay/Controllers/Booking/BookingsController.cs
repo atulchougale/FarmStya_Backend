@@ -14,14 +14,14 @@ namespace FarmStay.API.Controllers.Booking;
 [Authorize(Policy = FarmStay.API.Authorization.BookingCustomerRequirement.Policy)]
 [Route("api/bookings")]
 public sealed class BookingsController(IBookingSubmission submission,
-    IValidator<SubmitBookingRequest> validator) : ControllerBase
+    IValidator<SubmitBookingRequest> validator, IBookingActorContext actorContext) : ControllerBase
 {
     [HttpGet("mine")]
     public async Task<IActionResult> Mine(CancellationToken cancellationToken)
     {
-        var scopeError = GetBookingScope(out var farmHouseId, out var userId);
-        if (scopeError != null)
-            return scopeError;
+        var scope = await actorContext.CustomerAsync(ct: cancellationToken);
+        var farmHouseId = scope.FarmHouseId;
+        var userId = scope.UserId;
 
         return Ok(new ApiResponse<IReadOnlyList<SubmitBookingResponse>>
         {
@@ -34,9 +34,9 @@ public sealed class BookingsController(IBookingSubmission submission,
     public async Task<IActionResult> Submit([CustomizeValidator(Skip = true)] SubmitBookingRequest request,
         CancellationToken cancellationToken)
     {
-        var scopeError = GetBookingScope(out var farmHouseId, out var userId);
-        if (scopeError != null)
-            return scopeError;
+        var scope = await actorContext.CustomerAsync(ct: cancellationToken);
+        var farmHouseId = scope.FarmHouseId;
+        var userId = scope.UserId;
 
         var validation = await validator.ValidateAsync(request, cancellationToken);
         if (!validation.IsValid)
@@ -55,15 +55,4 @@ public sealed class BookingsController(IBookingSubmission submission,
         });
     }
 
-    private IActionResult? GetBookingScope(out int farmHouseId, out int userId)
-    {
-        farmHouseId = 0;
-        if (!int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out userId) || userId <= 0)
-            return Unauthorized();
-        if (!int.TryParse(Request.Headers["FarmHouseId"].FirstOrDefault(), out farmHouseId) || farmHouseId <= 0)
-            return BadRequest(new ApiResponse<object> { Message = "A valid farmhouse is required." });
-        var tenantClaim = User.FindFirstValue(JwtClaimNames.FarmHouseId);
-        return tenantClaim != null && (!int.TryParse(tenantClaim, out var tokenTenant) || tokenTenant != farmHouseId)
-            ? Forbid() : null;
-    }
 }

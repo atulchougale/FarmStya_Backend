@@ -1,0 +1,13 @@
+PASS Balanced double entry
+PASS Reject invalid money 0
+PASS Reject invalid money -1
+PASS Reject invalid money 1.001
+PASS Reject invalid money 1000000000000
+PASS Reject unbalanced voucher
+PASS Reject both sides on one line
+PASS Reject one-line voucher
+PASS SLM caps at residual
+PASS WDV uses configured rate
+PASS Reject invalid depreciation
+PASS Bound page size and sorting
+TOTAL passed=12 failed=0

@@ -43,7 +43,7 @@ namespace FarmStay.Infrastructure.Repositories.Auth
                 .AnyAsync(um =>
                     um.UserId == userId &&
                     um.FarmHouseId == farmHouseId &&
-                    um.RoleId == 1 &&
+                    um.Role != null && um.Role.RoleName == "Super Admin" && um.Role.IsActive && !um.Role.IsDeleted && um.User != null && um.User.IsActive && !um.User.IsDeleted &&
                     um.IsActive &&
                     !um.IsDeleted);
 

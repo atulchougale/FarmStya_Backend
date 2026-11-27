@@ -7,10 +7,11 @@ using Microsoft.Reporting.NETCore;
 
 namespace FarmStay.Infrastructure.Services.Reporting;
 
-public sealed class BookingReceipts(AppDbContext db) : IBookingReceipts
+public sealed class BookingReceipts(AppDbContext db, FarmStay.Application.Interfaces.Common.ICurrentTenantContext tenant) : IBookingReceipts
 {
     public async Task<IReadOnlyList<PaymentReceiptSummary>> ListAsync(int farmHouseId, long bookingId, int? customerId, CancellationToken ct)
     {
+        await ValidateScope(farmHouseId, customerId, ct);
         return await db.BookingReceipts.AsNoTracking().Where(r =>
             r.FarmHouseId == farmHouseId && r.BookingId == bookingId &&
             r.Booking != null && !r.Booking.IsDelete &&
@@ -23,29 +24,14 @@ public sealed class BookingReceipts(AppDbContext db) : IBookingReceipts
 
     public async Task<ReceiptPdf?> RenderAsync(int farmHouseId, long bookingId, long receiptId, int? customerId, CancellationToken ct)
     {
-        var connection = db.Database.GetDbConnection();
-        var close = connection.State != ConnectionState.Open;
-        if (close) await connection.OpenAsync(ct);
+        await ValidateScope(farmHouseId, customerId, ct);
+        var rows = await db.Set<FarmStay.Application.DTOs.Reports.Receipts.Responses.PaymentReceiptReportRow>()
+            .FromSqlInterpolated($"EXEC dbo.usp_Report_BookingPaymentReceipt @FarmHouseId={farmHouseId}, @BookingId={bookingId}, @ReceiptId={receiptId}, @CustomerUserId={customerId}")
+            .AsNoTracking().ToListAsync(ct);
         var table = new DataTable();
-        try
-        {
-            await using var command = connection.CreateCommand();
-            command.CommandText = "dbo.usp_Report_BookingPaymentReceipt";
-            command.CommandType = CommandType.StoredProcedure;
-            foreach (var item in new (string Name, object Value)[] {
-                ("@FarmHouseId", farmHouseId), ("@BookingId", bookingId),
-                ("@ReceiptId", receiptId), ("@CustomerUserId", (object?)customerId ?? DBNull.Value) })
-            {
-                var parameter = command.CreateParameter();
-                parameter.ParameterName = item.Name;
-                parameter.Value = item.Value;
-                parameter.DbType = item.Name == "@ReceiptId" || item.Name == "@BookingId" ? DbType.Int64 : DbType.Int32;
-                command.Parameters.Add(parameter);
-            }
-            await using var reader = await command.ExecuteReaderAsync(ct);
-            table.Load(reader);
-        }
-        finally { if (close) await connection.CloseAsync(); }
+        var properties = typeof(FarmStay.Application.DTOs.Reports.Receipts.Responses.PaymentReceiptReportRow).GetProperties();
+        foreach (var property in properties) table.Columns.Add(property.Name, typeof(string));
+        foreach (var row in rows) table.Rows.Add(properties.Select(property => property.GetValue(row) ?? DBNull.Value).ToArray());
         if (table.Rows.Count == 0) return null;
         table.Columns.Add("AmountInWords", typeof(string));
         table.Rows[0]["AmountInWords"] = AmountInWords(Convert.ToDecimal(table.Rows[0]["Amount"], CultureInfo.InvariantCulture));
@@ -56,6 +42,14 @@ public sealed class BookingReceipts(AppDbContext db) : IBookingReceipts
         report.LoadReportDefinition(definition);
         report.DataSources.Add(new ReportDataSource("Receipt", table));
         return new ReceiptPdf(report.Render("PDF"), $"{table.Rows[0]["ReceiptNumber"]}.pdf");
+    }
+    private async Task ValidateScope(int farm, int? customer, CancellationToken ct)
+    {
+        var scope = await tenant.RequireAsync(ct);
+        if (scope.FarmHouseId != farm || (customer.HasValue && customer != scope.UserId))
+            throw new FarmStay.Application.Interfaces.Common.TenantAccessException(403, "Receipt scope conflicts with your membership.");
+        if (!customer.HasValue && scope.Role is not ("Admin" or "Farm Owner" or "FarmOwner" or "Super Admin"))
+            throw new FarmStay.Application.Interfaces.Common.TenantAccessException(403, "An administration membership is required.");
     }
     private static string AmountInWords(decimal amount)
     {

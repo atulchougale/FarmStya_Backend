@@ -1,0 +1,120 @@
+APPLIED MIGRATIONS
+20260804182921_InitialCreate
+20260807205327_AuthFlowFreeze
+20260808112042_UserFarmHouseUniqueIndex
+20260808181724_AddEmailVerificationToken
+20260817164338_AddPasswordResetFields
+20260817164940_AddPasswordResetFields1
+20260907202653_MakeOwnerUserIdNullable
+20260908080943_TestMigration
+20260908105715_Feedback
+20260909103557_israverite
+20260911190438_aminities
+20260914180328_AddFarmHouseModule
+20260915141235_SeedModules
+20260915150450_SeedWebsiteSettingsPermissions
+20260928065612_AddFailedAttemptsToUserOtp
+20260929141501_Addaboutus
+20261003170903_ChangeEmailToMobileNumber
+20261011162111_AddFarmHousePricing
+20261012181123_AddBookingChnages
+20261016163128_FinalUtcAndFarmHouseModuleFix
+20261016215927_AddBookingSupportingEntities
+20261116210519_AddBookingSubmissionIdempotency
+20261117131000_SeedBookingAdministrationPermissions
+20261117190253_StoreBookingTimestampsInServerTime
+20261118140000_LinkFeedbackToBooking
+20261118230000_AddActualBookingStayTimes
+20261119001000_AddPaymentReceiptReport
+20261119010000_SeedPricingManagementPermissions
+20261119020000_SeedPricingCrudPermissions
+20261119030000_AddIdentityProofTypes
+20261119040000_OptionalCustomerEmailAndAdminBooking
+20261119050000_AddBookingConfirmationPermission
+20261120001000_AddReportingModule
+20261120143334_StandardStoredProcedureIntegration
+20261120145755_AddDynamicAdministrationDashboard
+20261122172524_AddDashboardRevenueAndSourceCharts
+20261124130233_AddContactEnquiryFields
+20261124135656_AddProfileContactVerification
+20261124183817_AddAccountsFinanceModule
+20261124184253_AddAccountsPostingControls
+20261124190200_HardenAccountsIntegrity
+PENDING MIGRATIONS
+TABLES
+dbo.__EFMigrationsHistory
+dbo.AboutUs
+dbo.AboutUsFeatures
+dbo.AccountingAssetEvents
+dbo.AccountingAttachments
+dbo.AccountingAudits
+dbo.AccountingBankStatements
+dbo.AccountingFinancialYears
+dbo.AccountingFixedAssets
+dbo.AccountingMasters
+dbo.AccountingMoneyAccounts
+dbo.AccountingPeriods
+dbo.AccountingRecurringExpenses
+dbo.AccountingSettings
+dbo.AccountingVendors
+dbo.AccountingVoucherLines
+dbo.AccountingVouchers
+dbo.Amenities
+dbo.BookingActionTokens
+dbo.BookingDateReservations
+dbo.BookingDocuments
+dbo.BookingEventDates
+dbo.BookingReceipts
+dbo.Bookings
+dbo.BookingStatusHistory
+dbo.BookingStayDates
+dbo.CheckoutDiscounts
+dbo.ContactDetail
+dbo.FarmHouseCancellationPolicies
+dbo.farmHouseModules
+dbo.FarmHousePaymentConfigurations
+dbo.FarmHousePricing
+dbo.FarmHouses
+dbo.FeedBacks
+dbo.Galleries
+dbo.LedgerAccounts
+dbo.Modules
+dbo.NotificationOutbox
+dbo.PaymentTransactions
+dbo.Permissions
+dbo.RoleModulePermissions
+dbo.RoleModules
+dbo.Roles
+dbo.SubscriptionPlans
+dbo.UserMemberships
+dbo.UserOtps
+dbo.UserRefreshTokens
+dbo.Users
+STORED PROCEDURES
+dbo.usp_Accounts_Report
+dbo.usp_Booking_GetReport
+dbo.usp_Booking_GetSummary
+dbo.usp_Customer_GetReport
+dbo.usp_Customer_GetSummary
+dbo.usp_Dashboard_GetBookingSources
+dbo.usp_Dashboard_GetCalendar
+dbo.usp_Dashboard_GetRevenueTrend
+dbo.usp_Dashboard_GetSummary
+dbo.usp_Occupancy_GetReport
+dbo.usp_Occupancy_GetSummary
+dbo.usp_Report_BookingPaymentReceipt
+dbo.usp_Report_Bookings
+dbo.usp_Report_Customers
+dbo.usp_Report_Occupancy
+dbo.usp_Report_Revenue
+dbo.usp_Revenue_GetReport
+dbo.usp_Revenue_GetSummary
+MODULES
+1 | Dashboard | /dashboard | active=1
+2 | Bookings | /bookings | active=1
+3 | Accounts | /accounts | active=1
+4 | Reporting | /reporting | active=1
+5 | WebsiteSettings | /website-settings | active=1
+6 | Reports | /reports | active=1
+RBAC COUNTS
+Roles=7; Permissions=44; RoleModules=17; RoleModulePermissions=135; FarmHouseModules=21

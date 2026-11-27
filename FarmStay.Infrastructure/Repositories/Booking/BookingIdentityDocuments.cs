@@ -1,4 +1,5 @@
 using System.Security.Cryptography;
+using FarmStay.Infrastructure.Services.FileUpload;
 using FarmStay.Application.Interfaces.Services.Booking;
 using FarmStay.Domain.Entities;
 using FarmStay.Infrastructure.Data;
@@ -8,7 +9,7 @@ using Microsoft.Extensions.Configuration;
 namespace FarmStay.Infrastructure.Repositories.Booking;
 
 public sealed class BookingIdentityDocuments(AppDbContext db, IConfiguration configuration,
-    IBookingNotifications notifications) : IBookingIdentityDocuments
+    IBookingNotifications notifications, Microsoft.Extensions.Hosting.IHostEnvironment environment) : FarmStay.Application.Interfaces.Repositories.IBookingIdentityRepository
 {
     private const string IdentityProof = "IdentityProof";
 
@@ -35,7 +36,12 @@ public sealed class BookingIdentityDocuments(AppDbContext db, IConfiguration con
         var path = FilePath(document.StorageKey);
         try
         {
-            return (File.OpenRead(path), document.ContentType);
+            var stream=File.OpenRead(path);
+            try {
+                var hash=Convert.ToHexString(await SHA256.HashDataAsync(stream,ct));
+                if(stream.Length!=document.FileSizeBytes||!string.Equals(hash,document.Sha256Hash,StringComparison.OrdinalIgnoreCase)){await stream.DisposeAsync();return null;}
+                stream.Position=0;return (stream, document.ContentType);
+            }catch{await stream.DisposeAsync();throw;}
         }
         catch (IOException)
         {
@@ -62,7 +68,21 @@ public sealed class BookingIdentityDocuments(AppDbContext db, IConfiguration con
             return null;
 
         if (files.Count is < 1 or > 2) return null;
+        string[] types=["Aadhaar Card","PAN Card","Passport","Driving Licence","Voter ID","Government-issued Photo ID","Other"];
+        if(!types.Contains(documentType)||(documentType=="Other"&&(string.IsNullOrWhiteSpace(otherDocumentType)||otherDocumentType.Trim().Length>100)))return null;
+        foreach(var file in files) {
+            try {FileSafety.DisplayName(file.FileName);}catch(ArgumentException){return null;}
+            if(!FileSafety.ValidProof(file.FileName,file.ContentType,file.Bytes))return null;
+        }
+        if(files.Select(f=>Convert.ToHexString(SHA256.HashData(f.Bytes))).Distinct().Count()!=files.Count)return null;
         var previous = await Current(farmHouseId, bookingId).ToListAsync(ct);
+        // Uploaded identity is immutable until administration explicitly requests replacement.
+        if (previous.Count > 0 && !previous.Any(doc => doc.VerificationStatus == "ReuploadRequested")) {
+            var hashes=files.Select(f=>Convert.ToHexString(SHA256.HashData(f.Bytes))).OrderBy(h=>h).ToArray();
+            var same=previous.Count==files.Count && previous.All(d=>d.IdentityProofType==documentType&&d.OtherDocumentType==(documentType=="Other"?otherDocumentType?.Trim():null))
+                && previous.Select(d=>d.Sha256Hash).OrderBy(h=>h).SequenceEqual(hashes,StringComparer.OrdinalIgnoreCase);
+            return same ? Map(previous) : null;
+        }
         var now = DateTime.Now;
         var awaitingConfirmation = booking.Status == "Approved" && booking.CustomerDeadline > now;
         var replacementRequested = booking.Status == "Confirmed" && previous.Any(doc => doc.VerificationStatus == "ReuploadRequested");
@@ -74,7 +94,7 @@ public sealed class BookingIdentityDocuments(AppDbContext db, IConfiguration con
             FarmHouseId = farmHouseId, BookingId = bookingId, UserId = booking.CustomerUserId, CreatedBy = actorId,
             DocumentType = IdentityProof, IdentityProofType = documentType,
             OtherDocumentType = documentType == "Other" ? otherDocumentType?.Trim() : null,
-            StorageKey = Guid.NewGuid().ToString("N"), OriginalFileName = file.FileName,
+            StorageKey = Guid.NewGuid().ToString("N"), OriginalFileName = FileSafety.DisplayName(file.FileName),
             ContentType = file.ContentType, FileSizeBytes = file.Bytes.LongLength,
             Sha256Hash = Convert.ToHexString(SHA256.HashData(file.Bytes)), CreatedDate = now
         }).ToList();
@@ -145,10 +165,10 @@ public sealed class BookingIdentityDocuments(AppDbContext db, IConfiguration con
             IF @result < 0 THROW 50012, 'Booking document lock unavailable.', 1;
             """, ct);
 
-    private string FilePath(string key) => Path.Combine(
+    private string FilePath(string key) => Path.Combine(FileSafety.PrivateRoot(
         configuration["BookingDocuments:PrivateRoot"] ??
             Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "FarmStay", "BookingIdentity"),
-        key);
+        Path.Combine(environment.ContentRootPath,"wwwroot")), key);
 
     private static BookingIdentityDocument Map(IReadOnlyList<BookingDocument> documents)
     {

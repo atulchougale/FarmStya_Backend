@@ -19,7 +19,15 @@ builder.Services.AddRateLimiter(options => { options.RejectionStatusCode=429; op
         _ => new System.Threading.RateLimiting.FixedWindowRateLimiterOptions {
             PermitLimit = 120, Window = TimeSpan.FromMinutes(1), QueueLimit = 0 })); });
 
-builder.Services.AddCorsServices();
+builder.Services.AddRateLimiter(options=>{
+ foreach(var policy in new[]{("Auth",20),("Upload",10),("PublicWrite",20),("Export",10)}) {
+  var limit=policy.Item2;
+  options.AddPolicy(policy.Item1,context=>System.Threading.RateLimiting.RateLimitPartition.GetFixedWindowLimiter(
+   (context.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value??context.Connection.RemoteIpAddress?.ToString()??"anonymous")+":"+context.Request.Path,
+   _=>new System.Threading.RateLimiting.FixedWindowRateLimiterOptions{PermitLimit=limit,Window=TimeSpan.FromMinutes(1),QueueLimit=0}));
+ }
+});
+builder.Services.AddCorsServices(builder.Configuration, builder.Environment);
 
 builder.Services.AddFluentValidationServices();
 
@@ -58,16 +66,22 @@ app.UseSerilogRequestLogging(options =>
 // -------------------------------------
 // Middleware Pipeline
 // -------------------------------------
+if(!app.Environment.IsDevelopment()) {
+ var hosts=app.Configuration["AllowedHosts"];
+ if(string.IsNullOrWhiteSpace(hosts)||hosts.Split(';').Any(x=>x.Trim()=="*")) throw new InvalidOperationException("Configure explicit production AllowedHosts.");
+ app.UseHsts();
+}
 app.UseHttpsRedirection();
-
-app.UseStaticFiles();
 
 app.UseCors("AllowAngular");
 
 app.UseMiddleware<GlobalExceptionMiddleware>();
+app.UseMiddleware<PublicMediaBoundaryMiddleware>();
+app.UseStaticFiles();
 
 app.UseAuthentication();
 
+app.UseMiddleware<TenantBoundaryMiddleware>();
 app.UseAuthorization();
 app.UseRateLimiter();
 

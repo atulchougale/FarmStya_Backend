@@ -4,7 +4,7 @@ using FarmStay.Application.Interfaces.Repositories;
 using FarmStay.Application.Interfaces.Services.Auth;
 using FarmStay.Application.Interfaces.Services.Booking;
 namespace FarmStay.Application.Services.Booking;
-public sealed class AdminBookingCustomers(IUserRepository users, IUserMembershipRepository memberships, IUserService auth, FarmStay.Application.Interfaces.Common.IUnitOfWork unitOfWork)
+public sealed class AdminBookingCustomers(IUserRepository users, IUserMembershipRepository memberships, IUserService auth, IUserOtpRepository otps, FarmStay.Application.Interfaces.Common.IUnitOfWork unitOfWork)
     : IAdminBookingCustomers
 {
     public async Task<AdminCustomer?> FindAsync(int farmhouse, string mobile)
@@ -13,9 +13,10 @@ public sealed class AdminBookingCustomers(IUserRepository users, IUserMembership
         if (user == null || !user.IsActive || user.IsDeleted) return null;
         var membership = await memberships.GetMembershipAsync(user.UserId, farmhouse);
         var customer = membership is { IsActive: true, IsDeleted: false, Role: { RoleName: "Customer", IsActive: true, IsDeleted: false } };
+        var mobileOtp = user.IsMobileVerified ? null : await otps.GetActiveOtpAsync(user.UserId, FarmStay.Domain.Enums.OtpPurpose.Register);
         return new(user.UserId, farmhouse, user.FullName, user.MobileNumber, user.Email,
             user.IsMobileVerified, user.IsEmailVerified, customer,
-            customer && user.IsMobileVerified && (string.IsNullOrWhiteSpace(user.Email) || user.IsEmailVerified));
+            customer && user.IsMobileVerified && (string.IsNullOrWhiteSpace(user.Email) || user.IsEmailVerified), mobileOtp?.ExpiryDate);
     }
     public async Task<ApiResponse<AdminCustomer>> RegisterAsync(int farmhouse, int actor, AdminCustomerRegistration request)
     {

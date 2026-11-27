@@ -89,6 +89,11 @@ namespace FarmStay.API.DependencyInjection
             // Repositories
             // -----------------------------
 
+            services.AddScoped<FarmStay.Infrastructure.Services.Security.CurrentTenantContext>();
+            services.AddScoped<FarmStay.Application.Interfaces.Common.ICurrentTenantContext>(sp=>sp.GetRequiredService<FarmStay.Infrastructure.Services.Security.CurrentTenantContext>());
+            services.AddScoped<FarmStay.Application.Interfaces.Common.ICurrentUserContext>(sp=>sp.GetRequiredService<FarmStay.Infrastructure.Services.Security.CurrentTenantContext>());
+            services.AddScoped<FarmStay.Application.Interfaces.Common.IPublicTenantResolver,FarmStay.Infrastructure.Services.Security.PublicTenantResolver>();
+            services.AddScoped<FarmStay.Application.Interfaces.Common.IPublicMediaAccess,FarmStay.Infrastructure.Services.FileUpload.PublicMediaAccess>();
             services.AddScoped<FarmStay.Application.Accounts.IAccountsRepository, FarmStay.Infrastructure.Accounts.AccountsRepository>();
             services.AddScoped<FarmStay.Application.Accounts.IAccountsScope, FarmStay.Infrastructure.Accounts.AccountsScope>();
             services.AddHostedService<FarmStay.Infrastructure.Accounts.AccountingWorker>();
@@ -125,12 +130,12 @@ namespace FarmStay.API.DependencyInjection
             services.AddScoped<IBookingCalendarRepository, BookingCalendarRepository>();
             services.AddScoped<IBookingListRepository, BookingListRepository>();
             services.AddScoped<IDashboardRepository, FarmStay.Infrastructure.Repositories.Administration.DashboardRepository>();
-            services.AddScoped<IBookingDecisionService, BookingDecisionService>();
-            services.AddScoped<IBookingStayOperations, BookingStayOperations>();
+            services.AddScoped<FarmStay.Application.Interfaces.Repositories.IBookingDecisionRepository, BookingDecisionService>();
+            services.AddScoped<FarmStay.Application.Interfaces.Repositories.IBookingStayRepository, BookingStayOperations>();
             services.AddScoped<IBookingReceipts, FarmStay.Infrastructure.Services.Reporting.BookingReceipts>();
-            services.AddScoped<IBookingIdentityDocuments, BookingIdentityDocuments>();
-            services.AddScoped<IAdvancePaymentOrders, RazorpayAdvancePaymentOrders>();
-            services.AddScoped<IAdminBookingConfirmation, AdminBookingConfirmation>();
+            services.AddScoped<FarmStay.Application.Interfaces.Repositories.IBookingIdentityRepository, BookingIdentityDocuments>();
+            services.AddScoped<FarmStay.Application.Interfaces.Repositories.IAdvancePaymentRepository, RazorpayAdvancePaymentOrders>();
+            services.AddScoped<FarmStay.Application.Interfaces.Repositories.IAdminBookingConfirmationRepository, AdminBookingConfirmation>();
             services.AddScoped<FarmStay.Application.Reporting.IReportAccess, FarmStay.Infrastructure.Reporting.ReportAccess>();
             services.AddScoped<FarmStay.Application.Interfaces.Repositories.Reports.IBookingReportRepository,
                 FarmStay.Infrastructure.Repositories.Reports.Booking.BookingReportRepository>();
@@ -142,7 +147,7 @@ namespace FarmStay.API.DependencyInjection
                 FarmStay.Infrastructure.Repositories.Reports.Occupancy.OccupancyReportRepository>();
             services.AddScoped<FarmStay.Application.Interfaces.Services.Reports.IReportFileRenderer,
                 FarmStay.Infrastructure.Reporting.ReportFileRenderer>();
-            services.AddScoped<IBookingSubmission, BookingSubmission>();
+            services.AddScoped<FarmStay.Application.Interfaces.Repositories.IBookingSubmissionRepository, BookingSubmission>();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
@@ -156,7 +161,7 @@ namespace FarmStay.API.DependencyInjection
 
             services.AddScoped<ITenantResolver, TenantResolver>();
 
-            services.AddScoped<IFileUploadService, FileUploadService>();
+            services.AddScoped<FarmStay.Application.Interfaces.Repositories.FileUpload.IFileUploadRepository, FarmStay.Infrastructure.Services.Common.FileUploadRepository>();
 
             // -----------------------------
             // Comman Services

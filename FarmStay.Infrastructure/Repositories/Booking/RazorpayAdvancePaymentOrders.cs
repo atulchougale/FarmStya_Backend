@@ -15,7 +15,7 @@ namespace FarmStay.Infrastructure.Repositories.Booking;
 
 public sealed class RazorpayAdvancePaymentOrders(AppDbContext db, IHttpClientFactory clients,
     IOptions<RazorpaySettings> configuration, ILogger<RazorpayAdvancePaymentOrders> logger,
-    IBookingNotifications notifications) : IAdvancePaymentOrders
+    IBookingNotifications notifications) : FarmStay.Application.Interfaces.Repositories.IAdvancePaymentRepository
 {
     public const string ClientName = "Razorpay";
     private const string Provider = "RazorpayTest";

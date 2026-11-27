@@ -508,3 +508,6 @@ $RECYCLE.BIN/
 
 # Generated Accounts verification exports
 /docs/Accounts/evidence/
+
+# Local baseline working-tree snapshot
+/docs/Phase0/tracked-changes.patch

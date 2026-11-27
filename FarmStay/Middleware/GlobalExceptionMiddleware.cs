@@ -35,17 +35,19 @@ namespace FarmStay.API.Middleware
 
         private static Task HandleExceptionAsync( HttpContext context, Exception exception)
         {
+            context.Response.Headers["X-Correlation-ID"] = context.TraceIdentifier;
+            context.Response.Headers.CacheControl = "no-store";
             context.Response.ContentType =
                 "application/json";
 
             context.Response.StatusCode =
-                (int)HttpStatusCode.InternalServerError;
+                exception is FarmStay.Application.Interfaces.Common.TenantAccessException denied ? denied.Status : (int)HttpStatusCode.InternalServerError;
 
             var response =
                 new ApiResponse<string>
                 {
                     Success = false,
-                    Message = exception.Message,
+                    Message = exception is FarmStay.Application.Interfaces.Common.TenantAccessException access ? access.Message : "An unexpected error occurred. Reference: " + context.TraceIdentifier,
                     Data = null
                 };
 

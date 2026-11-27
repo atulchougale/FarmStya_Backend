@@ -9,6 +9,9 @@ namespace FarmStay.API.Controllers.Accounts;
 [Microsoft.AspNetCore.RateLimiting.EnableRateLimiting("Accounts")]
 public sealed class AccountsController(IAccountsService service):ControllerBase
 {
+ [HttpGet("refunds/payments")] public Task<IActionResult> RefundPayments(string bookingReference,CancellationToken ct)=>Respond(async()=>await service.RefundPaymentsAsync(bookingReference,ct));
+ [HttpPost("refunds")] public Task<IActionResult> Refund(RefundInput input,CancellationToken ct)=>Respond(async()=>await service.RefundAsync(input,ct));
+ [HttpPut("source-reviews/{id:long}")] public Task<IActionResult> RetrySource(long id,ActionInput input,CancellationToken ct)=>Save("source-reviews",id,input,ct);
  [HttpGet("reports/{report}")] public Task<IActionResult> Report(string report,[FromQuery] AccountQuery q,CancellationToken ct)=>Respond(async()=>await service.ReportAsync(report,q,ct));
  [HttpGet("reports/{report}/export/{format}")] public async Task<IActionResult> Export(string report,string format,[FromQuery]AccountQuery q,CancellationToken ct) {try{var f=await service.ExportAsync(report,q,format,ct);return File(f.Content,f.ContentType,f.FileName);}catch(AccountsException e){return StatusCode(e.Status,new{success=false,message=e.Message});}}
  [HttpGet("vouchers/{id:long}")] public Task<IActionResult> Voucher(long id,CancellationToken ct)=>Respond(async()=>await service.VoucherAsync(id,ct));

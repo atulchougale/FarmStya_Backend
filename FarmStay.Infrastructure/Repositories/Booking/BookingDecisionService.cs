@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 namespace FarmStay.Infrastructure.Repositories.Booking;
 
 public sealed class BookingDecisionService(AppDbContext db, IBookingNotifications notifications,
-    ILogger<BookingDecisionService> logger) : IBookingDecisionService
+    ILogger<BookingDecisionService> logger) : FarmStay.Application.Interfaces.Repositories.IBookingDecisionRepository
 {
     public async Task<BookingDecisionOutcome> DecideAsync(int farmHouseId, long bookingId, int actorId,
         string? rejectionReason, CancellationToken cancellationToken)

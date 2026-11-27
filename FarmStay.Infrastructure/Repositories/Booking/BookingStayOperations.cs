@@ -15,7 +15,7 @@ namespace FarmStay.Infrastructure.Repositories.Booking;
 
 public sealed class BookingStayOperations(AppDbContext db, IBookingNotifications notifications,
     IHttpClientFactory clients, IOptions<RazorpaySettings> options, ILogger<BookingStayOperations> logger)
-    : IBookingStayOperations
+    : FarmStay.Application.Interfaces.Repositories.IBookingStayRepository
 {
     public async Task<StayResult> ExecuteAsync(int tenant, long bookingId, int actor, string action,
         CheckoutRequest? request, CancellationToken ct)
@@ -44,8 +44,8 @@ public sealed class BookingStayOperations(AppDbContext db, IBookingNotifications
         }
 
         var payments = db.PaymentTransactions.Where(p => p.FarmHouseId == tenant && p.BookingId == bookingId && !p.IsDelete);
-        var advance = await payments.Where(p => p.PaymentType == "Advance" && p.PaymentStatus == "Success")
-            .SumAsync(p => p.Amount, ct);
+        var advance = await payments.Where(p => p.PaymentType == "Advance" && p.PaymentStatus == "Success").SumAsync(p => p.Amount, ct)
+            - await payments.Where(p=>p.PaymentType=="Refund"&&p.RefundAccountingKind=="Advance"&&p.PaymentStatus=="Success").SumAsync(p=>p.Amount,ct);
         var payment = await payments.SingleOrDefaultAsync(p => p.IdempotencyKey == $"checkout:{bookingId}", ct);
         var discount = await db.CheckoutDiscounts.Where(d => d.BookingId == bookingId && d.FarmHouseId == tenant && !d.IsDelete)
             .SumAsync(d => d.Amount, ct);
@@ -54,7 +54,7 @@ public sealed class BookingStayOperations(AppDbContext db, IBookingNotifications
         var balance = new CheckoutBalance(booking.TotalAmount, advance, discount,
             payment?.Amount ?? Math.Max(0, remaining - discount), currency, payment?.PaymentStatus);
         if (action is "balance" or "customer-balance") return new(200, "Checkout balance.", balance);
-        if (booking.Status == "CheckedOut" && payment?.PaymentStatus == "Success")
+        if (booking.Status == "CheckedOut" && (payment?.PaymentStatus == "Success" || payment == null && booking.ActualCheckOutAt.HasValue))
             return new(200, "Checkout complete.");
         if (booking.Status != "CheckedIn") return new(409, "The booking must be checked in first.");
 
@@ -73,6 +73,16 @@ public sealed class BookingStayOperations(AppDbContext db, IBookingNotifications
             if (request.Discount > 0)
                 db.CheckoutDiscounts.Add(new CheckoutDiscount
                 { FarmHouseId = tenant, BookingId = bookingId, Amount = request.Discount, Reason = reason!, EnteredBy = actor });
+
+            if (payable == 0)
+            {
+                booking.CheckoutPaidAt = null;
+                booking.ActualCheckOutAt = DateTime.Now;
+                ChangeStatus(booking, actor, "CheckedOut", false, "No additional payment due; checkout completed without a money transaction.");
+                await notifications.StageAsync(booking, BookingNotificationEvent.CheckedOut, cancellationToken: ct);
+                await SaveAsync();
+                return new(200, "No balance due. Checkout complete.");
+            }
 
             payment = new PaymentTransaction
             {
@@ -163,12 +173,12 @@ public sealed class BookingStayOperations(AppDbContext db, IBookingNotifications
         await notifications.StageAsync(booking, BookingNotificationEvent.CheckedOut, cancellationToken: ct);
     }
 
-    private void ChangeStatus(BookingEntity booking, int actor, string status, bool customer)
+    private void ChangeStatus(BookingEntity booking, int actor, string status, bool customer, string? reason = null)
     {
         db.BookingStatusHistories.Add(new BookingStatusHistory
         {
             FarmHouseId = booking.FarmHouseId, BookingId = booking.BookingId, OldStatus = booking.Status,
-            NewStatus = status, ActorUserId = actor, ActorType = customer ? "Customer" : "Administration"
+            NewStatus = status, ActorUserId = actor, ActorType = customer ? "Customer" : "Administration", Reason = reason
         });
         booking.Status = status;
         booking.ModifiedBy = actor;

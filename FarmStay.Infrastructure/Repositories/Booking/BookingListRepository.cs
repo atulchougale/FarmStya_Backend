@@ -94,20 +94,34 @@ namespace FarmStay.Infrastructure.Repositories.Booking
                 .ToListAsync();
         }
 
+        public async Task<List<FarmStay.Application.DTOs.Booking.BookingListResponseDto.BookingDiscountDetails>> GetDiscountDetailsAsync(int farmHouseId, long bookingId)
+        {
+            return await (from d in _context.CheckoutDiscounts.AsNoTracking()
+                where d.FarmHouseId == farmHouseId && d.BookingId == bookingId && !d.IsDelete
+                join u in _context.Users.AsNoTracking() on d.EnteredBy equals (long)u.UserId into users
+                from u in users.DefaultIfEmpty()
+                orderby d.CreatedDate, d.CheckoutDiscountId
+                select new FarmStay.Application.DTOs.Booking.BookingListResponseDto.BookingDiscountDetails(
+                    d.Amount, d.Reason, d.EnteredBy, u == null ? null : u.FullName, d.CreatedDate)).ToListAsync();
+        }
+
         // Get booking status history
-        public async Task<(decimal TotalPaid, decimal AdvancePaid, decimal Discount, bool PendingAdvance)> GetPaymentTotalsAsync(int farmHouseId, long bookingId)
+        public async Task<(decimal TotalPaid, decimal AdvancePaid, decimal Discount, bool PendingAdvance, decimal Refunded)> GetPaymentTotalsAsync(int farmHouseId, long bookingId)
         {
             var paid = _context.PaymentTransactions.AsNoTracking().Where(p =>
                 p.FarmHouseId == farmHouseId && p.BookingId == bookingId && !p.IsDelete && p.PaymentStatus == "Success");
-            var total = await paid.SumAsync(p => (decimal?)p.Amount) ?? 0;
+            var total = await paid.Where(p=>p.PaymentType=="Advance"||p.PaymentType=="Checkout").SumAsync(p => (decimal?)p.Amount) ?? 0;
+            var refunded=await paid.Where(p=>p.PaymentType=="Refund").SumAsync(p=>(decimal?)p.Amount)??0;
+            total=Math.Max(0,total-refunded);
             var advance = await paid.Where(p => p.PaymentType == "Advance").SumAsync(p => (decimal?)p.Amount) ?? 0;
+            advance=Math.Max(0,advance-(await paid.Where(p=>p.PaymentType=="Refund"&&p.RefundAccountingKind=="Advance").SumAsync(p=>(decimal?)p.Amount)??0));
             var discount = await _context.CheckoutDiscounts.AsNoTracking().Where(d =>
                 d.FarmHouseId == farmHouseId && d.BookingId == bookingId && !d.IsDelete)
                 .SumAsync(d => (decimal?)d.Amount) ?? 0;
             var pendingAdvance = await _context.PaymentTransactions.AsNoTracking().AnyAsync(p =>
                 p.FarmHouseId == farmHouseId && p.BookingId == bookingId && !p.IsDelete &&
                 p.PaymentType == "Advance" && p.PaymentMethod == "Online" && p.PaymentStatus == "Pending");
-            return (total, advance, discount, pendingAdvance);
+            return (total, advance, discount, pendingAdvance, refunded);
         }
 
         public async Task<List<BookingStatusHistory>>

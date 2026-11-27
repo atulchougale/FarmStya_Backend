@@ -2,7 +2,7 @@ using FarmStay.Application.Common.ApiResponse;
 using FarmStay.Application.DTOs.Auth;
 namespace FarmStay.Application.Interfaces.Services.Booking;
 public record AdminCustomer(int UserId, int FarmHouseId, string FullName, string MobileNumber, string? Email,
-    bool IsMobileVerified, bool IsEmailVerified, bool HasMembership, bool CanBook);
+    bool IsMobileVerified, bool IsEmailVerified, bool HasMembership, bool CanBook, DateTime? MobileOtpExpiresAt = null);
 public record AdminCustomerRegistration(string FullName, string MobileNumber, string? Email);
 public interface IAdminBookingCustomers
 {

@@ -7,6 +7,7 @@ namespace FarmStay.API.Controllers.Auth
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Microsoft.AspNetCore.RateLimiting.EnableRateLimiting("Auth")]
     public class AuthController : ControllerBase
     {
         private readonly IUserService _userService;

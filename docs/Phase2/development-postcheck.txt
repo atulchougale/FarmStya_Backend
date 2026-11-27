@@ -1,0 +1,4 @@
+4 | Reporting | /reporting | active=1
+6 | Reports | /reports | active=0
+Module=Reporting; role assignments=2; farmhouse assignments=4
+Module=Reports; role assignments=2; farmhouse assignments=4

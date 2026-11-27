@@ -1,0 +1,41 @@
+Disposable database: FSBooking_Phase3_dc5b9ae4f4594e77a0d5075133723dfa
+PASS Submit uses application service and persists one Pending booking
+PASS Response-loss replay returns same booking and no duplicate outbox/history
+PASS Changed request cannot reuse submission key
+PASS Concurrent double-click returns a single persisted booking
+PASS Existing reservation expiry still rejects submit
+PASS Customer cannot impersonate another customer or farmhouse
+PASS Customer cannot use administration submission
+PASS Application validation rejects invalid guest count
+PASS Assisted submission preserves customer and administration actor
+PASS Submission key cannot be replayed under another booking source
+PASS Customer details remain private to the booking owner
+PASS Approve applies once with one history and notification set
+PASS Reject releases existing stay dates without rebuilding reservation flow
+PASS Customer cannot approve or check in
+PASS ID metadata and file access cannot cross customers
+PASS Existing pending gateway order is reused without creating another order
+PASS Expired confirmation deadline rejects payment verification
+PASS Gateway amount mismatch cannot confirm booking
+PASS Gateway currency mismatch cannot confirm booking
+PASS Gateway order mismatch cannot confirm booking
+PASS Gateway refunded mismatch cannot confirm booking
+PASS Gateway pending mismatch cannot confirm booking
+PASS Provider error does not mark advance paid
+PASS Captured payment confirms booking once
+PASS Payment verification replay does not call gateway or duplicate receipt/outbox
+PASS Approved assisted booking requires identity before cash advance
+PASS Cash advance retry remains idempotent
+PASS Admin and Owner receive consistent check-in and document capabilities
+PASS Checkout cannot bypass check-in
+PASS Existing check-in operation retries without duplicate history
+PASS Customer cannot override checkout amounts
+PASS Checkout payment, receipt and history stay idempotent
+PASS Final checkout stores actual timestamps and discounted payable
+PASS Document remains visible after checkout with no check-in capability
+PASS HTTP anonymous booking access denied
+PASS HTTP customer mine route remains compatible
+PASS HTTP customer cannot approve
+PASS HTTP customer cannot read another customer booking
+PASS HTTP admin details retain uploaded identity metadata after checkout
+TOTAL passed=39 failed=0

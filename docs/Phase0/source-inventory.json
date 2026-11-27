@@ -1,0 +1,2372 @@
+[
+  {
+    "path": "FarmStay\\FarmStay.API.csproj",
+    "sha256": "83b9bb27a06a2cc5eda79b7bdd62cf309e0eda55172f8633d0281064562609b6",
+    "lines": 41
+  },
+  {
+    "path": "FarmStay\\Program.cs",
+    "sha256": "aaef8a36b6d72faffe0b3c61ba9a6578e1fcbc556c9dc0aa340e1182e7c5a4f0",
+    "lines": 77
+  },
+  {
+    "path": "FarmStay\\Authorization\\BookingCustomerAuthorizationHandler.cs",
+    "sha256": "4a458e9612d2d708e2a24b36e392757b80408c82b752c7fc158b87be17bb64ca",
+    "lines": 30
+  },
+  {
+    "path": "FarmStay\\Authorization\\HasPermissionAttribute.cs",
+    "sha256": "0faad26d3c7afac6d0089fc3927fd5e9834505c65c25db03dff1b7266cdeec39",
+    "lines": 25
+  },
+  {
+    "path": "FarmStay\\Authorization\\PermissionAuthorizationHandler.cs",
+    "sha256": "2179fe977a9cefadf6bf46bbb5d014c31fec30436c3c4b040d17877b766bee4f",
+    "lines": 57
+  },
+  {
+    "path": "FarmStay\\Authorization\\PermissionAuthorizationRequirement.cs",
+    "sha256": "af4a8eabee8d4d4fe4239dc190f4b0fd0928938345317d89621bfc1fa811369f",
+    "lines": 21
+  },
+  {
+    "path": "FarmStay\\Authorization\\PermissionPolicyProvider.cs",
+    "sha256": "267bf0fd04217a38f8c06283e48bd266985ee2d8f399c803676dbc1f4521fb17",
+    "lines": 44
+  },
+  {
+    "path": "FarmStay\\DependencyInjection\\ApplicationServiceRegistration.cs",
+    "sha256": "1bf773c9c4b221c9a5c03550a390a5932b998d67e79df08535a98da06ddeb6d5",
+    "lines": 67
+  },
+  {
+    "path": "FarmStay\\DependencyInjection\\AuthenticationServiceRegistration.cs",
+    "sha256": "a97ac5bd1c302f6993a6dd1b5a89535afda1309763dd5e1531921800fafd467f",
+    "lines": 65
+  },
+  {
+    "path": "FarmStay\\DependencyInjection\\CorsServiceRegistration.cs",
+    "sha256": "472fc0353cfa213726da51f334a156de5971aed6065d65b4912befc46714c825",
+    "lines": 24
+  },
+  {
+    "path": "FarmStay\\DependencyInjection\\FluentValidationServiceRegistration.cs",
+    "sha256": "5faa80085a56024677a15d347c57083bfd4b84e57ae154813dafeff879cc55fb",
+    "lines": 21
+  },
+  {
+    "path": "FarmStay\\DependencyInjection\\InfrastructureServiceRegistration.cs",
+    "sha256": "836ef59f409ceeb6bd1fca8efb6e4f774948ee134c9ac4c51e10c43bf33d18da",
+    "lines": 186
+  },
+  {
+    "path": "FarmStay\\DependencyInjection\\SerilogServiceRegistration.cs",
+    "sha256": "664da83f05694583e941c3b06ce20a67f9e87a1531ed00268d2c6821c0d9c853",
+    "lines": 22
+  },
+  {
+    "path": "FarmStay\\DependencyInjection\\SwaggerServiceRegistration.cs",
+    "sha256": "ac4e84c378901f9a3f25765b2ae3848e9ffd1be12a16a794564738017661a3f1",
+    "lines": 52
+  },
+  {
+    "path": "FarmStay\\Middleware\\GlobalExceptionMiddleware.cs",
+    "sha256": "2d3343f65d642ba224423c140761eb16c68ff7a03b96875085fe11a9f3cb6886",
+    "lines": 59
+  },
+  {
+    "path": "FarmStay\\Controllers\\AboutUs\\AboutUsController.cs",
+    "sha256": "75b4ac194ed62a2c9129b21c2af962755d0418a2675eaa33568a8e927d5d9c3a",
+    "lines": 158
+  },
+  {
+    "path": "FarmStay\\Controllers\\Accounts\\AccountsController.cs",
+    "sha256": "3321dbe23684ed8b053f057f44e75e4ed83b6133fc0c9721dd47794bcd5f0b1e",
+    "lines": 41
+  },
+  {
+    "path": "FarmStay\\Controllers\\Administration\\AdminMenuController .cs",
+    "sha256": "b9272aebc33a205790a2a088f128c10871d81610277b36a2fbdac0db8d3d9d8a",
+    "lines": 36
+  },
+  {
+    "path": "FarmStay\\Controllers\\Amenity\\AmenityController.cs",
+    "sha256": "d6f9b2b30bbfb668d1d28beb5177687616e2c11d8874627bddb966238ee5c7a3",
+    "lines": 77
+  },
+  {
+    "path": "FarmStay\\Controllers\\Auth\\AuthController.cs",
+    "sha256": "1440babfe60d7dff6b37aa415b8132bd038d92e7c632a0b1eda54d38e40cd501",
+    "lines": 254
+  },
+  {
+    "path": "FarmStay\\Controllers\\Booking\\AdminBookingsController.cs",
+    "sha256": "a1326b4efe6d71950b3c892e0dd2c26a11c33c63d7cd9c201ab928797e9a638a",
+    "lines": 108
+  },
+  {
+    "path": "FarmStay\\Controllers\\Booking\\BookingCalendarController.cs",
+    "sha256": "72b53bedd1d572bedf057efbffcfd2d8e962cbe379100a516012772d75025190",
+    "lines": 144
+  },
+  {
+    "path": "FarmStay\\Controllers\\Booking\\BookingListController.cs",
+    "sha256": "d7ea174f0d689d11b2dc385e675ad5856909f7cd2e1781c7d598482cbd9a58ba",
+    "lines": 433
+  },
+  {
+    "path": "FarmStay\\Controllers\\Booking\\BookingPricingController.cs",
+    "sha256": "2fc41f2c9a783a63b4b5d955a36603ff2c3d5bee8e2b1497fb7a9fbc6634d1f2",
+    "lines": 55
+  },
+  {
+    "path": "FarmStay\\Controllers\\Booking\\BookingsController.cs",
+    "sha256": "06204e3359e03d03ad7268c2200d8d45b6c4a6e21a13ded7b7a5a031c61021a4",
+    "lines": 70
+  },
+  {
+    "path": "FarmStay\\Controllers\\Contact\\ContactController.cs",
+    "sha256": "922d83ce74e484971cbc1db420edbbdb64890f47fa5016b251472fabe90b2ff0",
+    "lines": 63
+  },
+  {
+    "path": "FarmStay\\Controllers\\Dashboard\\DashboardController.cs",
+    "sha256": "58c98328abb5d845c1fe515dbade1a461b311003fedf1608ce30654d25ddc632",
+    "lines": 21
+  },
+  {
+    "path": "FarmStay\\Controllers\\FarmHouse\\FarmHouseController.cs",
+    "sha256": "464c638424631adfcdf915fe5021acf3dd941af45fd1be01f02979008441bd81",
+    "lines": 89
+  },
+  {
+    "path": "FarmStay\\Controllers\\Feedback\\FeedbackController.cs",
+    "sha256": "1fb0fd923338e2d78bb4be875699121410761a50134d3230f801e2e37b7d45ea",
+    "lines": 76
+  },
+  {
+    "path": "FarmStay\\Controllers\\FileUpload\\FileUploadController.cs",
+    "sha256": "10f6e25fcdcf1a2f81760e52798aedc81f04a3d1c166f89d5f5b1471d2dd38d8",
+    "lines": 36
+  },
+  {
+    "path": "FarmStay\\Controllers\\Gallery\\GalleryController.cs",
+    "sha256": "df7fba58bbe88b015064f1903f1c3a03cf8d7b9ffdf777bec72bddca4c134faf",
+    "lines": 86
+  },
+  {
+    "path": "FarmStay\\Controllers\\Pricing\\PricingManagementController.cs",
+    "sha256": "85b10520a6e79e59938ef9e39d67069bb7ad32677689211121fa4f1f3576f948",
+    "lines": 73
+  },
+  {
+    "path": "FarmStay\\Controllers\\Public\\PublicController.cs",
+    "sha256": "7c387c37e213b43e2c7cb228db3b4603ab4eefa55b7a6b824855c55e5f9f7e23",
+    "lines": 30
+  },
+  {
+    "path": "FarmStay\\Controllers\\Public\\PublicPageController.cs",
+    "sha256": "04713cab05272ee2d12e7438b1b62233f7495fb971dc30a26f2e77a339e2c103",
+    "lines": 89
+  },
+  {
+    "path": "FarmStay\\Controllers\\Reporting\\ReportsController.cs",
+    "sha256": "26f86764066fff208e43981a9e5e6f18ab521cdbcd33727340c899b7721fb054",
+    "lines": 50
+  },
+  {
+    "path": "FarmStay\\Controllers\\WhatsApp\\WhatsAppWebhookController.cs",
+    "sha256": "18c6867f488c587d4968968ab6996c430f271527c50c2a6e42c84240ca015429",
+    "lines": 36
+  },
+  {
+    "path": "FarmStay.Application\\FarmStay.Application.csproj",
+    "sha256": "7797034b5bc610b1a198207100b7e0fc9022dc5d9a4e2d1b4842260b2ac37d05",
+    "lines": 32
+  },
+  {
+    "path": "FarmStay.Application\\Configurations\\RazorpaySettings.cs",
+    "sha256": "3f85161244b7a7cbf1e24110010601b2c2b17ce932fc4baf7d824c3004cbb4b4",
+    "lines": 12
+  },
+  {
+    "path": "FarmStay.Application\\Configurations\\WhatsAppSettings.cs",
+    "sha256": "d69cfe8f120fb70147bd164b88a77bb7bfb62bb2674981aa143c8f7a6fe5dbd6",
+    "lines": 18
+  },
+  {
+    "path": "FarmStay.Application\\BackgroundJobs\\Communication\\EmailJob.cs",
+    "sha256": "da77a33e0702eb05b73392c910f02af4a5ce06b3f57969949f61346370d71175",
+    "lines": 13
+  },
+  {
+    "path": "FarmStay.Application\\BackgroundJobs\\Communication\\WhatsAppJob.cs",
+    "sha256": "b4f2bbbbff08d15291814f020e6e3a4e752371ca04a64bdb6b72ffd21ad06308",
+    "lines": 9
+  },
+  {
+    "path": "FarmStay.Application\\Common\\ApiResponse\\ApiResponse.cs",
+    "sha256": "dac2862273d454eef6a625cb683ff587c267ff6a494fc03a79a1f9b233e4691a",
+    "lines": 18
+  },
+  {
+    "path": "FarmStay.Application\\Common\\Constants\\BookingPermissions.cs",
+    "sha256": "3b5c4c5b48de819211b1ca583b18f8083b119100fa2f682aeeef70488825b12a",
+    "lines": 8
+  },
+  {
+    "path": "FarmStay.Application\\Common\\Constants\\JwtClaimNames.cs",
+    "sha256": "69e3917dd4f9948e3b3f1a0cdbe0318b2e35bebd73c3e32552611ce9eb2ed0a8",
+    "lines": 8
+  },
+  {
+    "path": "FarmStay.Application\\Common\\Exceptions\\AccountsException.cs",
+    "sha256": "4e4d97b2d9cdc09ed541f9a5537c22f024427378154df5faae4ee6b56ff0aa02",
+    "lines": 5
+  },
+  {
+    "path": "FarmStay.Application\\Common\\Reporting\\ReportCatalog.cs",
+    "sha256": "8b4cf28150f535351461164e702fcc8a8d2d7f61efccaaa33eacdb44d789636f",
+    "lines": 26
+  },
+  {
+    "path": "FarmStay.Application\\Common\\Reporting\\ReportError.cs",
+    "sha256": "ff51b398a282a326eedc8fe6aa521d4d718a5571d3a321f6b7bf54de8f40adb8",
+    "lines": 6
+  },
+  {
+    "path": "FarmStay.Application\\Common\\Reporting\\ReportException.cs",
+    "sha256": "684f4bdb654bb1747c04acefaa673e73381dea270d1f6f8beb207dcec7a871d6",
+    "lines": 9
+  },
+  {
+    "path": "FarmStay.Application\\Common\\Settings\\EmailSettings.cs",
+    "sha256": "9eca18cb71801d4b38d9373aef4a49908be51155821bff334010d382e16d7831",
+    "lines": 28
+  },
+  {
+    "path": "FarmStay.Application\\Common\\Settings\\FileUploadSettings.cs",
+    "sha256": "d99f017536a7705d8900a0f342120620e11e584b11d988f4461f006e7f3a03a0",
+    "lines": 25
+  },
+  {
+    "path": "FarmStay.Application\\DTOs\\AboutUs\\Requests\\AboutUsFeatureRequestDto.cs",
+    "sha256": "c553645a92a610119fbed2c79a21beb8f2431b144b53190d50079c0f2cc5cf0a",
+    "lines": 28
+  },
+  {
+    "path": "FarmStay.Application\\DTOs\\AboutUs\\Requests\\AboutUsRequestDto.cs",
+    "sha256": "0109fc9eb1a75e93ccb8dd04d149048bd1d13c8f2343bc71e4807dd45191c7b6",
+    "lines": 35
+  },
+  {
+    "path": "FarmStay.Application\\DTOs\\AboutUs\\Responses\\AboutUsResponseDto.cs",
+    "sha256": "63e30c96d8a6e58409b23ad99d6cfd8b31834424f9c6a672b99d5b9e89bdb428",
+    "lines": 48
+  },
+  {
+    "path": "FarmStay.Application\\DTOs\\Accounts\\Requests\\AccountQuery.cs",
+    "sha256": "6c92972b5bfc023e757cb657f4070b9ccd67cff25b9df89952b16dec6e230a96",
+    "lines": 17
+  },
+  {
+    "path": "FarmStay.Application\\DTOs\\Accounts\\Requests\\ActionInput.cs",
+    "sha256": "be007c0b5d1af68932a9363b13dea12c9e0f7b08f5fbf677d40f98a131c6a928",
+    "lines": 13
+  },
+  {
+    "path": "FarmStay.Application\\DTOs\\Accounts\\Requests\\AssetInput.cs",
+    "sha256": "bb0e93bb122e6d4ba09cfb6ba4d8b560ad796f690d9fe227dc17ac135bd158d1",
+    "lines": 23
+  },
+  {
+    "path": "FarmStay.Application\\DTOs\\Accounts\\Requests\\LedgerInput.cs",
+    "sha256": "2e4d6099045cfc9a6cfa327a47ff5295c146d41afdacbbdeaeac4ee32f5ffd07",
+    "lines": 12
+  },
+  {
+    "path": "FarmStay.Application\\DTOs\\Accounts\\Requests\\LineInput.cs",
+    "sha256": "736799b336873dc1d18be54d613910843c7c0632dbdabee002456cef3d78e25c",
+    "lines": 16
+  },
+  {
+    "path": "FarmStay.Application\\DTOs\\Accounts\\Requests\\MasterInput.cs",
+    "sha256": "f8e9f07d1a12cdd9cd2c73694442c034ed945e68f2e77b0497687cc02a35c995",
+    "lines": 17
+  },
+  {
+    "path": "FarmStay.Application\\DTOs\\Accounts\\Requests\\MoneyAccountInput.cs",
+    "sha256": "a18a1212a5023e45ed14e8d71be8de5890ff5389c00b21f3b1c777ba90f219b4",
+    "lines": 13
+  },
+  {
+    "path": "FarmStay.Application\\DTOs\\Accounts\\Requests\\RecurringInput.cs",
+    "sha256": "cddbe9a140f4b9f5cb15fbd82b49c134b4d2d83d02f3f5a5b49e08773dbc1ce4",
+    "lines": 17
+  },
+  {
+    "path": "FarmStay.Application\\DTOs\\Accounts\\Requests\\SettingsInput.cs",
+    "sha256": "5b940fc17a883eb5d007a4e60bd72b42a80cc62906e3bf8228c5a6fc52f700d6",
+    "lines": 10
+  },
+  {
+    "path": "FarmStay.Application\\DTOs\\Accounts\\Requests\\StatementInput.cs",
+    "sha256": "172d688fb5259977ccd8390754b9e4eada5ffcc91c7766f425af18f04de9be91",
+    "lines": 12
+  },
+  {
+    "path": "FarmStay.Application\\DTOs\\Accounts\\Requests\\VendorInput.cs",
+    "sha256": "01ef696a8813c462898d596addb119fa3d4ad8315490323161b78306aeab2cf0",
+    "lines": 14
+  },
+  {
+    "path": "FarmStay.Application\\DTOs\\Accounts\\Requests\\VoucherInput.cs",
+    "sha256": "8223df4268d5286be0281a79d135e359719e1ffc01c6940a90db625a94100d96",
+    "lines": 16
+  },
+  {
+    "path": "FarmStay.Application\\DTOs\\Accounts\\Responses\\AccountPage.cs",
+    "sha256": "84ec3d7d898e2faa3fe14b39eb3815e2843269db12057ea8ca9c469e5165d4e9",
+    "lines": 5
+  },
+  {
+    "path": "FarmStay.Application\\DTOs\\Accounts\\Responses\\AccountReportRow.cs",
+    "sha256": "a58f0f97bd06604a55791d3546f09b4606698b2452d6a3a6526744de25994d3a",
+    "lines": 19
+  },
+  {
+    "path": "FarmStay.Application\\DTOs\\Accounts\\Responses\\AccountScope.cs",
+    "sha256": "9b46e60263fe6ada3c9906bd72f0508098a05a1c34045935dadf8f2ea8d8a21c",
+    "lines": 5
+  },
+  {
+    "path": "FarmStay.Application\\DTOs\\Accounts\\Responses\\AccountsDownload.cs",
+    "sha256": "94696aa46dcc3fa975d1c9995def443a996cd7494108b06c08337f41581772ec",
+    "lines": 5
+  },
+  {
+    "path": "FarmStay.Application\\DTOs\\Administration\\Responses\\AdminMenuResponseDto.cs",
+    "sha256": "57aac204cfca7756b113a3f062fdcef59288952d38bf594f64d73c7e52f211ed",
+    "lines": 26
+  },
+  {
+    "path": "FarmStay.Application\\DTOs\\Amenity\\Requests\\AmenityRequestDto.cs",
+    "sha256": "cbeac3d779636588f2b7e8b9bcf7a77ba032a04bcedb04639e168d576b165ef9",
+    "lines": 28
+  },
+  {
+    "path": "FarmStay.Application\\DTOs\\Amenity\\Responses\\AmenityResponseDto.cs",
+    "sha256": "130618b35ab0699a178d9fd824d933ebb5a2dad367479e3232321bfe3250dafd",
+    "lines": 30
+  },
+  {
+    "path": "FarmStay.Application\\DTOs\\Auth\\Requests\\ChangePasswordDto.cs",
+    "sha256": "36c4856511d57db5966c273786f48bb05595186dbb84c644de4b4d6f3f431f40",
+    "lines": 14
+  },
+  {
+    "path": "FarmStay.Application\\DTOs\\Auth\\Requests\\LoginRequestDto.cs",
+    "sha256": "31bfa6497639b55d9e5c1b72bda972617440c74bf58916d642b29eb640b0ba35",
+    "lines": 9
+  },
+  {
+    "path": "FarmStay.Application\\DTOs\\Auth\\Requests\\LogoutDto.cs",
+    "sha256": "ac55b004eeba33547da72ca9d3cfdf4fb1df1794ecc8dc74a0d0fce87d1a3e29",
+    "lines": 7
+  },
+  {
+    "path": "FarmStay.Application\\DTOs\\Auth\\Requests\\RefreshTokenDto.cs",
+    "sha256": "7864cfda1f027b2906781a8f24876b2957adef56da5a11e0363c22631db553b0",
+    "lines": 9
+  },
+  {
+    "path": "FarmStay.Application\\DTOs\\Auth\\Requests\\RegisterRequestDto.cs",
+    "sha256": "9a1daac08040f4cc02f956ed1c40b12962a06f4915907acd4eb885c28a5f2db0",
+    "lines": 13
+  },
+  {
+    "path": "FarmStay.Application\\DTOs\\Auth\\Requests\\ResendOtpRequestDto.cs",
+    "sha256": "053574d6e7e8ed7457e386e4bca07980d5bfaedb0fea07028326c4380e5393a5",
+    "lines": 9
+  },
+  {
+    "path": "FarmStay.Application\\DTOs\\Auth\\Requests\\ResetPasswordByEmailDto.cs",
+    "sha256": "3c792cd2cd27bbc1b8469481da9ec1c492b5f181635147017aac186644e53321",
+    "lines": 13
+  },
+  {
+    "path": "FarmStay.Application\\DTOs\\Auth\\Requests\\ResetPasswordByOtpDto.cs",
+    "sha256": "431cb9a2a8784e1f7b2f42a2c9c626f6da8f6d15770a1d52cbc28ccd1b8e9974",
+    "lines": 13
+  },
+  {
+    "path": "FarmStay.Application\\DTOs\\Auth\\Requests\\SendLoginOtpRequestDto.cs",
+    "sha256": "d455330df8c942d28956bbc3334345ea7f855fdffd9e290a507b75908efb09e2",
+    "lines": 7
+  },
+  {
+    "path": "FarmStay.Application\\DTOs\\Auth\\Requests\\UpdateEmailRequest.cs",
+    "sha256": "61e63d4caedc8b149aac539cca781d88df0518dc99c4a37489be3bfad3b5c258",
+    "lines": 3
+  },
+  {
+    "path": "FarmStay.Application\\DTOs\\Auth\\Requests\\UpdateProfileRequest.cs",
+    "sha256": "1aac17ff24084a6b38fcf2912055892fbd366c601caf69486f60613f443e336a",
+    "lines": 5
+  },
+  {
+    "path": "FarmStay.Application\\DTOs\\Auth\\Requests\\VerifyEmailRequestDto.cs",
+    "sha256": "809bb13d01c765beef696110e759fdddd1542453255c627517dc409d36df3644",
+    "lines": 11
+  },
+  {
+    "path": "FarmStay.Application\\DTOs\\Auth\\Requests\\VerifyLoginOtpRequestDto.cs",
+    "sha256": "cdf671561689de02048008c7ac9177ed074a7ec69ea6a5279d88f31ba41f2e49",
+    "lines": 9
+  },
+  {
+    "path": "FarmStay.Application\\DTOs\\Auth\\Requests\\VerifyOtpRequestDto.cs",
+    "sha256": "6a1a17ce7c9afaf1d09421240749e804a0e25a21621df5aa373815d80bf73e0d",
+    "lines": 11
+  },
+  {
+    "path": "FarmStay.Application\\DTOs\\Auth\\Responses\\ForgotPasswordDto.cs",
+    "sha256": "db25a9c3e5e0a407d1a54d43a7e1eab8956c73b51e252b0eb56b3aec27a01c12",
+    "lines": 13
+  },
+  {
+    "path": "FarmStay.Application\\DTOs\\Auth\\Responses\\LoginResponseDto.cs",
+    "sha256": "847874ba8cc52988c87812042b69ffe4dfad39020f92784d7704f010b4c2027e",
+    "lines": 42
+  },
+  {
+    "path": "FarmStay.Application\\DTOs\\Auth\\Responses\\ProfileDto.cs",
+    "sha256": "4ec08e8d40681db417f5139bb4df2ad520f7813da9c77659840b1bffd59ff9b1",
+    "lines": 31
+  },
+  {
+    "path": "FarmStay.Application\\DTOs\\Auth\\Responses\\RegisterResponseDto.cs",
+    "sha256": "b842df6eea817a160957b0636b6aa9002db7c96e31b5b7186556fe66b6472f39",
+    "lines": 27
+  },
+  {
+    "path": "FarmStay.Application\\DTOs\\Auth\\Responses\\VerificationStatusResponseDto.cs",
+    "sha256": "510ef2bfa3eddb69f471fec4debdbeffbbb93df88c813a1f06eeb3e0824e2d3d",
+    "lines": 11
+  },
+  {
+    "path": "FarmStay.Application\\DTOs\\Booking\\Requests\\CreateBookingDateReservationsDto.cs",
+    "sha256": "5e1b3f44d4887dde6dbd616530338b09f0ac144ced05fb26bb29316335747992",
+    "lines": 46
+  },
+  {
+    "path": "FarmStay.Application\\DTOs\\Booking\\Requests\\SubmitBookingRequest.cs",
+    "sha256": "1e5ef7446e497a4abc443600599df06962540c2ddb879073894dae722b62d5a2",
+    "lines": 34
+  },
+  {
+    "path": "FarmStay.Application\\DTOs\\Booking\\Responses\\ActiveBookingDateReservationDto.cs",
+    "sha256": "dc32db95e298ef2b450ca6381a74f3eb4a271295d3d3947d0c948b8318839ed0",
+    "lines": 19
+  },
+  {
+    "path": "FarmStay.Application\\DTOs\\Booking\\Responses\\AdministrationBookingList.cs",
+    "sha256": "eed8314342dfa9dfe17b16d0d85f4b5024034d8bde98270f4504a8b3bae19b80",
+    "lines": 14
+  },
+  {
+    "path": "FarmStay.Application\\DTOs\\Booking\\Responses\\BookingCalendarAvailabilityResponseDto.cs",
+    "sha256": "9dd4be8d8fc9698186f53190e0b474de779cd744f4a094429faa122d785a8fa7",
+    "lines": 39
+  },
+  {
+    "path": "FarmStay.Application\\DTOs\\Booking\\Responses\\BookingCalendarMonthResponseDto.cs",
+    "sha256": "6605313422eccf547268286be15d6d0131f48608c59d120e78f7e28e27bdaf35",
+    "lines": 33
+  },
+  {
+    "path": "FarmStay.Application\\DTOs\\Booking\\Responses\\BookingListResponseDto.cs",
+    "sha256": "b8afd9229996e0cf0ae40cdcd87b6221483e170878ef651d17af877e48191d68",
+    "lines": 113
+  },
+  {
+    "path": "FarmStay.Application\\DTOs\\Booking\\Responses\\BookingQuoteDto.cs",
+    "sha256": "0ae42d299a90ac9be0735daed0e50bb6bddfb336ef604a8eeed4bab4377809f6",
+    "lines": 10
+  },
+  {
+    "path": "FarmStay.Application\\DTOs\\Booking\\Responses\\FarmHousePricingResponseDto.cs",
+    "sha256": "25e954c988be39dfd40cf674976970831c3fc4a8549b0edaa3e552b4fe229bea",
+    "lines": 15
+  },
+  {
+    "path": "FarmStay.Application\\DTOs\\Booking\\Responses\\ManageFarmHousePricing.cs",
+    "sha256": "a0644493316da0e4fa151fd67f3840566a98cb172285fc99114452ad30e4b4c8",
+    "lines": 8
+  },
+  {
+    "path": "FarmStay.Application\\DTOs\\Contact\\Requests\\ContactRequestDto.cs",
+    "sha256": "f4fb6ec36e1619286d535f84a2d3cf9ace54737ef685d8b37b155453ecfb5270",
+    "lines": 27
+  },
+  {
+    "path": "FarmStay.Application\\DTOs\\Contact\\Responses\\ContactResponseDto.cs",
+    "sha256": "dd4b3e0fdc09cc6302eb03e23697d0dfc620ad1c44b2154ed467f38b97a6f1c1",
+    "lines": 29
+  },
+  {
+    "path": "FarmStay.Application\\DTOs\\Dashboard\\Responses\\DashboardDto.cs",
+    "sha256": "44519041f22e2feeaf0f9bf85614ca82ed218c9d6d8a8bc21487b2a90ad3ebb1",
+    "lines": 34
+  },
+  {
+    "path": "FarmStay.Application\\DTOs\\FarmHouse\\Requests\\CreateFarmHouseDto.cs",
+    "sha256": "30732726d578e932fbcf0e92c05307d85b0adecb6f66ea11c412348fec0bb913",
+    "lines": 67
+  },
+  {
+    "path": "FarmStay.Application\\DTOs\\FarmHouse\\Requests\\UpdateFarmHouseDto.cs",
+    "sha256": "b4012b5077efd370aec6bb9bf4b3db21eafb045519b7e7f540fba76c25779cc1",
+    "lines": 71
+  },
+  {
+    "path": "FarmStay.Application\\DTOs\\FarmHouse\\Responses\\FarmHouseDto.cs",
+    "sha256": "126ca6644695bc7d9bae87cd17504b1af6ba525be995ff9b8b0d3b843fb2bea6",
+    "lines": 93
+  },
+  {
+    "path": "FarmStay.Application\\DTOs\\FarmHouse\\Responses\\FarmHouseResponseDto.cs",
+    "sha256": "ca4322c06966266be50f082f6541286f2bb58f02e53fd539131f3e0f9389012b",
+    "lines": 87
+  },
+  {
+    "path": "FarmStay.Application\\DTOs\\Feedback\\Requests\\FeedbackRequestDto.cs",
+    "sha256": "b9cf855f6ad5c5d89a8f579b2eb154dc819403d4c06155e9c10b33392b138a2d",
+    "lines": 17
+  },
+  {
+    "path": "FarmStay.Application\\DTOs\\Feedback\\Responses\\FeedbackResponseDto.cs",
+    "sha256": "0331a6aef7b45a2bf160ccb672a8b3e6f0de6f75a3a2ec75b8dc301ffdb899c7",
+    "lines": 24
+  },
+  {
+    "path": "FarmStay.Application\\DTOs\\FileUpload\\Requests\\FileUploadRequestDto.cs",
+    "sha256": "26b88a3c92d945ed122755c2d72102d2be33cbff46ec346658946a124cbcde4c",
+    "lines": 11
+  },
+  {
+    "path": "FarmStay.Application\\DTOs\\FileUpload\\Responses\\FileUploadResponseDto.cs",
+    "sha256": "b7687eded8ab0c3d4c02edf83cc1e425036596eb68fc54520331ef76faf04b34",
+    "lines": 9
+  },
+  {
+    "path": "FarmStay.Application\\DTOs\\Gallery\\Requests\\GalleryRequestDto.cs",
+    "sha256": "df105655fc1a788922c185df9fa8ab1184c8982434817e48954768563cfc5562",
+    "lines": 20
+  },
+  {
+    "path": "FarmStay.Application\\DTOs\\Gallery\\Responses\\GalleryResponseDto.cs",
+    "sha256": "99b5b2139b9314b5759501c43cd6095bfbecdca3b53c0e0ac25734c92bba228f",
+    "lines": 24
+  },
+  {
+    "path": "FarmStay.Application\\DTOs\\Public\\Responses\\PublicSiteDto.cs",
+    "sha256": "905eae44bc63d192827b946155d65a6131b96811776d92c0d53d7f58af935df9",
+    "lines": 51
+  },
+  {
+    "path": "FarmStay.Application\\DTOs\\Reports\\Requests\\ReportFilter.cs",
+    "sha256": "c780d31e7978f375c2e1a1b523f3e5019332237952f3e7efd2c3ad8f26ea7b93",
+    "lines": 43
+  },
+  {
+    "path": "FarmStay.Application\\DTOs\\Reports\\Requests\\ReportQuery.cs",
+    "sha256": "5adf649349a3f0b8d0359708c36a95e38a045b31300d23040143cbb911d2b127",
+    "lines": 9
+  },
+  {
+    "path": "FarmStay.Application\\DTOs\\Reports\\Responses\\ReportCatalogEntry.cs",
+    "sha256": "ad22d5ed39a68370b95e2c8dea640479384a3c199a843a3a92f9bf7452d7c956",
+    "lines": 8
+  },
+  {
+    "path": "FarmStay.Application\\DTOs\\Reports\\Responses\\ReportColumn.cs",
+    "sha256": "1803eedffff1cca5e1e6c081024e4b10fa710d0868766667de0db26354a48813",
+    "lines": 4
+  },
+  {
+    "path": "FarmStay.Application\\DTOs\\Reports\\Responses\\ReportDefinition.cs",
+    "sha256": "0869538298b94b04e583f6b378c4e9f99a0f6e6cf060efb1d1285cdde8faad60",
+    "lines": 4
+  },
+  {
+    "path": "FarmStay.Application\\DTOs\\Reports\\Responses\\ReportDownload.cs",
+    "sha256": "166159ad6ad60871669e842df501eafe8812b3261b4e2a3c671f001067ace0a4",
+    "lines": 4
+  },
+  {
+    "path": "FarmStay.Application\\DTOs\\Reports\\Responses\\ReportPage.cs",
+    "sha256": "26d4601c39fe1cad8975ca9e59ed11671f3c5cba2ebedbe2e97fcdbbf2660012",
+    "lines": 11
+  },
+  {
+    "path": "FarmStay.Application\\DTOs\\Reports\\Responses\\ReportScope.cs",
+    "sha256": "c95225f86aa04e347e2e3ed2f8bfa5fc312264f4427b805b3d98b85d055526bd",
+    "lines": 8
+  },
+  {
+    "path": "FarmStay.Application\\DTOs\\Reports\\Responses\\ReportTotalResponseDto.cs",
+    "sha256": "1637533b37ce675e4e8b3331abdeebb5025a650d40d3aeaf55ed6fdd33df9bbc",
+    "lines": 10
+  },
+  {
+    "path": "FarmStay.Application\\DTOs\\Reports\\Booking\\Responses\\BookingReportResponseDto.cs",
+    "sha256": "f3884f04bbc9f6c49b8f2e4ab80a56e8006ce5129e429809f0f19566b5e19332",
+    "lines": 29
+  },
+  {
+    "path": "FarmStay.Application\\DTOs\\Reports\\Customer\\Responses\\CustomerReportResponseDto.cs",
+    "sha256": "99d3d206dfa7e9a7223e03a3953ef658260598632d80a62362e32e54e228e66a",
+    "lines": 23
+  },
+  {
+    "path": "FarmStay.Application\\DTOs\\Reports\\Occupancy\\Responses\\OccupancyReportResponseDto.cs",
+    "sha256": "2f084bfe9dc7e7da6e4cf06ec0468de7def07348380541a58ff4a5282d5f80ba",
+    "lines": 17
+  },
+  {
+    "path": "FarmStay.Application\\DTOs\\Reports\\Revenue\\Responses\\RevenueReportResponseDto.cs",
+    "sha256": "4f7dacda8d6eb7d2f126de8f1ad3734fded7e5be40e5ef7de7762112fcc8dbf8",
+    "lines": 23
+  },
+  {
+    "path": "FarmStay.Application\\DTOs\\WhatsApp\\Requests\\WhatsAppMessageRequest.cs",
+    "sha256": "68ac059d2aa59115d59a30bcd676e14f2d983d5b16eaa4ce9c4e11c0e8129f8b",
+    "lines": 9
+  },
+  {
+    "path": "FarmStay.Application\\DTOs\\WhatsApp\\Responses\\WhatsAppResponseDto.cs",
+    "sha256": "5870c230a2e7d396486e3c7b5354b7512a34df223f5a0f38a8bc5f96683d4ee5",
+    "lines": 11
+  },
+  {
+    "path": "FarmStay.Application\\Interfaces\\Authorization\\IPermissionService.cs",
+    "sha256": "1e63c01b15f3456c4ef36b7d67550fdd3cb8bea2d76ec450fe59e2ae65fcc22d",
+    "lines": 4
+  },
+  {
+    "path": "FarmStay.Application\\Interfaces\\Common\\IEmailQueue.cs",
+    "sha256": "af5fedb6b909300db26225ed2741ed4b6f37f3f9a72f67d36afe0a0f73d463ec",
+    "lines": 13
+  },
+  {
+    "path": "FarmStay.Application\\Interfaces\\Common\\IEmailService.cs",
+    "sha256": "6a25c6581309a1349262eb4e953ad58ac35bd0c2c1914666da164647542e49f7",
+    "lines": 12
+  },
+  {
+    "path": "FarmStay.Application\\Interfaces\\Common\\IJwtService.cs",
+    "sha256": "491d7e994f1afec15e1c573ba11a7e11e662c38fbbfde03d942af010e820df83",
+    "lines": 20
+  },
+  {
+    "path": "FarmStay.Application\\Interfaces\\Common\\IPasswordService.cs",
+    "sha256": "a7c4ee36e672095bc9790fcf26821303de83f2bf9601c0af7eb58f13add597df",
+    "lines": 9
+  },
+  {
+    "path": "FarmStay.Application\\Interfaces\\Common\\ITenantResolver.cs",
+    "sha256": "dd1a0f9d29ba12138ae50e23f99bbbb558afedd3f3ab9e7c732db51fe112384f",
+    "lines": 9
+  },
+  {
+    "path": "FarmStay.Application\\Interfaces\\Common\\IUnitOfWork.cs",
+    "sha256": "b1e81a91a26f8502aff5b0fcc62b97fa6c3ed280ea5752cd51151c40ab4646de",
+    "lines": 7
+  },
+  {
+    "path": "FarmStay.Application\\Interfaces\\Common\\IWhatsAppQueue.cs",
+    "sha256": "4fc614a1ff7c1b439dafe9165063b24f21334d4364c1b33b2c73816af6249bf2",
+    "lines": 13
+  },
+  {
+    "path": "FarmStay.Application\\Interfaces\\Repositories\\AboutUs\\IAboutUsRepository.cs",
+    "sha256": "e5aba82350c08ae8082ac69033cf0bfd8c282662cd42ea7c4f3e98782d6fd786",
+    "lines": 28
+  },
+  {
+    "path": "FarmStay.Application\\Interfaces\\Repositories\\Accounts\\IAccountsRepository.cs",
+    "sha256": "ea213922ac73c998685c0b83ed1dbf0a4298bc5e88c3bf6703d2f82e9509c0a0",
+    "lines": 19
+  },
+  {
+    "path": "FarmStay.Application\\Interfaces\\Repositories\\Administration\\IAdminMenuRepository.cs",
+    "sha256": "447af8940fb6f023b615d70fb3ac79da04a8d870000b84e6659afda4401941d1",
+    "lines": 11
+  },
+  {
+    "path": "FarmStay.Application\\Interfaces\\Repositories\\Amenity\\IAmenityRepository.cs",
+    "sha256": "041ce36916ec4dc6e1c0ba392203ae836da8790b7685d172bde8d8e4b7000dcf",
+    "lines": 26
+  },
+  {
+    "path": "FarmStay.Application\\Interfaces\\Repositories\\Auth\\IUserMembershipRepository.cs",
+    "sha256": "fa4009b11b28f2cf10e7b519bc460edc48dd23799874a52cfe2bf613e0f551da",
+    "lines": 17
+  },
+  {
+    "path": "FarmStay.Application\\Interfaces\\Repositories\\Auth\\IUserOtpRepository.cs",
+    "sha256": "aafe713ef26ce6573e82bef04e38fbf53a1e7685e31904c54da4990c71e31058",
+    "lines": 13
+  },
+  {
+    "path": "FarmStay.Application\\Interfaces\\Repositories\\Auth\\IUserRefreshTokenRepository.cs",
+    "sha256": "ce90f0fd21b1ff973c90268c45d5342f8a8a25624b5906fc13ce024632bffd43",
+    "lines": 17
+  },
+  {
+    "path": "FarmStay.Application\\Interfaces\\Repositories\\Auth\\IUserRepository.cs",
+    "sha256": "6e7f76e7dc1090a52752494434b9788014eef6facfccd42769886595929cff73",
+    "lines": 27
+  },
+  {
+    "path": "FarmStay.Application\\Interfaces\\Repositories\\Authorization\\IPermissionRepository.cs",
+    "sha256": "81a11727e9ea1eb8f065bfa16d8c5a4869d11ce9319b3ae948e94a21342fb9e4",
+    "lines": 10
+  },
+  {
+    "path": "FarmStay.Application\\Interfaces\\Repositories\\Authorization\\IRoleRepository.cs",
+    "sha256": "42199cd104d77d81d78740ae3c8fc073fa1953bc29eedddef375c1f813b07422",
+    "lines": 17
+  },
+  {
+    "path": "FarmStay.Application\\Interfaces\\Repositories\\Booking\\IBookingCalendarRepository.cs",
+    "sha256": "03bb903a684e57ee4acee8df5b808e841af6fb413dcf385bb70ac6fe0b0896f0",
+    "lines": 37
+  },
+  {
+    "path": "FarmStay.Application\\Interfaces\\Repositories\\Booking\\IBookingListRepository.cs",
+    "sha256": "676e7516450db299d8cff2bc1b72c93de308d803b10dd714da54301f6ea2808e",
+    "lines": 30
+  },
+  {
+    "path": "FarmStay.Application\\Interfaces\\Repositories\\Booking\\IBookingSubmissionRepository.cs",
+    "sha256": "10dbfa4cd25cc9a9fd0b14fdf6cf417f9efbcb6e385207992783c133d307136c",
+    "lines": 15
+  },
+  {
+    "path": "FarmStay.Application\\Interfaces\\Repositories\\Common\\IPublicPageRepository.cs",
+    "sha256": "a2e23785873c38a4d6028ce158dba0c8f26a5ee1a0d106e20db39d2ac173585e",
+    "lines": 17
+  },
+  {
+    "path": "FarmStay.Application\\Interfaces\\Repositories\\Contact\\IContactRepository.cs",
+    "sha256": "a858e88a311e31b6e589cf22cd282b7acd1de29a0be8aaae958f8e9bb4d1e76d",
+    "lines": 23
+  },
+  {
+    "path": "FarmStay.Application\\Interfaces\\Repositories\\Dashboard\\IDashboardRepository.cs",
+    "sha256": "e2c72348b557a10429047bac09d2909aa874eb3bae41bdc5d84fb8a577f7eb1b",
+    "lines": 10
+  },
+  {
+    "path": "FarmStay.Application\\Interfaces\\Repositories\\FarmHouse\\IFarmHouseRepository.cs",
+    "sha256": "07d82b587c5a094c45834656f3877c17d856c3e78bb36e9d8321624beef4b439",
+    "lines": 18
+  },
+  {
+    "path": "FarmStay.Application\\Interfaces\\Repositories\\Feedback\\IFeedbackRepository.cs",
+    "sha256": "cce32d4f2d269e786871689734e92c23bc76c8cb0c194cb2ebcdc33842fd719b",
+    "lines": 19
+  },
+  {
+    "path": "FarmStay.Application\\Interfaces\\Repositories\\FileUpload\\IFileUploadRepository.cs",
+    "sha256": "8dcb0fa6a62449869eb38f8b3c0af465ad5a4562b070b66a8a8dd27d1b6afec3",
+    "lines": 11
+  },
+  {
+    "path": "FarmStay.Application\\Interfaces\\Repositories\\Gallery\\IGalleryRepository.cs",
+    "sha256": "60ea52b3ccad4cb25869875879abe17d04e600d09812d848ef8f84b92613fae7",
+    "lines": 20
+  },
+  {
+    "path": "FarmStay.Application\\Interfaces\\Repositories\\Pricing\\IFarmHousePricingRepository.cs",
+    "sha256": "4219e346019361d4570643591731c75b3b969833a267717e79d6389987d69db9",
+    "lines": 14
+  },
+  {
+    "path": "FarmStay.Application\\Interfaces\\Repositories\\Reports\\IBookingReportRepository.cs",
+    "sha256": "b960b28dbdab9572bdc96afc2b2741e4b46aa1bf7326d2fd32772cc205cbe3d3",
+    "lines": 4
+  },
+  {
+    "path": "FarmStay.Application\\Interfaces\\Repositories\\Reports\\ICustomerReportRepository.cs",
+    "sha256": "33e333e91e1a29de765ea60382ab73836ffb9c50f4e03949003e5b97480ab8a7",
+    "lines": 4
+  },
+  {
+    "path": "FarmStay.Application\\Interfaces\\Repositories\\Reports\\IOccupancyReportRepository.cs",
+    "sha256": "88174519a1c83f56e0f45f2339e87b63bdc0753f88fa1135fc134a27055fcd4d",
+    "lines": 4
+  },
+  {
+    "path": "FarmStay.Application\\Interfaces\\Repositories\\Reports\\IReportRepository.cs",
+    "sha256": "8dbae526ed144f4bc6a173a391c46e1f2283d8899e118e448fe798ada12711f9",
+    "lines": 9
+  },
+  {
+    "path": "FarmStay.Application\\Interfaces\\Repositories\\Reports\\IRevenueReportRepository.cs",
+    "sha256": "616882c4acdb2652ef261a89417808ad31a01601b7f31919d1fa899c0acebae2",
+    "lines": 4
+  },
+  {
+    "path": "FarmStay.Application\\Interfaces\\Services\\AboutUs\\IAboutUsService.cs",
+    "sha256": "6dd1fd4fe4a27348246ed26636c58f45545cd45c326aa7eaaa32cff6344cd4cc",
+    "lines": 19
+  },
+  {
+    "path": "FarmStay.Application\\Interfaces\\Services\\Accounts\\IAccountsScope.cs",
+    "sha256": "15b14dbeb87eb9df340edb6823e171d4af49e3edabc3013025eceb432cd95c63",
+    "lines": 5
+  },
+  {
+    "path": "FarmStay.Application\\Interfaces\\Services\\Accounts\\IAccountsService.cs",
+    "sha256": "6c12e9238eff9e4029a1d0bcf110bc58d1e7a42c213b78bc37b2383d7fc9d706",
+    "lines": 17
+  },
+  {
+    "path": "FarmStay.Application\\Interfaces\\Services\\Administration\\IAdminMenuService.cs",
+    "sha256": "3dd135323c29c5d9afd4fa8160365ca5781a8ac4829f7ab8ed73cbab185514ca",
+    "lines": 10
+  },
+  {
+    "path": "FarmStay.Application\\Interfaces\\Services\\Amenity\\IAmenityService.cs",
+    "sha256": "ff7d7ae51cf0c1b7dcb50a340e26c705f6c93b8cd07b3940832091cdb2a75816",
+    "lines": 29
+  },
+  {
+    "path": "FarmStay.Application\\Interfaces\\Services\\Auth\\IUserService.cs",
+    "sha256": "214858423bc452d5bd811f40a5c1c5d013cd3f46b16619f9f3f96b2d995132ca",
+    "lines": 46
+  },
+  {
+    "path": "FarmStay.Application\\Interfaces\\Services\\Auth\\IVerificationService.cs",
+    "sha256": "43bcbebfd27c23c512e890bc75cff4ad25c85d387ee64551604b981dbad013a1",
+    "lines": 18
+  },
+  {
+    "path": "FarmStay.Application\\Interfaces\\Services\\Auth\\IWhatsAppService.cs",
+    "sha256": "72bc360f28e5993e90ad255f562d124f1babf4bda5f7fab2618ad57e0067fa80",
+    "lines": 15
+  },
+  {
+    "path": "FarmStay.Application\\Interfaces\\Services\\Booking\\IAdminBookingConfirmation.cs",
+    "sha256": "1f2b0c1aeae9726058eb9f1f71adb3a6021fd0b3a141cfd79c29ea0c58a14aeb",
+    "lines": 11
+  },
+  {
+    "path": "FarmStay.Application\\Interfaces\\Services\\Booking\\IAdminBookingCustomers.cs",
+    "sha256": "ee877784edde5ee28db08f3a40d18a3f60eb469dffcdaa035c6d3179c31934b2",
+    "lines": 14
+  },
+  {
+    "path": "FarmStay.Application\\Interfaces\\Services\\Booking\\IAdvancePaymentOrders.cs",
+    "sha256": "b75b2d458d6b9b3c67065045cddc0c27659835a316f9ebd99bce3319034a9ee2",
+    "lines": 13
+  },
+  {
+    "path": "FarmStay.Application\\Interfaces\\Services\\Booking\\IBookingCalendarService.cs",
+    "sha256": "8d1c9b50eb401ac852cafce8e65d171c1cdaba48c54d97ba718526c681aa186c",
+    "lines": 28
+  },
+  {
+    "path": "FarmStay.Application\\Interfaces\\Services\\Booking\\IBookingDecisionService.cs",
+    "sha256": "954f128f495e5a40921a9040d3f3d99d36f838286a6eab39fb41578f86edbccc",
+    "lines": 10
+  },
+  {
+    "path": "FarmStay.Application\\Interfaces\\Services\\Booking\\IBookingIdentityDocuments.cs",
+    "sha256": "0ea6b458792126e7201ed26f40f1733ba020c2d221fe89cad655c85d883bd01b",
+    "lines": 20
+  },
+  {
+    "path": "FarmStay.Application\\Interfaces\\Services\\Booking\\IBookingListService.cs",
+    "sha256": "4accef1bd4adffd9eb81e37ed4f091690310c24f5afbf8e9744810a1e7fc7ea5",
+    "lines": 15
+  },
+  {
+    "path": "FarmStay.Application\\Interfaces\\Services\\Booking\\IBookingNotifications.cs",
+    "sha256": "4ab770abb06380fb6eb83db800de3d4d2811b417658772796729fab0fda2b9ca",
+    "lines": 28
+  },
+  {
+    "path": "FarmStay.Application\\Interfaces\\Services\\Booking\\IBookingReceipts.cs",
+    "sha256": "944be46db0ff92322e780da7c1d886cacdfbdf2b03100e68c567cc1088a2233e",
+    "lines": 10
+  },
+  {
+    "path": "FarmStay.Application\\Interfaces\\Services\\Booking\\IBookingStayOperations.cs",
+    "sha256": "ecbf8f0a1b2d7758d4eec881ec19730be37941a165e170949f08818cf018425c",
+    "lines": 12
+  },
+  {
+    "path": "FarmStay.Application\\Interfaces\\Services\\Booking\\IBookingSubmission.cs",
+    "sha256": "825f741418367b051fbc8c04976a4a0e1d7bf5cd49c42308c82169c8b4f38570",
+    "lines": 19
+  },
+  {
+    "path": "FarmStay.Application\\Interfaces\\Services\\Booking\\IFarmHousePricingService.cs",
+    "sha256": "1d0efacf50af80e477bbc57112f075d63596da27e10e04b6be09dab729568592",
+    "lines": 16
+  },
+  {
+    "path": "FarmStay.Application\\Interfaces\\Services\\Contact\\IContactService.cs",
+    "sha256": "20879e7aac99ccd46328cc25950e85b94cd1a3120e9e0f3bc93c79d8eca25bc4",
+    "lines": 19
+  },
+  {
+    "path": "FarmStay.Application\\Interfaces\\Services\\Dashboard\\IDashboardService.cs",
+    "sha256": "c4e274867f735cbd4755aba09bfee43bf58b37886d0a800b54158c9c9dee97ff",
+    "lines": 8
+  },
+  {
+    "path": "FarmStay.Application\\Interfaces\\Services\\FarmHouse\\IFarmHouseService.cs",
+    "sha256": "f1bc061246d58da84fc4e5bad79c816d6f8dbc0d650a9628772b707c8bda8fd6",
+    "lines": 22
+  },
+  {
+    "path": "FarmStay.Application\\Interfaces\\Services\\Feedback\\IFeedbackService.cs",
+    "sha256": "307f40b9a1fbf1c0b6a60f9dd7d2f2d3bcf1cd0544ffdd26fb952ce3de75bd8a",
+    "lines": 18
+  },
+  {
+    "path": "FarmStay.Application\\Interfaces\\Services\\FileUpload\\IFileUploadService.cs",
+    "sha256": "2f7bd23c8db905af790a5a82c221dfbef1923ed638ada006ab65f75df7fc8795",
+    "lines": 11
+  },
+  {
+    "path": "FarmStay.Application\\Interfaces\\Services\\Gallery\\IGalleryService.cs",
+    "sha256": "d60d00ea75484d0b2a04c392c288fdad0cb80c3221b66c47584bc7aead538ec1",
+    "lines": 17
+  },
+  {
+    "path": "FarmStay.Application\\Interfaces\\Services\\Public\\IPublicPageService.cs",
+    "sha256": "52888844f1a47c418ebc742ff87eb2b3437b6ca1fa2e07aa3cda30eafa6a2ae6",
+    "lines": 21
+  },
+  {
+    "path": "FarmStay.Application\\Interfaces\\Services\\Public\\IPublicSiteService.cs",
+    "sha256": "c9a13fa59b4291e273f2c42d273d81bf7685bb3660e7b8891f7274a2cc0b317c",
+    "lines": 10
+  },
+  {
+    "path": "FarmStay.Application\\Interfaces\\Services\\Reports\\IBookingReportService.cs",
+    "sha256": "64da2640a74067f8e47670d9e2ea5c809fa586835dd8f4390da5add74990dc17",
+    "lines": 4
+  },
+  {
+    "path": "FarmStay.Application\\Interfaces\\Services\\Reports\\ICustomerReportService.cs",
+    "sha256": "06ce7a06530d6514925234bd3c06cab4d00e0bfa84d1ff801d1a9437d5307524",
+    "lines": 4
+  },
+  {
+    "path": "FarmStay.Application\\Interfaces\\Services\\Reports\\IOccupancyReportService.cs",
+    "sha256": "313e8dcb331ff0e8e9246f75ac25cc9346c5f3384fca49da0e0c6c4cfd8f6fd0",
+    "lines": 4
+  },
+  {
+    "path": "FarmStay.Application\\Interfaces\\Services\\Reports\\IReportAccess.cs",
+    "sha256": "809aa6a7902812b10e2e7979ab3973ab6519eef0bb1fcb4d365c772f2f01de8e",
+    "lines": 6
+  },
+  {
+    "path": "FarmStay.Application\\Interfaces\\Services\\Reports\\IReportingService.cs",
+    "sha256": "99d296c13646aecdfe41222c1f0c35f304b0f1dae794580b013e31b972018b5c",
+    "lines": 8
+  },
+  {
+    "path": "FarmStay.Application\\Interfaces\\Services\\Reports\\IReportModuleService.cs",
+    "sha256": "1e33e89e189ffc7f10486614d67138972a16639049fa7899849ce841e4f35a85",
+    "lines": 15
+  },
+  {
+    "path": "FarmStay.Application\\Interfaces\\Services\\Reports\\IReportPage.cs",
+    "sha256": "12a3704f8067378c739866a741aa696e6ed14842ffa527a3a3975eaad9708c0d",
+    "lines": 15
+  },
+  {
+    "path": "FarmStay.Application\\Interfaces\\Services\\Reports\\IRevenueReportService.cs",
+    "sha256": "a3c395b1c9cfcbe04de8e18564d73738759823ceb826b8c2f8c8a323bc8eba78",
+    "lines": 4
+  },
+  {
+    "path": "FarmStay.Application\\Services\\AboutUs\\AboutUsService.cs",
+    "sha256": "f320013820d0354ccda66af44c65cd7e8e4d58e1d7e9ca9e2b8e7b43c18ae120",
+    "lines": 984
+  },
+  {
+    "path": "FarmStay.Application\\Services\\Accounts\\AccountsService.cs",
+    "sha256": "94a9b40b82274033a26bedd760fd03e427383b846ab096fd3fec249eaef42cb2",
+    "lines": 15
+  },
+  {
+    "path": "FarmStay.Application\\Services\\Administration\\AdminMenuService .cs",
+    "sha256": "2e21d69a83d4f37e03b373eb5fc4eaa47ab6f8d7872416e616117c268a2a1d9f",
+    "lines": 145
+  },
+  {
+    "path": "FarmStay.Application\\Services\\Amenity\\AmenityService.cs",
+    "sha256": "aefa931923d406dabb3c236e64121dd8b6545b80ec3e71c03a0cb003af80dc0a",
+    "lines": 854
+  },
+  {
+    "path": "FarmStay.Application\\Services\\Auth\\PasswordService.cs",
+    "sha256": "8b03df0a3aa538a40b36b9f98ad43972589df9b98dc383a11a00a1745b9c1fd9",
+    "lines": 18
+  },
+  {
+    "path": "FarmStay.Application\\Services\\Auth\\PermissionService.cs",
+    "sha256": "139f4f953d8256eae8da7014d4d854b1cb4332c0f9786c4b7cc4b452c822e3ae",
+    "lines": 32
+  },
+  {
+    "path": "FarmStay.Application\\Services\\Auth\\UserService.cs",
+    "sha256": "b65e09d0083094fea04e0f14b234c2d50123a58c004f9086c4ece893c79009c0",
+    "lines": 3222
+  },
+  {
+    "path": "FarmStay.Application\\Services\\Auth\\UserService.Email.cs",
+    "sha256": "3de15b7e0a2c8447e79740bd008c057a9d05ac0745b039af6119faaa4944e39f",
+    "lines": 76
+  },
+  {
+    "path": "FarmStay.Application\\Services\\Auth\\UserService.Profile.cs",
+    "sha256": "3bedb46156e8e43468298392f3336bfa54445baa3303b768769f30446be0208f",
+    "lines": 122
+  },
+  {
+    "path": "FarmStay.Application\\Services\\Booking\\AdminBookingCustomers.cs",
+    "sha256": "9d97c8d80d5e9c11d291a9e5133043e31f4a18913ece5b65fd80d496d59f363b",
+    "lines": 46
+  },
+  {
+    "path": "FarmStay.Application\\Services\\Booking\\BookingCalendarService.cs",
+    "sha256": "0866a3af938a206e3e9e1a46370fa4be84c467f0e2ee6d8b6c426d084aa9df86",
+    "lines": 891
+  },
+  {
+    "path": "FarmStay.Application\\Services\\Booking\\BookingListService.cs",
+    "sha256": "e481c791ed463fc09eeb1934ef295421082064d44bec2af1f442b3312864da4d",
+    "lines": 110
+  },
+  {
+    "path": "FarmStay.Application\\Services\\Booking\\BookingSubmissionService.cs",
+    "sha256": "ed63e3dae9f79072e0a8d2436cb4112d6b0920c307ce3045a1f05ab0d06a0516",
+    "lines": 14
+  },
+  {
+    "path": "FarmStay.Application\\Services\\Booking\\FarmHousePricingService.cs",
+    "sha256": "cd5b62a7ec42d372be16711fcfa7da578f7fac32ce78294046e5141789a06c90",
+    "lines": 202
+  },
+  {
+    "path": "FarmStay.Application\\Services\\Common\\TenantResolver.cs",
+    "sha256": "79bef8752bd0fa68ff14f20edbe8565e612b8696f23a1b267f3eec4f46c95908",
+    "lines": 32
+  },
+  {
+    "path": "FarmStay.Application\\Services\\Contact\\ContactService.cs",
+    "sha256": "21b7ffec188804a9d365e613b2a13b8beec2e6e8e6492743e8cca7e2a62665b0",
+    "lines": 330
+  },
+  {
+    "path": "FarmStay.Application\\Services\\Dashboard\\DashboardService.cs",
+    "sha256": "7489b1eddd7a2ef464d669c28b0f13534d3d8181d899c9bcb298ba71c1b2096e",
+    "lines": 47
+  },
+  {
+    "path": "FarmStay.Application\\Services\\FarmHouse\\FarmHouseService.cs",
+    "sha256": "c3248b107c012e1678c30d4837cac0cc86ebb2d9f5c0bfafe8311e3d559bf5ef",
+    "lines": 496
+  },
+  {
+    "path": "FarmStay.Application\\Services\\Feedback\\FeedbackService.cs",
+    "sha256": "7ba0834d3a85854ab949b974dc851fac8a7c0aeb14764fc2b3b0a28ea1b71404",
+    "lines": 522
+  },
+  {
+    "path": "FarmStay.Application\\Services\\FileUpload\\FileUploadService.cs",
+    "sha256": "8d3850008cc065600d57699a8f8b4da07e19299401e33880fecb6985c98d80c8",
+    "lines": 11
+  },
+  {
+    "path": "FarmStay.Application\\Services\\Gallery\\GalleryService.cs",
+    "sha256": "05a9318805a5083fd679edec5da1ad72ccb3d88fb176f11f37ec0b24b3f8e1fd",
+    "lines": 973
+  },
+  {
+    "path": "FarmStay.Application\\Services\\Public\\PublicPageService.cs",
+    "sha256": "341abbe1e5ea169b4040b705df2ebe50dce4c3a41b87bda035e13fede1427876",
+    "lines": 524
+  },
+  {
+    "path": "FarmStay.Application\\Services\\Public\\PublicSiteService.cs",
+    "sha256": "fa250526ca30c851e266b3557bc6249277c065d4983f30749eea2d7aeed5048b",
+    "lines": 124
+  },
+  {
+    "path": "FarmStay.Application\\Services\\Reports\\ReportingService.cs",
+    "sha256": "eaa4dd1dcfc74d5ebf42464551bd84da702e53bb371e0d9766b31a91b9124ed5",
+    "lines": 87
+  },
+  {
+    "path": "FarmStay.Application\\Services\\Reports\\ReportModuleService.cs",
+    "sha256": "2fe67692a660faff9690d12a079a69fe892784ca0ceeb2d359335f4f024d50c3",
+    "lines": 46
+  },
+  {
+    "path": "FarmStay.Application\\Services\\WhatsApp\\WhatsAppService.cs",
+    "sha256": "4c42535e2a28bfce0cc831b55395dab80f5fcb4dd4e32d39f0c6281fef681331",
+    "lines": 124
+  },
+  {
+    "path": "FarmStay.Application\\Services\\Reports\\Booking\\BookingReportService.cs",
+    "sha256": "76249201d15c4c43aedccb9ae497e8b4777e70c9add6637e704dd03c189cad7e",
+    "lines": 9
+  },
+  {
+    "path": "FarmStay.Application\\Services\\Reports\\Customer\\CustomerReportService.cs",
+    "sha256": "1ea29c4caa57c1b6b76e1eb95f719f18a1fb5d6b809e10a18d75e072a740b108",
+    "lines": 9
+  },
+  {
+    "path": "FarmStay.Application\\Services\\Reports\\Occupancy\\OccupancyReportService.cs",
+    "sha256": "3fb2cc9ef4fff64e566b51a88c0ea80835d1eae4a33aed6831bd4989e3669c07",
+    "lines": 9
+  },
+  {
+    "path": "FarmStay.Application\\Services\\Reports\\Revenue\\RevenueReportService.cs",
+    "sha256": "a2003ea2c287f04e9e4878c168adb56ac5926b7956c791b1b6a104e4183af7c3",
+    "lines": 9
+  },
+  {
+    "path": "FarmStay.Application\\Validators\\Auth\\ChangePasswordDtoValidator.cs",
+    "sha256": "3a797e74f628b6216a37fdf307407ff9fd3744d1b3a13b9f931e71598da105ce",
+    "lines": 36
+  },
+  {
+    "path": "FarmStay.Application\\Validators\\Auth\\ForgotPasswordDtoValidator.cs",
+    "sha256": "1213bd6d6aa7ea9c2ddcca4d2c0f85b9457f02c302381ec366cf8118a52e78a5",
+    "lines": 36
+  },
+  {
+    "path": "FarmStay.Application\\Validators\\Auth\\LoginRequestDto.cs",
+    "sha256": "4b8388424f773d03cc1bb22d9ed7173fdce7d2841661b0dd291f57f87b9c0ef4",
+    "lines": 23
+  },
+  {
+    "path": "FarmStay.Application\\Validators\\Auth\\RegisterRequestDtoValidator.cs",
+    "sha256": "c6820ca965367df7211a03d9db25fc7546999819843fa60a8d0dcf1bdf9b1652",
+    "lines": 44
+  },
+  {
+    "path": "FarmStay.Application\\Validators\\Auth\\ResetPasswordEmailDtoValidator.cs",
+    "sha256": "0c5d1433d8c16ff59123e2df3fda9dd792e3e25a6e0de27ba7322133aefa131c",
+    "lines": 41
+  },
+  {
+    "path": "FarmStay.Application\\Validators\\Auth\\ResetPasswordOtpDtoValidator.cs",
+    "sha256": "7aaa83906a29f1a7c29768833e07cf8a35cb58fa5590861762fce2a4ce56085f",
+    "lines": 47
+  },
+  {
+    "path": "FarmStay.Application\\Validators\\Auth\\SendLoginOtpRequestDtoValidator.cs",
+    "sha256": "394dc16446f6cdbfa82ae9dbaafbd662b4010180817501b817b620af36f689c7",
+    "lines": 18
+  },
+  {
+    "path": "FarmStay.Application\\Validators\\Auth\\VerifyLoginOtpRequestDtoValidator.cs",
+    "sha256": "a19fddb696450491b855aaaa262c1e33430420ea61a36cb34d841fb179766b78",
+    "lines": 25
+  },
+  {
+    "path": "FarmStay.Application\\Validators\\FarmHouse\\CreateFarmHouseValidator.cs",
+    "sha256": "098a9257bc9d9fef692e91666a1a0ac01b464fab517dd25abf3496a3b1a5d7f9",
+    "lines": 83
+  },
+  {
+    "path": "FarmStay.Application\\Validators\\FarmHouse\\UpdateFarmHouseValidator.cs",
+    "sha256": "e55c41d086b938039f9d5837cf5d976dc21e11cc675232c30d7526b0dc961f6e",
+    "lines": 89
+  },
+  {
+    "path": "FarmStay.Application\\Validators\\Gallery\\CreateGalleryValidator.cs",
+    "sha256": "7b342bbf5fc01caea7e683d0ce4ff12520e85be2751b978c6132701981fdf282",
+    "lines": 46
+  },
+  {
+    "path": "FarmStay.Application\\Validators\\Reports\\ReportFilterValidator.cs",
+    "sha256": "969701b38147fa0792e8ff68f13940291466e3ebd9ba3019d8bad3cb5fbe851d",
+    "lines": 16
+  },
+  {
+    "path": "FarmStay.Domain\\FarmStay.Domain.csproj",
+    "sha256": "ea50206f51ecbee1cec354731b443ad8e0a31785736cb65e03a2a6a4b5f8b37c",
+    "lines": 20
+  },
+  {
+    "path": "FarmStay.Domain\\Entities\\AboutUs\\AboutUs.cs",
+    "sha256": "2d8f3ae2607b9ead9bf300c7d4b6f2bbec831ab44d577d3a01fb0898fe2c4e2b",
+    "lines": 56
+  },
+  {
+    "path": "FarmStay.Domain\\Entities\\AboutUs\\AboutUsFeature.cs",
+    "sha256": "6f0f17a868c5f2b4ebfc7f72edca628b45268b2aee34d31b9d25291fe719e1fa",
+    "lines": 39
+  },
+  {
+    "path": "FarmStay.Domain\\Entities\\Accounts\\AccountingAttachment.cs",
+    "sha256": "f5b37537a521469e4cf611ae19a08e5e323fadeb0f81939b55d4ea4d3e2d94b8",
+    "lines": 11
+  },
+  {
+    "path": "FarmStay.Domain\\Entities\\Accounts\\AccountingAudit.cs",
+    "sha256": "5fabcb1b231e7ea03a25acd49db7fd321396acfd13243c8693e37c3ec94cdc16",
+    "lines": 12
+  },
+  {
+    "path": "FarmStay.Domain\\Entities\\Accounts\\AccountingMaster.cs",
+    "sha256": "989199cd644e99b7144c19924e5498a3077bf15f0fee461d10368e2b7e04677e",
+    "lines": 24
+  },
+  {
+    "path": "FarmStay.Domain\\Entities\\Accounts\\AccountingPeriod.cs",
+    "sha256": "d814a2e40b769ff8b0439f2a0e3e1b9757c1cc66e1c85d2e616c276e399b208f",
+    "lines": 12
+  },
+  {
+    "path": "FarmStay.Domain\\Entities\\Accounts\\AccountingSettings.cs",
+    "sha256": "9f0ad6000374dcb78623270360ccbf3184c4b08412338f6f6db1f7891f291c0a",
+    "lines": 12
+  },
+  {
+    "path": "FarmStay.Domain\\Entities\\Accounts\\AccountRecord.cs",
+    "sha256": "585afedff03f472da18a083eb5f08e9adb85d2260ad2c10be33a6f79c9088c12",
+    "lines": 14
+  },
+  {
+    "path": "FarmStay.Domain\\Entities\\Accounts\\AssetEvent.cs",
+    "sha256": "a0f1026fe0afd1b9910830cb7409417c4a3f400f5d765d96c6be5eaa02a987c0",
+    "lines": 14
+  },
+  {
+    "path": "FarmStay.Domain\\Entities\\Accounts\\BankStatementEntry.cs",
+    "sha256": "f7a54a7ef45602efde89d9474879ee14ab0b33cad7b92b086fb457d5077ac44e",
+    "lines": 13
+  },
+  {
+    "path": "FarmStay.Domain\\Entities\\Accounts\\FinancialYear.cs",
+    "sha256": "c74e3b7ae52ad018eed49976cb39f6c725ecc4b8582e966fa3811aa322b60626",
+    "lines": 12
+  },
+  {
+    "path": "FarmStay.Domain\\Entities\\Accounts\\FixedAsset.cs",
+    "sha256": "ac219d6c711de8d5b226ad075cead72c72c53aa9ff7dd6f91bbd1fdb74cfa99b",
+    "lines": 25
+  },
+  {
+    "path": "FarmStay.Domain\\Entities\\Accounts\\LedgerAccount.cs",
+    "sha256": "d52cda3ec2c40c1409e47f1e1558a92d3493f956cd9de5922c947a55b9618890",
+    "lines": 16
+  },
+  {
+    "path": "FarmStay.Domain\\Entities\\Accounts\\MoneyAccount.cs",
+    "sha256": "c7233328e88df8509fe06b80884c2784efca1af6747dbf0a1f7039f0e88b60b1",
+    "lines": 14
+  },
+  {
+    "path": "FarmStay.Domain\\Entities\\Accounts\\RecurringExpense.cs",
+    "sha256": "3d1758fe4e3fd8e0648b58f13dcc6aa1a39d9a648a579a036ccaf90debc5027f",
+    "lines": 17
+  },
+  {
+    "path": "FarmStay.Domain\\Entities\\Accounts\\Vendor.cs",
+    "sha256": "c419271b394a2939a1810e4c5eb15bed7e0e71b6582ae8f930489e00fad399aa",
+    "lines": 15
+  },
+  {
+    "path": "FarmStay.Domain\\Entities\\Accounts\\Voucher.cs",
+    "sha256": "01cb82ae5c2bc99ffccd8ea897fb4634f905cbacd4457807146d4adf3dad6c09",
+    "lines": 26
+  },
+  {
+    "path": "FarmStay.Domain\\Entities\\Accounts\\VoucherLine.cs",
+    "sha256": "519d9b2fb69350bdb230c01cc8caa4277b95196b709b69abf0d7947ae0b32357",
+    "lines": 22
+  },
+  {
+    "path": "FarmStay.Domain\\Entities\\Amenity\\Amenity.cs",
+    "sha256": "328627637de7030e42e3a6e789e02f59aa4efc02cf80704350748fe84055ab0d",
+    "lines": 40
+  },
+  {
+    "path": "FarmStay.Domain\\Entities\\Auth\\User.cs",
+    "sha256": "ee3cfc4ed4437fa71471c00cf07ede53d8f6fde3224ca6115209d7e0c5874a86",
+    "lines": 88
+  },
+  {
+    "path": "FarmStay.Domain\\Entities\\Auth\\UserMembership.cs",
+    "sha256": "5928397f878e93a26776cfc7d2941f48c8247b453b4b353279bd89e6395c7ff1",
+    "lines": 59
+  },
+  {
+    "path": "FarmStay.Domain\\Entities\\Auth\\UserOtp.cs",
+    "sha256": "d35655ec6da0727e03dae577c3f50b50a282172ac4c480613748e45fce0eee8e",
+    "lines": 60
+  },
+  {
+    "path": "FarmStay.Domain\\Entities\\Auth\\UserRefreshToken.cs",
+    "sha256": "2174c3decc245887422bdf8e0b1e872af34d3cafa55e3548fc67945d173ff7c4",
+    "lines": 74
+  },
+  {
+    "path": "FarmStay.Domain\\Entities\\Authorization\\FarmHouseModule.cs",
+    "sha256": "1b92953952f46d5e5d0d55f5c8268956248e58325e163adf16847cdcd6cc97a3",
+    "lines": 38
+  },
+  {
+    "path": "FarmStay.Domain\\Entities\\Authorization\\Module.cs",
+    "sha256": "376a205f34f62a9449fc4eb2e5890592eefad046d6142e9a33dad11d6fa66248",
+    "lines": 47
+  },
+  {
+    "path": "FarmStay.Domain\\Entities\\Authorization\\Permission.cs",
+    "sha256": "b8b737af7aeef62eee04c25137679519ab0c9a29af0d8f18b4b56d4ed7bf0bee",
+    "lines": 40
+  },
+  {
+    "path": "FarmStay.Domain\\Entities\\Authorization\\Role.cs",
+    "sha256": "d201d44ede06d6ecfae335d41eb2a9a0f278568dc82fbc021274f36943511859",
+    "lines": 40
+  },
+  {
+    "path": "FarmStay.Domain\\Entities\\Authorization\\RoleModule.cs",
+    "sha256": "b56ac8887262de04712075633d4424ba91904988e62b429a300cc786b06a32ac",
+    "lines": 39
+  },
+  {
+    "path": "FarmStay.Domain\\Entities\\Authorization\\RoleModulePermission.cs",
+    "sha256": "28400c2f72c4ba9bb7e5ffb1c68f50112ead9daecf604b38225bf3540123cf94",
+    "lines": 42
+  },
+  {
+    "path": "FarmStay.Domain\\Entities\\Booking\\Booking.cs",
+    "sha256": "ef033fee4a7ca2295ba3310896e3c535f18f229930331fc5d55f245f05158d00",
+    "lines": 151
+  },
+  {
+    "path": "FarmStay.Domain\\Entities\\Booking\\BookingActionToken.cs",
+    "sha256": "03cb7b44d1954a7314e1b169cbb13e0073c4ce067621cd178f80c72825f82795",
+    "lines": 49
+  },
+  {
+    "path": "FarmStay.Domain\\Entities\\Booking\\BookingDateReservation.cs",
+    "sha256": "8086087bbe21708ddde895f6612c780152b8f1ef6b06900ca65a6929e469b4a8",
+    "lines": 38
+  },
+  {
+    "path": "FarmStay.Domain\\Entities\\Booking\\BookingDocument.cs",
+    "sha256": "d2efecc7db24da76b04beb754ae1240ac3bb2252761dee40b5dca3ba785bf0e6",
+    "lines": 87
+  },
+  {
+    "path": "FarmStay.Domain\\Entities\\Booking\\BookingEventDate.cs",
+    "sha256": "28443f4d02c1503e02645b508847978580cad1a5e1751cbbb18aa9f9bbb5869a",
+    "lines": 47
+  },
+  {
+    "path": "FarmStay.Domain\\Entities\\Booking\\BookingReceipt.cs",
+    "sha256": "05dc5733bc256388549b729d6fa1a256e2ce11b3f8d62b314f6b8f4b44bf8171",
+    "lines": 54
+  },
+  {
+    "path": "FarmStay.Domain\\Entities\\Booking\\BookingStatusHistory.cs",
+    "sha256": "9aebf4829a2a9cf2d8915b9b8a3535632b348c671d32ae8af1d3f3d02f9995a9",
+    "lines": 49
+  },
+  {
+    "path": "FarmStay.Domain\\Entities\\Booking\\BookingStayDate.cs",
+    "sha256": "4c10d53dfae555dcbd28dd75180b1a3c8e7397dead13cfb5734db4b3d527278f",
+    "lines": 40
+  },
+  {
+    "path": "FarmStay.Domain\\Entities\\Booking\\CheckoutDiscount.cs",
+    "sha256": "3d50e62dced40adbda60de5a9fa5a084b1740170b4155d1f284e1447e929e706",
+    "lines": 41
+  },
+  {
+    "path": "FarmStay.Domain\\Entities\\Booking\\FarmHouseCancellationPolicy.cs",
+    "sha256": "4fa33b4e19dfcf377ee5e5cda9367317bbdb428d31b15cff5eda03551457b0c4",
+    "lines": 46
+  },
+  {
+    "path": "FarmStay.Domain\\Entities\\Booking\\FarmHousePaymentConfiguration.cs",
+    "sha256": "f50f4aa16491d042a3b81e147b9905699b9665575583bf4959e4c50e89e78576",
+    "lines": 56
+  },
+  {
+    "path": "FarmStay.Domain\\Entities\\Booking\\PaymentTransaction.cs",
+    "sha256": "1be25c540ed619d787e233a96deb902671df2e6cc3e7b3b6e6f30b1da6b1ad5e",
+    "lines": 81
+  },
+  {
+    "path": "FarmStay.Domain\\Entities\\Contact\\ContactUs.cs",
+    "sha256": "414b9a7b0c2137295fa86be04c146f00cd4840437abe4e411a8a4f2e69007e7a",
+    "lines": 43
+  },
+  {
+    "path": "FarmStay.Domain\\Entities\\FarmHouse\\FarmHouse.cs",
+    "sha256": "1270d2aaa1871481bf4954693a260830b50e4fe81116e2258df60b75a77b2dba",
+    "lines": 154
+  },
+  {
+    "path": "FarmStay.Domain\\Entities\\Feedback\\FeedBack.cs",
+    "sha256": "260e38b30b4797c62a699bab909a5724783029bb9bfdd338465ffe8d06a3ab89",
+    "lines": 36
+  },
+  {
+    "path": "FarmStay.Domain\\Entities\\Gallery\\Gallery.cs",
+    "sha256": "18828477ecb06cfbae056142d3f8c8e36bd98c4c790eb5a73c8aa49188379bfd",
+    "lines": 53
+  },
+  {
+    "path": "FarmStay.Domain\\Entities\\Notifications\\NotificationOutbox.cs",
+    "sha256": "7d038a7dbe1f5663d6ed2eeac4df9f0bb2a7d367db5b4c2dedbaeae39f3393cc",
+    "lines": 60
+  },
+  {
+    "path": "FarmStay.Domain\\Entities\\Pricing\\FarmHousePricing.cs",
+    "sha256": "26c42659c4e371dc9fac0899f55c20ac2ddfd00a1439ddfec9a5cf50b5c8a763",
+    "lines": 49
+  },
+  {
+    "path": "FarmStay.Domain\\Entities\\Subscription\\SubscriptionPlan.cs",
+    "sha256": "a6a0fe0d875afb4b4a030b298ab3f1a4aaaffac96d18df66111bfb02c75848bd",
+    "lines": 40
+  },
+  {
+    "path": "FarmStay.Domain\\Enums\\Common\\ForgotPasswordMethod.cs",
+    "sha256": "ec223375065a56a479e4657d6f6a6a2105eff624a6f6afd1234df2011458bb8c",
+    "lines": 9
+  },
+  {
+    "path": "FarmStay.Domain\\Enums\\Common\\OtpPurpose.cs",
+    "sha256": "fbcf2c789ea4933431c331228225703d61796671027b54c1eb2d6116a667276f",
+    "lines": 13
+  },
+  {
+    "path": "FarmStay.Domain\\Rules\\Accounts\\AccountingRules.cs",
+    "sha256": "955d5d8489f82e2000ed2130f278a7f9cbd92e1d2ffb7356762008d04e253ce7",
+    "lines": 27
+  },
+  {
+    "path": "FarmStay.Infrastructure\\FarmStay.Infrastructure.csproj",
+    "sha256": "df564e483987eb1aa67c1eb461f4a36d67ca5f0c3f32c2588df0d1ef297d6481",
+    "lines": 73
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Data\\AppDbContext.cs",
+    "sha256": "7b83dda33e3d07ec0f9dbb3498d5ae5257f2e64464a2f0e0b8272578ca7e1a19",
+    "lines": 459
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Data\\UnitOfWork.cs",
+    "sha256": "ecb9b3abc97b99bedc19b1527c5c7ca923d3b2b476c7dbb18794aaff7c53b941",
+    "lines": 20
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Migrations\\20260804182921_InitialCreate.cs",
+    "sha256": "9a2bee2a6d58570ca8070dc07ebf5db8d391f76718949474ffea8447a6bc3993",
+    "lines": 681
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Migrations\\20260804182921_InitialCreate.Designer.cs",
+    "sha256": "61a277fe32b348e60076145eda230f1179bad92b63d5456bd679d7c706e7a951",
+    "lines": 1110
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Migrations\\20260807205327_AuthFlowFreeze.cs",
+    "sha256": "14165ed8cae5528ab72043a79f2eac167cd07e98f01604c10cb47b34609d14d2",
+    "lines": 240
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Migrations\\20260807205327_AuthFlowFreeze.Designer.cs",
+    "sha256": "050da3430ac0308d324b1593fecf9239b39cd57ef5bf0ecb543dd04520f412ba",
+    "lines": 1124
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Migrations\\20260808112042_UserFarmHouseUniqueIndex.cs",
+    "sha256": "54c8c9f185caad94307d585d5c082e8c547efc65de8cb391fc9e33765c631b0f",
+    "lines": 90
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Migrations\\20260808112042_UserFarmHouseUniqueIndex.Designer.cs",
+    "sha256": "32d9915bfc601cb29820a51203aea312e334052a437088f8cc101916d709b70e",
+    "lines": 1121
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Migrations\\20260808181724_AddEmailVerificationToken.cs",
+    "sha256": "910a0d133f8d8151e9bfb22270a0f2f22e057dd0eafbbd8560a45d8e30716ba5",
+    "lines": 41
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Migrations\\20260808181724_AddEmailVerificationToken.Designer.cs",
+    "sha256": "a5468c2bf9cce26b4ff34bbada1a03e3b2e6424b0d0325fdb56c6f6b7260b8d6",
+    "lines": 1128
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Migrations\\20260817164338_AddPasswordResetFields.cs",
+    "sha256": "577c0630072e932ead32a0880f3bb478842b9613affdabfd02d589fcc954aefb",
+    "lines": 41
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Migrations\\20260817164338_AddPasswordResetFields.Designer.cs",
+    "sha256": "7a683523d9074ff124258ff64a5733e6b5d8a3f3a1840dba2bd362384561c52f",
+    "lines": 1135
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Migrations\\20260817164940_AddPasswordResetFields1.cs",
+    "sha256": "01bfbb2b186da87b541de3497926818cf8f86743d62b6e38ca6a7cbe23ce2861",
+    "lines": 23
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Migrations\\20260817164940_AddPasswordResetFields1.Designer.cs",
+    "sha256": "0fbf766e2bae1e0f4120714c38080ff6e1f076b3230ca192b3917f97a7320e74",
+    "lines": 1135
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Migrations\\20260907202653_MakeOwnerUserIdNullable.cs",
+    "sha256": "673d56798459a3e47882d03dc6bd3296325c497daf3c6fbfa842ccd128f3be9b",
+    "lines": 68
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Migrations\\20260907202653_MakeOwnerUserIdNullable.Designer.cs",
+    "sha256": "55cf43ca354e38349e4e04ed9c019fecae2dd606f7753b3ab4c4a86bd8faf629",
+    "lines": 1216
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Migrations\\20260908080943_TestMigration.cs",
+    "sha256": "e7f56ac2064b4e56f4504859b217bc4473a1d67674d943fe1572cd8fa9065bdf",
+    "lines": 23
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Migrations\\20260908080943_TestMigration.Designer.cs",
+    "sha256": "d57d728e97b496e23d3959fe0490a40396ad33752b4005a9c1205807fa9fbaa3",
+    "lines": 1216
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Migrations\\20260908105715_Feedback.cs",
+    "sha256": "23195407f01997e34488fc76de842138d3a23c380a8c3064519a2a9b3e5f4b02",
+    "lines": 54
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Migrations\\20260908105715_Feedback.Designer.cs",
+    "sha256": "e154c26368f1b0d4406cfe2255c0386425b85b83f248175fe1cdab3c00e3d126",
+    "lines": 1273
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Migrations\\20260909103557_israverite.cs",
+    "sha256": "98b89bc17cccbea9e105a7b40cfb77d0b1cfe17a38c91a0fab33433353fa1375",
+    "lines": 30
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Migrations\\20260909103557_israverite.Designer.cs",
+    "sha256": "7ae329f577175cb8333b8df68c64fd3721d51d7b461bfe7b52d2e863cd4c2126",
+    "lines": 1276
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Migrations\\20260911190438_aminities.cs",
+    "sha256": "df892c06b5cb409e32783213174f4fa5d34fa37ee31a00f06ce5d218cfebf49f",
+    "lines": 57
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Migrations\\20260911190438_aminities.Designer.cs",
+    "sha256": "fadb7f81c4a7f97683a3746856c160bf7b89b9f7ee4366d22438b24ed77cc8eb",
+    "lines": 1345
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Migrations\\20260914180328_AddFarmHouseModule.cs",
+    "sha256": "bc65aded1ec27639ad8d27494811a3c7152e5f84d9722099b25b4f7bbc9bf0ec",
+    "lines": 67
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Migrations\\20260914180328_AddFarmHouseModule.Designer.cs",
+    "sha256": "1ddb242d2215a63bab86908f6a8ab08bdd1d22e5cc69f8eea5b8b7f28a82dc33",
+    "lines": 1411
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Migrations\\20260915141235_SeedModules.cs",
+    "sha256": "ab527e90054ee4c43f04df664ef4719ae05e894e328c9a44efe99fb2b92d1f31",
+    "lines": 59
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Migrations\\20260915141235_SeedModules.Designer.cs",
+    "sha256": "7a356d7f763df83ed61d855b9e977826eae0638bae2c49f9397cfaf7de816690",
+    "lines": 1463
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Migrations\\20260915150450_SeedWebsiteSettingsPermissions.cs",
+    "sha256": "ef3709da0bcad8e298d2dc12e0cedecc316e71e0b39f2b26dec065af45ec6873",
+    "lines": 165
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Migrations\\20260915150450_SeedWebsiteSettingsPermissions.Designer.cs",
+    "sha256": "ff98fbc220afa6419b8c3d7a8a3ec4edf54797cd3640cbdd394d87cc9ba9ce22",
+    "lines": 1575
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Migrations\\20260928065612_AddFailedAttemptsToUserOtp.cs",
+    "sha256": "5e378d79a9f98dc1390d0b850e4a4f83398ab83ebde50a877bff1a3ed8ba46be",
+    "lines": 287
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Migrations\\20260928065612_AddFailedAttemptsToUserOtp.Designer.cs",
+    "sha256": "494ae5114814a671df592b53a05f4215909d659e3636cb1a35157d91a074f8b3",
+    "lines": 1632
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Migrations\\20260929141501_Addaboutus.cs",
+    "sha256": "d7f0ef79c19a9a5b60e72facd41a3af1d8a4d9af866c67691afe11f9afd8a865",
+    "lines": 315
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Migrations\\20260929141501_Addaboutus.Designer.cs",
+    "sha256": "32d251ed07a18ce9f123b4aaf2baf267601409f7364ac7f3f69d8dedbbdfa5e5",
+    "lines": 1764
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Migrations\\20261003170903_ChangeEmailToMobileNumber.cs",
+    "sha256": "05f48667c10a9bc0f4868b81ede7ea474c4c289b4c9462fb9c973aaaac79a0dc",
+    "lines": 267
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Migrations\\20261003170903_ChangeEmailToMobileNumber.Designer.cs",
+    "sha256": "f1d5502191821531cf55441a9b32def0f74f1c88dfcc484762ce631a60efa47e",
+    "lines": 1765
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Migrations\\20261011162111_AddFarmHousePricing.cs",
+    "sha256": "d2296599428d662d720a0f37d3ac1331a20c8243fc12b813984b5d4f1511c333",
+    "lines": 600
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Migrations\\20261011162111_AddFarmHousePricing.Designer.cs",
+    "sha256": "9fe330455cd6348ebcca341d411a3c0a11cdbadd67220628059057bca67f60ec",
+    "lines": 1887
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Migrations\\20261012181123_AddBookingChnages.cs",
+    "sha256": "9afa0d7f5a532cbb2d6fe0118a8d54314fd4243be1f337c682160e2616c83384",
+    "lines": 360
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Migrations\\20261012181123_AddBookingChnages.Designer.cs",
+    "sha256": "fa38e87770ca4be60ff1e6e0f5144ead06b20554c609d0f03c950c7a7241a647",
+    "lines": 1897
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Migrations\\20261016163128_FinalUtcAndFarmHouseModuleFix.cs",
+    "sha256": "f104872e0d44c0969e6ebee4af5d293971de7ae2fce135dec0976a8e0c59968d",
+    "lines": 464
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Migrations\\20261016163128_FinalUtcAndFarmHouseModuleFix.Designer.cs",
+    "sha256": "bbef0a99d03e48dac621c2848cde1d1d1045c6189dbf20991b247ce1ad965060",
+    "lines": 1537
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Migrations\\20261016215927_AddBookingSupportingEntities.cs",
+    "sha256": "1c5267f489bfd4c758bf3d7fdebc95e7f83423e60f7a9f57950d96f5da72e3e3",
+    "lines": 1013
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Migrations\\20261016215927_AddBookingSupportingEntities.Designer.cs",
+    "sha256": "28d935df72d11f0d73827c04fb5cb5bb7befccbe72b13186980e001a94a4cfce",
+    "lines": 2767
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Migrations\\20261116210519_AddBookingSubmissionIdempotency.cs",
+    "sha256": "3dea9bd346adb9bce21f71df4a0df05d8fad0cec8c04576696fdffad3856bdd6",
+    "lines": 81
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Migrations\\20261116210519_AddBookingSubmissionIdempotency.Designer.cs",
+    "sha256": "87cbaf9fd673efae80a33f5a57f6dff820f65f23a699de0fbc31b521a01161d7",
+    "lines": 2786
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Migrations\\20261117131000_SeedBookingAdministrationPermissions.cs",
+    "sha256": "406a062efa517611a0e1b9e7a6db578ddbe3f327d700fdf59cfe0fffe4a79e05",
+    "lines": 65
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Migrations\\20261117190253_StoreBookingTimestampsInServerTime.cs",
+    "sha256": "ba70651020638c1e6b0613b781ccc20c9029fafdd285c024dc13f7cff59789ec",
+    "lines": 69
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Migrations\\20261117190253_StoreBookingTimestampsInServerTime.Designer.cs",
+    "sha256": "431048d80e110ecc57de8890717c8874485d2c7561261831399bf2d07483410b",
+    "lines": 2800
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Migrations\\20261118140000_LinkFeedbackToBooking.cs",
+    "sha256": "6eb35df07b53787aa9f7409d215e6bb5e67c5d9307df9b0ee92588b5cbd4c20c",
+    "lines": 27
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Migrations\\20261118230000_AddActualBookingStayTimes.cs",
+    "sha256": "2c30e733ba473de3625592952279aa9bccb52a69b8b416dec81728c19520be1e",
+    "lines": 46
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Migrations\\20261119001000_AddPaymentReceiptReport.cs",
+    "sha256": "03088a6f810c8706fd9877afb8d9ebf9ddf957af0e5553c5c9b846986e33f289",
+    "lines": 71
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Migrations\\20261119010000_SeedPricingManagementPermissions.cs",
+    "sha256": "49f915dc0129a968bfa51072be90c749be2b531ee524d22df525e71c31ccdd59",
+    "lines": 40
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Migrations\\20261119020000_SeedPricingCrudPermissions.cs",
+    "sha256": "4a44e45b03a44816ce453d50563a5696ac18d40ce0ef6aa54033da5cd919fb25",
+    "lines": 31
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Migrations\\20261119030000_AddIdentityProofTypes.cs",
+    "sha256": "5f63497a1d98fd2396503f242cd84ee25c5f188c4deb4313bb975c05fd4ba1df",
+    "lines": 20
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Migrations\\20261119040000_OptionalCustomerEmailAndAdminBooking.cs",
+    "sha256": "dd318d1ce3643cde1216c06d8e7466d407b5d0a7f3bba9698d02caff3df2808e",
+    "lines": 39
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Migrations\\20261119050000_AddBookingConfirmationPermission.cs",
+    "sha256": "5a981c9650225f357aba77c4e096e4b01b259f096d3e9a95150b29114183fefa",
+    "lines": 26
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Migrations\\20261120001000_AddReportingModule.cs",
+    "sha256": "58a9c4b0d8490fb8c7c9ba32f29d7c8afa0dc4c1ff5f63477548ad63bb98dcbc",
+    "lines": 34
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Migrations\\20261120143334_StandardStoredProcedureIntegration.cs",
+    "sha256": "8fa27e778da2b71fcd7aeb88b2f09538a02fd9eb6a610157ab3f54a9fcccc04a",
+    "lines": 24
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Migrations\\20261120143334_StandardStoredProcedureIntegration.Designer.cs",
+    "sha256": "746e4761e0eef22046cc1312c64a04d2073f614e1ce27bc27b6c83791816c77d",
+    "lines": 2987
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Migrations\\20261120145755_AddDynamicAdministrationDashboard.cs",
+    "sha256": "5dd9d3ee7151ad88c081882734d595fdbd966e507853697aecddb3209b9e0507",
+    "lines": 19
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Migrations\\20261120145755_AddDynamicAdministrationDashboard.Designer.cs",
+    "sha256": "765974cefbcffe83a82d42043554bf233bbba5a1d878c0e66f9ae2c7e3006ace",
+    "lines": 3046
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Migrations\\20261122172524_AddDashboardRevenueAndSourceCharts.cs",
+    "sha256": "de87db01fa3b2185063565cb7458f853b9c2394e95e737f6d0fa125a8cef6e85",
+    "lines": 20
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Migrations\\20261122172524_AddDashboardRevenueAndSourceCharts.Designer.cs",
+    "sha256": "111bcf61beca4fd88f0c20ac0d54538adb4976d97e936919968a437109c35e79",
+    "lines": 3074
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Migrations\\20261124130233_AddContactEnquiryFields.cs",
+    "sha256": "925c9fa3bd240b7a7da3f1027a90d3e5e2eda2089e8f9f025e4c3d4897758fa6",
+    "lines": 45
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Migrations\\20261124130233_AddContactEnquiryFields.Designer.cs",
+    "sha256": "288d5b604436041c32204975666f4dd136f1e466e3c7c2fa03f3518ee0ac72ac",
+    "lines": 3085
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Migrations\\20261124135656_AddProfileContactVerification.cs",
+    "sha256": "6da20da88a6a6e1b94a8ffddbcf674047b38a6de44b0e081854d732f7c41d87b",
+    "lines": 54
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Migrations\\20261124135656_AddProfileContactVerification.Designer.cs",
+    "sha256": "f41a7fc5a9711d5074da319387052f0c9e5e343592c74cf5134dfbc36944f8a5",
+    "lines": 3096
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Migrations\\20261124183817_AddAccountsFinanceModule.cs",
+    "sha256": "94253b64592cc0fa4df4a29aac9ae0011f825ed1ba340a0da43de316aba50804",
+    "lines": 899
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Migrations\\20261124183817_AddAccountsFinanceModule.Designer.cs",
+    "sha256": "06d48a9b622f609d35ad16aecda3bfb385081ee56830b1ebe921eec73d706773",
+    "lines": 4477
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Migrations\\20261124184253_AddAccountsPostingControls.cs",
+    "sha256": "2a1d218edaf393671038b58675b4d165b687fe5356b53708af3bfed8c79d4bf7",
+    "lines": 35
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Migrations\\20261124184253_AddAccountsPostingControls.Designer.cs",
+    "sha256": "1c5e6ea92e2c5227c1cd04c9cf0fda02f75c4f60131ba4eb848a24eba794ef51",
+    "lines": 4480
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Migrations\\20261124190200_HardenAccountsIntegrity.cs",
+    "sha256": "002ccca676d155e6c8f2c2673ae5e399cf14fa7129c9290aff8aa3cbd16429d3",
+    "lines": 51
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Migrations\\20261124190200_HardenAccountsIntegrity.Designer.cs",
+    "sha256": "2e72b987c972344769486115301a1931c88f260dd3f86cfc1e15d1b83156a7c0",
+    "lines": 4518
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Migrations\\AppDbContextModelSnapshot.cs",
+    "sha256": "2bc1a641c3f233d7299745e5f9535c4b7148b9bee5e5d60ef6109b7a0a4d64e5",
+    "lines": 4515
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Reports\\PaymentReceipt.rdlc",
+    "sha256": "a42898d4553c27c1c240e951eddb51e776e8c408c3008eda077285eb7c938946",
+    "lines": 2
+  },
+  {
+    "path": "FarmStay.Infrastructure\\BackgroundServices\\Accounts\\AccountingWorker.cs",
+    "sha256": "14db2d094588a4d355b0595e02bbb9b04a275e699069d6178a4fd244896ea02e",
+    "lines": 13
+  },
+  {
+    "path": "FarmStay.Infrastructure\\BackgroundServices\\Booking\\BookingNotificationBackgroundService.cs",
+    "sha256": "16539ef326bb6f93e34a6887cdedccd4560b4a3bbde2e2595b246ccebfa32553",
+    "lines": 122
+  },
+  {
+    "path": "FarmStay.Infrastructure\\BackgroundServices\\Booking\\BookingOwnerApprovalBackgroundService.cs",
+    "sha256": "b4f4ab1c7145e38fd02fdb3c083ec2b7788da671fb3ffafd7605a6cc6993c0ea",
+    "lines": 109
+  },
+  {
+    "path": "FarmStay.Infrastructure\\BackgroundServices\\Communication\\EmailBackgroundService.cs",
+    "sha256": "43787807dd25f2e86978036dd1f18b08d63546761e89af333e7eebb47ede4628",
+    "lines": 76
+  },
+  {
+    "path": "FarmStay.Infrastructure\\BackgroundServices\\Communication\\WhatsAppBackgroundService.cs",
+    "sha256": "0ae2e906a9ad399b029541e8668bf287e89ef02c82438388fde42b743f0d131c",
+    "lines": 84
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Persistence\\Configurations\\AboutUs\\AboutUsConfiguration.cs",
+    "sha256": "44dc92a55e097552e8fdd7eb01197c7623d3e83e89177108c48c2441bf1a2e4f",
+    "lines": 68
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Persistence\\Configurations\\AboutUs\\AboutUsFeatureConfiguration.cs",
+    "sha256": "6a77d7cca374e021977353b79da7fc48a677fb181ba1b41246265269eca3d430",
+    "lines": 36
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Persistence\\Configurations\\Accounts\\AccountingModel.cs",
+    "sha256": "1ce87451de43d9b41d0dd21d551f1bce29ca44d0f160dcceacfeb06d15503ffa",
+    "lines": 50
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Persistence\\Configurations\\Amenity\\AmenityConfiguration.cs",
+    "sha256": "8e693395adf6667dae6402d4f70c849d0c014025d582e87a732b0ba1ca5f1635",
+    "lines": 69
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Persistence\\Configurations\\Auth\\UserOtpConfiguration.cs",
+    "sha256": "60841f9afd63de03b77369f86c9f8055ca25523458cf6c4c3b20fcd8c455875f",
+    "lines": 69
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Persistence\\Configurations\\Auth\\UserRefreshTokenConfiguration .cs",
+    "sha256": "fbe4422b6e56c347ae5180533d903cfafe38b8e58854410758ba8544b37ed744",
+    "lines": 51
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Persistence\\Configurations\\Booking\\BookingActionTokenConfiguration.cs",
+    "sha256": "e3e023623601e5492e5637fc4f7c87dce6d12c435cabe082286bda7275e934b3",
+    "lines": 75
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Persistence\\Configurations\\Booking\\BookingConfiguration.cs",
+    "sha256": "93941b468abe2bc84a1fadae2ab8a0a7791d26888c0628fc0aa1a4830baa9937",
+    "lines": 206
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Persistence\\Configurations\\Booking\\BookingDateReservationConfiguration.cs",
+    "sha256": "efe711b6ccbbcb20174e331a46ffb3eebe619257bdc8cb0126d521ec67cd7e06",
+    "lines": 77
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Persistence\\Configurations\\Booking\\BookingDocumentConfiguration.cs",
+    "sha256": "379de15ac3c0c71bb87702310434c70bb1f05a22ade2f101bbf5fd9e8c8899c7",
+    "lines": 138
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Persistence\\Configurations\\Booking\\BookingEventDateConfiguration.cs",
+    "sha256": "0905166d9928509a42790357756f8a021f493881a3422eb169ed9c09a1274aea",
+    "lines": 96
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Persistence\\Configurations\\Booking\\BookingReceiptConfiguration.cs",
+    "sha256": "dcf1681e9aaa5a27c9a3950643741b2e2842e787aac91fc711cafb22437bd066",
+    "lines": 100
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Persistence\\Configurations\\Booking\\BookingStatusHistoryConfiguration.cs",
+    "sha256": "37ae54656c90ba67e5d43c9247b91a7dc81dcc42e3d22fe12e045bc35c4f09c6",
+    "lines": 69
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Persistence\\Configurations\\Booking\\BookingStayDateConfiguration.cs",
+    "sha256": "614d20999652f207155aa8408093acbf26e18b1cb0410a5643e59d6ba48207df",
+    "lines": 83
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Persistence\\Configurations\\Booking\\CheckoutDiscountConfiguration.cs",
+    "sha256": "b3335df750a6b583ceccb8b50c4922095ea2a0c9465d9fc6f15f22889eea9852",
+    "lines": 55
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Persistence\\Configurations\\Booking\\FarmHouseCancellationPolicyConfiguration.cs",
+    "sha256": "569d6404f82c5c7255be57e4715e6db0e6dc2e44836082b9aa566d5e39d945de",
+    "lines": 59
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Persistence\\Configurations\\Booking\\FarmHousePaymentConfigurationConfiguration.cs",
+    "sha256": "6707d84470a85c11a418d3876ad6c927597b57479661596e9a253b9c23c6b4ed",
+    "lines": 78
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Persistence\\Configurations\\Booking\\PaymentTransactionConfiguration.cs",
+    "sha256": "24512a7699247377a43a90a6e74f6d49c204166e56c51866433f8cf862cfc850",
+    "lines": 126
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Persistence\\Configurations\\Contact\\ContactConfiguration.cs",
+    "sha256": "33b2f71e5947b5abb9165b1d895ca3518d3bf826b4c64beab44e4bbb5329242a",
+    "lines": 63
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Persistence\\Configurations\\Feedback\\FeedbackConfiguration.cs",
+    "sha256": "64cf112ce2956eccf748a6266f788387e1a34ccdc30953a0bd8b99fe4f70924a",
+    "lines": 62
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Persistence\\Configurations\\Gallery\\GalleryConfiguration.cs",
+    "sha256": "a2f99f259f792c7e546bc465c1f96e035d8473173b22fe29e403fe64c9073324",
+    "lines": 61
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Persistence\\Configurations\\Notifications\\NotificationOutboxConfiguration.cs",
+    "sha256": "0ef7bfe625309bd5b5b6898c36ccbfeeafc9e09552d62a93065b931347c1da91",
+    "lines": 84
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Persistence\\Configurations\\Pricing\\FarmHousePricingConfiguration.cs",
+    "sha256": "d72c40364436a3175be89cf9148db220a02ae4330b7a535b423d08fcb4c224f5",
+    "lines": 91
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Persistence\\Configurations\\Reports\\ReportResultConfiguration.cs",
+    "sha256": "d3ad2dc19b74b7508928bad07876d3af9bbe3228919f4bb6c643e37126aa7217",
+    "lines": 32
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Reports\\Accounts\\AccountingReport.rdlc",
+    "sha256": "375fb2beceb91fbff32cafb20e2237d102c7fe1ce714e0d43ac038203b607e87",
+    "lines": 2
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Reports\\Operational\\bookings.rdlc",
+    "sha256": "d73b63462e4805c06283c2e8a01eff10d6ce394c7e2946fa3992751bf9b8f9ca",
+    "lines": 2
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Reports\\Operational\\customers.rdlc",
+    "sha256": "821d7f335700233b0fe00fdccabc594c6096b69bc58ef1e03c3e61552ac728b9",
+    "lines": 2
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Reports\\Operational\\occupancy.rdlc",
+    "sha256": "1ef971f0df3809ca17ca6d17573204c88909f7290c2da40160d91017ddfee8fa",
+    "lines": 2
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Reports\\Operational\\revenue.rdlc",
+    "sha256": "d8404c90c61866b30ad236a548d436bd157da6195e452608cc504c3d5d00738b",
+    "lines": 2
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Repositories\\AboutUs\\AboutUsRepository.cs",
+    "sha256": "054ff5b8bedd62a4301aeba93cfcdbc70caf34d00f61dc62571047a554ce3c86",
+    "lines": 165
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Repositories\\Accounts\\AccountsRepository.AssetsAndSources.cs",
+    "sha256": "221e29daaa65ba3a8865d725918923182bfe8229dcc38e9c026d9865fbca2857",
+    "lines": 84
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Repositories\\Accounts\\AccountsRepository.Foundation.cs",
+    "sha256": "f79e024ba716caea98c46208a8337665376dc418aed07078169acb516fe95256",
+    "lines": 60
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Repositories\\Accounts\\AccountsRepository.Masters.cs",
+    "sha256": "e7c6229bec8b96bd3ca17f9c24cea348036ce4a5964da7b70dd2af791ee3b343",
+    "lines": 103
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Repositories\\Accounts\\AccountsRepository.Reports.cs",
+    "sha256": "2de96e9b0d85fc19b210c9db7abeaedb9dbaee7da672ad6fc6cde4a24ed4fedf",
+    "lines": 26
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Repositories\\Accounts\\AccountsRepository.Vouchers.cs",
+    "sha256": "f926c283d7921ee574af53afaa0d5c610a201c0e69ed1cda0111fd95120e40de",
+    "lines": 96
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Repositories\\Administration\\AdminMenuRepository.cs",
+    "sha256": "4d38f8b3ba0be852f77d691704d253a1ae11f4bff73c963ead69275c78925b86",
+    "lines": 311
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Repositories\\Amenity\\AmenityRepository.cs",
+    "sha256": "96d1fd04675664556004de6785cab3b32298cac28b397ac52f59fae0cadbbc85",
+    "lines": 74
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Repositories\\Auth\\PermissionRepository.cs",
+    "sha256": "bd5d164e798082c213eba645b4a9b1940235b92f7b3f9c80846ef96d75ce911f",
+    "lines": 137
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Repositories\\Auth\\UserMembershipRepository.cs",
+    "sha256": "2a6a7a54d189d059a11afd2d53aa3974a83f3d046b1a43f12d3014f36074b62b",
+    "lines": 67
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Repositories\\Auth\\UserOtpRepository.cs",
+    "sha256": "8ca4143314044ead2ccb27d7efdbb1d82bdbcad93fbf78882807de5cdd215c20",
+    "lines": 55
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Repositories\\Auth\\UserRefreshTokenRepository.cs",
+    "sha256": "b38a6f5313f57fe3c027b7d7991795a61d674cc8a2bab1a6b996642059d51718",
+    "lines": 60
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Repositories\\Auth\\UserRepository.cs",
+    "sha256": "9e117ae78fcb089839a4543d26fce67d00a3895686a750d09833cae8b2579bc3",
+    "lines": 77
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Repositories\\Authorization\\RoleRepository.cs",
+    "sha256": "b3a835d8e309dce6b41adfa281e799d80cc33a45812c8278f40c363f8599d07c",
+    "lines": 53
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Repositories\\Booking\\AdminBookingConfirmation.cs",
+    "sha256": "502075743144eaed49018129d93fd44af022179ea10b99c5b988184fabb04a45",
+    "lines": 101
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Repositories\\Booking\\BookingCalendarRepository.cs",
+    "sha256": "2dfede3222be90626f443646960792e4d481f6935093862b766f4b07ac311401",
+    "lines": 112
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Repositories\\Booking\\BookingDecisionService.cs",
+    "sha256": "030d135567c7b55dad4ac562ba8d84bc7e1b29e671288644b60de36f24d51808",
+    "lines": 66
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Repositories\\Booking\\BookingIdentityDocuments.cs",
+    "sha256": "d64ef10dbbc34cef8b7227e8bf4229c3f0679280a6a42c15a3ad0c96a03b8330",
+    "lines": 162
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Repositories\\Booking\\BookingListRepository.cs",
+    "sha256": "d6f1cb142c03602ca4110e5b76cb49be1dbf2fc20d7ca02b1aab1030ce1d4be3",
+    "lines": 154
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Repositories\\Booking\\BookingStayOperations.cs",
+    "sha256": "edc41b663f670d50e555a453c71b8e9938a08314a7a773a6918ec956f8313d9f",
+    "lines": 178
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Repositories\\Booking\\BookingSubmission.cs",
+    "sha256": "b38b4e5c21e93b28008bae5a52bd28a47aed379dd741c15ef1ad80c0e8d12cf1",
+    "lines": 216
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Repositories\\Booking\\FarmHousePricingRepository.cs",
+    "sha256": "87334f793e26b432871fb889335244d19c766b0564614760d97f393e100eb329",
+    "lines": 120
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Repositories\\Booking\\RazorpayAdvancePaymentOrders.cs",
+    "sha256": "885e1f0b4d0cec97bbe730955e160cf732c974d4d3b879c4a1e5c09c13e76f3c",
+    "lines": 229
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Repositories\\Contact\\ContactRepository.cs",
+    "sha256": "2285e8a4bb1501e750c4ac455d5c8073a7ebaa04620d449a0cb356190f797307",
+    "lines": 57
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Repositories\\Dashboard\\DashboardRepository.cs",
+    "sha256": "0930136d38c865eb104d8f70a6951a9856959d80f3f4b909b20397ed129f5ff9",
+    "lines": 27
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Repositories\\FarmHouse\\FarmHouseRepository.cs",
+    "sha256": "557c6a92e9c6492217fbb7264ef22c88b7b673651d389b921906de2152a24f32",
+    "lines": 65
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Repositories\\Feedback\\FeedbackRepository.cs",
+    "sha256": "2f05cc61128c08580a7e9f70cf9a97f4cb54f363b984fe4655ca0a6996ab58df",
+    "lines": 80
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Repositories\\FileUpload\\FileUploadRepository.cs",
+    "sha256": "eb88e0074f1c9fc99987e75bfbd458eb26a6d41f37ab49efa2c0012cdb1a9c91",
+    "lines": 280
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Repositories\\Gallery\\GalleryRepository.cs",
+    "sha256": "889d3039390aa05276ace64121d30ab9ac5da034213cc5e37ac2a278f1f25e85",
+    "lines": 71
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Repositories\\Public\\PublicPageRepository.cs",
+    "sha256": "22ed38d67f86dc7a5052fdfdccc159a60200fb7e2d1eea6e5a87286dbd8387f7",
+    "lines": 114
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Repositories\\Reports\\ReportRepository.cs",
+    "sha256": "ccbda204dbd06d802cb4292afe31801938ab8e96153132364df21beaae556c50",
+    "lines": 30
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Repositories\\Reports\\Booking\\BookingReportRepository.cs",
+    "sha256": "f85b81ddf6248695e461644ad19acce1cb9a808d10c6d84cfe4963986ee96c1f",
+    "lines": 21
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Repositories\\Reports\\Customer\\CustomerReportRepository.cs",
+    "sha256": "e1b49fad3542e19703ce3d77f0deef6d953ca80e81c49cf9cdc806afe50dc067",
+    "lines": 21
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Repositories\\Reports\\Occupancy\\OccupancyReportRepository.cs",
+    "sha256": "cad44c04d4614a07e522f8f9bf406d3a745054d4eed33b5049ba70b875c0e34a",
+    "lines": 21
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Repositories\\Reports\\Revenue\\RevenueReportRepository.cs",
+    "sha256": "bfe6808ade0d2b9bfe19c4a1e47216875f4399c3a67582cd63d143a1718ef1bf",
+    "lines": 21
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Services\\Accounts\\AccountsScope.cs",
+    "sha256": "74e09b6ebb59a6506598331a0e8932f1e712a3746ae62d7276a916ee8e813bac",
+    "lines": 31
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Services\\Auth\\JwtService.cs",
+    "sha256": "b29f78a6dce5b84d3b7d057227aa3a433946e52c8bfde42b55f1e092beec5617",
+    "lines": 138
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Services\\Communication\\BookingNotifications.cs",
+    "sha256": "d00382f19ce6fd3d34968166c40f20fafc2d793393144435ff5f311041125d2c",
+    "lines": 224
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Services\\Communication\\EmailQueue.cs",
+    "sha256": "ff213c2a3a5e5542cf1a7a60a00287f14136e3c3368f9ca505e89d34ab1c96b8",
+    "lines": 34
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Services\\Communication\\EmailService.cs",
+    "sha256": "0cca3e112ef737f42e4e5741189d2c27ee8199cb7b73577f934ae4353f70c996",
+    "lines": 85
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Services\\Communication\\WhatsAppQueue.cs",
+    "sha256": "ec2eb888a6322135346cba9d99479dcef881d4b7e2a057c759d9d071ff7dce79",
+    "lines": 34
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Services\\Reporting\\BookingReceipts.cs",
+    "sha256": "c7248093d2e37ce5b3ad19b90d8d9ab30063c7f1b8a79d507bf08b4e31609a6a",
+    "lines": 85
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Services\\Reports\\ReportAccess.cs",
+    "sha256": "62002a4f26bf094875cdddc5927f06e7235afa72ba037d4e2e8193db3d977f14",
+    "lines": 26
+  },
+  {
+    "path": "FarmStay.Infrastructure\\Services\\Reports\\ReportFileRenderer.cs",
+    "sha256": "ca8a49b9f7fc989db43263fe224c43e4e5702239957c8c23ca2ac566eabd747b",
+    "lines": 32
+  },
+  {
+    "path": "FarmStay.Infrastructure\\SQL\\Accounts\\AccountsReport.sql",
+    "sha256": "3711cdd1f8cbd9cd5725175dac3923cfed2fe2671e65fddb6505a0a4dde9fda1",
+    "lines": 83
+  },
+  {
+    "path": "FarmStay.Infrastructure\\SQL\\Accounts\\AccountsSeeds.sql",
+    "sha256": "59024fed4b4cb10ff6bfcd5b5b8c45519f1767c4d29b2f25839fca730b52311d",
+    "lines": 153
+  },
+  {
+    "path": "FarmStay.Infrastructure\\SQL\\Accounts\\ImmutableAudit.sql",
+    "sha256": "2d6cd35ca8d05b580f5af29db1cbd6eeccfe99156a7d9b046af153f1509f508c",
+    "lines": 6
+  },
+  {
+    "path": "FarmStay.Infrastructure\\SQL\\Accounts\\ImmutableLine.sql",
+    "sha256": "69b429d68bb33158945af39bf1e1a242f8cf49e53cbc49900f5c3c30c9b90da1",
+    "lines": 7
+  },
+  {
+    "path": "FarmStay.Infrastructure\\SQL\\Accounts\\ImmutableVoucher.sql",
+    "sha256": "c884c3bf923cb54cb829ec6652dbd931146c3c4b83582445bf6a80e8e1ddba33",
+    "lines": 6
+  },
+  {
+    "path": "FarmStay.Infrastructure\\SQL\\Reports\\Bookings.sql",
+    "sha256": "d88d44aafeff03c1a7220d3309ee9023687804d2ea812c323c5b6941677e212e",
+    "lines": 16
+  },
+  {
+    "path": "FarmStay.Infrastructure\\SQL\\Reports\\Customers.sql",
+    "sha256": "821c6965bdff38a526951c581b76d5bea2cb6d8e90c7d170da29039fa705a9d0",
+    "lines": 16
+  },
+  {
+    "path": "FarmStay.Infrastructure\\SQL\\Reports\\Occupancy.sql",
+    "sha256": "729c2c8bba42ad8bde1e49d1750b7509e51dbd0c66edbd749899cdb505227d5c",
+    "lines": 16
+  },
+  {
+    "path": "FarmStay.Infrastructure\\SQL\\Reports\\Revenue.sql",
+    "sha256": "eb6216167659a6333ca05159719b2eb9cf8c8b3fe1c6663836b85157241f7721",
+    "lines": 16
+  },
+  {
+    "path": "FarmStay.Infrastructure\\SQL\\Reports\\SeedAndIndexes.sql",
+    "sha256": "3da3320ffbc7a274bcfdfe4b9e834d991cc2ad3352544cf45e482cbbd2eb894a",
+    "lines": 31
+  },
+  {
+    "path": "FarmStay.Infrastructure\\SQL\\Reports\\Dashboard\\BookingSources.sql",
+    "sha256": "405670db1c1b058894aee394aa2d1af34f17db34eb52e8b6823882743026cbf2",
+    "lines": 18
+  },
+  {
+    "path": "FarmStay.Infrastructure\\SQL\\Reports\\Dashboard\\Calendar.sql",
+    "sha256": "4bec072727beee4110b13a315d7ffaecda2299d07d9061ea84e9be0ed3273ec1",
+    "lines": 14
+  },
+  {
+    "path": "FarmStay.Infrastructure\\SQL\\Reports\\Dashboard\\Permissions.sql",
+    "sha256": "d0eb493a4a81fa5edb8d3613f6af1adb2b34db945154f0ec2cccd08da470d962",
+    "lines": 15
+  },
+  {
+    "path": "FarmStay.Infrastructure\\SQL\\Reports\\Dashboard\\RevenueTrend.sql",
+    "sha256": "447244c462ef914557147fe8bac08e90562c472c474aee742618064972717503",
+    "lines": 22
+  },
+  {
+    "path": "FarmStay.Infrastructure\\SQL\\Reports\\Dashboard\\Summary.sql",
+    "sha256": "46ecf550c7c0f76ff17027eeb2571cf99e216db5a2635c6fcf0d61db10e91729",
+    "lines": 34
+  },
+  {
+    "path": "FarmStay.Infrastructure\\SQL\\Reports\\Standard\\Booking_GetReport.sql",
+    "sha256": "bd8fa7600ce543c47931e5e7084345ff3750943dcc67916afecfb29d099e83ed",
+    "lines": 37
+  },
+  {
+    "path": "FarmStay.Infrastructure\\SQL\\Reports\\Standard\\Booking_GetSummary.sql",
+    "sha256": "d378d73850d7032d858d781c2c7e119bbbbebc8508f316b02ad8fcebaf59e7da",
+    "lines": 30
+  },
+  {
+    "path": "FarmStay.Infrastructure\\SQL\\Reports\\Standard\\Customer_GetReport.sql",
+    "sha256": "d4eee8999de56b3c6cf63b8347198776152fbff4a6c1941e579f3d9d10d697a7",
+    "lines": 29
+  },
+  {
+    "path": "FarmStay.Infrastructure\\SQL\\Reports\\Standard\\Customer_GetSummary.sql",
+    "sha256": "f145ebb40513d6cd1149a2e1a26d841951d066c4645f7640ed4314c5bb17a5ca",
+    "lines": 24
+  },
+  {
+    "path": "FarmStay.Infrastructure\\SQL\\Reports\\Standard\\Occupancy_GetReport.sql",
+    "sha256": "a75c992bd591a6caa7382f5621a07a4f82dff6be20d03927ac04f563678b0398",
+    "lines": 31
+  },
+  {
+    "path": "FarmStay.Infrastructure\\SQL\\Reports\\Standard\\Occupancy_GetSummary.sql",
+    "sha256": "586749357106b18f1f833b407c65808b9272621ea7f1fbfca2f37d925c69e6ae",
+    "lines": 26
+  },
+  {
+    "path": "FarmStay.Infrastructure\\SQL\\Reports\\Standard\\Revenue_GetReport.sql",
+    "sha256": "6cc841dabb9ad754d83f29278ac0e9755f924cd3215b1b448aac22a2340ee5db",
+    "lines": 33
+  },
+  {
+    "path": "FarmStay.Infrastructure\\SQL\\Reports\\Standard\\Revenue_GetSummary.sql",
+    "sha256": "36d412a5c7ba7db182506c3f480f5b08839b25cc57f1ef2acc2a78ef63ee6886",
+    "lines": 28
+  },
+  {
+    "path": "tests\\FarmStay.Accounts.Verification\\FarmStay.Accounts.Verification.csproj",
+    "sha256": "f48059dc62e87f9912754deb5dab3ad4028ec2a93a3f2f1acf4b6be1535cf699",
+    "lines": 2
+  },
+  {
+    "path": "tests\\FarmStay.Accounts.Verification\\Program.cs",
+    "sha256": "1f3db50f698ddef3d7d49aaef7d54d2da7eef4d62db4632a41d5c2a784b53ec0",
+    "lines": 131
+  }
+]

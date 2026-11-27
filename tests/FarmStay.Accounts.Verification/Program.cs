@@ -1,3 +1,5 @@
+using FarmStay.Application.Interfaces.Common;
+using FarmStay.Infrastructure.Services.Security;
 using FarmStay.Application.Accounts;
 using FarmStay.Domain.Accounts;
 using FarmStay.Domain.Entities;
@@ -34,6 +36,7 @@ await Test("SLM caps at residual",()=>{Check(AccountingRules.Depreciation(12000,
 await Test("WDV uses configured rate",()=>{Check(AccountingRules.Depreciation(12000,0,2000,60,"WDV",12)==100);return Task.CompletedTask;});
 await Test("Reject invalid depreciation",()=>Reject(()=>{AccountingRules.Depreciation(100,101,0,0,"SLM",0);return Task.CompletedTask;}));
 await Test("Bound page size and sorting",()=>Reject(()=>{new AccountQuery{PageSize=10000,Sort="name; DROP TABLE"}.Validate();return Task.CompletedTask;},400));
+await Test("Record lookup rejects invalid ID",()=>Reject(()=>{new AccountQuery{Id=0}.Validate();return Task.CompletedTask;},400));
 if(args.Contains("--integration")){
  var cwd=Directory.GetCurrentDirectory();var config=new ConfigurationBuilder().AddJsonFile(Path.Combine(cwd,"FarmStay/appsettings.json"),optional:true).AddJsonFile(Path.Combine(cwd,"FarmStay/appsettings.Development.json"),optional:true).AddUserSecrets("78bc642e-7ece-4aad-b741-ab7b10bcb3f8").AddEnvironmentVariables().Build();
  var raw=config.GetConnectionString("DefaultConnection")??throw new Exception("Development database configuration is missing.");
@@ -58,6 +61,13 @@ if(args.Contains("--integration")){
  db.AddRange(farms);await db.SaveChangesAsync();var repo=new AccountsRepository(db,NullLogger<AccountsRepository>.Instance);var ct=CancellationToken.None;
  var a=new AccountScope(farms[0].FarmHouseId,0,"test-a",new HashSet<string>());var b=new AccountScope(farms[1].FarmHouseId,0,"test-b",new HashSet<string>());
  await Test("Tenant initialization and seed rerun",async()=>{await repo.InitializeAsync(a.FarmHouseId,0,ct);await repo.InitializeAsync(b.FarmHouseId,0,ct);var count=await db.Set<AccountingMaster>().CountAsync();await repo.InitializeAsync(a.FarmHouseId,0,ct);Check(count==await db.Set<AccountingMaster>().CountAsync());Check(await db.Set<LedgerAccount>().CountAsync(x=>x.FarmHouseId==a.FarmHouseId)==AccountsRepository.Chart.Length,"Tenant chart does not contain all required codes");});
+ await Test("Record ID lookup is exact and tenant scoped",async()=>{
+  var ownId=await db.Set<LedgerAccount>().Where(x=>x.FarmHouseId==a.FarmHouseId&&x.Code=="1000").Select(x=>x.Id).SingleAsync();
+  var own=(AccountPage<LedgerAccount>)await repo.GetAsync(a,"ledgers",new(){Id=ownId,PageSize=1},ct);
+  Check(own.Total==1&&own.Items.Single().Id==ownId);
+  var foreign=(AccountPage<LedgerAccount>)await repo.GetAsync(b,"ledgers",new(){Id=ownId,PageSize=1},ct);
+  Check(foreign.Total==0&&foreign.Items.Count==0);
+ });
  long A(string code)=>db.Set<LedgerAccount>().Single(x=>x.FarmHouseId==a.FarmHouseId&&x.Code==code).Id;
  long B(string code)=>db.Set<LedgerAccount>().Single(x=>x.FarmHouseId==b.FarmHouseId&&x.Code==code).Id;
  async Task<Voucher> Draft(string type,decimal amount,long debit,long credit,long? settles=null,long? vendor=null)=> (Voucher)await repo.SaveAsync(a,"vouchers",null,new VoucherInput{Type=type,Date=DateTime.Today,Narration="Verification "+type,SettlesVoucherId=settles,Lines=[new(){AccountId=debit,Debit=amount,VendorId=vendor},new(){AccountId=credit,Credit=amount,VendorId=vendor}]},ct);
@@ -74,7 +84,11 @@ if(args.Contains("--integration")){
  await Test("Reverse creates opposite entry",async()=>{var v=await db.Set<Voucher>().Include(x=>x.Lines).SingleAsync(x=>x.Id==expense!.Id);var rev=(Voucher)await repo.PostAsync(a,v.Id,new(){Version=v.Version,Date=DateTime.Today,Reason="Verification reversal"},true,ct);Check(rev.ReversalOfVoucherId==v.Id&&rev.TotalDebit==v.TotalCredit);});
  await Test("GST-disabled tax report rejected",()=>Reject(async()=>await repo.ReportAsync(a,"tax",new(),false,ct),400));
  await Test("Vendor bill and partial payment ageing",async()=>{var v=(Vendor)await repo.SaveAsync(a,"vendors",null,new VendorInput{Code="TESTV",Name="Verification vendor"},ct);var bill=await Post(await Draft("VendorBill",1000,A("6040"),v.AccountId,null,v.Id));await Post(await Draft("VendorPayment",250,v.AccountId,A("1000"),bill.Id,v.Id));var report=await repo.ReportAsync(a,"payables",new(){PageSize=100},false,ct);Check(report.Single(x=>x.Reference==bill.VoucherNumber).Balance==750);});
- await Test("Cross-tenant attachment denied",()=>Reject(async()=>await repo.AttachmentAsync(b,expense!.Id,"bad.pdf","application/pdf",[37,80,68,70,1],ct),404));
+ await Test("Vendor Payments list excludes bills and other vouchers",async()=>{
+  var result=(AccountPage<Voucher>)await repo.GetAsync(a,"vendor-payments",new(){PageSize=100},ct);
+  Check(result.Total>0&&result.Items.All(x=>x.VoucherType=="VendorPayment"&&x.FarmHouseId==a.FarmHouseId));
+ });
+ await Test("Cross-tenant attachment denied",()=>Reject(async()=>await repo.AttachmentAsync(b,expense!.Id,"bad.pdf","application/pdf",[37,80,68,70,45],ct),404));
  await Test("Unsafe upload rejected",async()=>{var v=await Draft("Journal",5,A("1000"),A("3000"));await Reject(async()=>await repo.AttachmentAsync(a,v.Id,"attack.html","text/html",[60,62],ct),400);});
 
  await Test("Asset acquisition, depreciation, maintenance and disposal",async()=>{
@@ -85,6 +99,8 @@ if(args.Contains("--integration")){
   db.ChangeTracker.Clear();asset=await db.Set<FixedAsset>().SingleAsync(x=>x.Id==asset.Id);await repo.AssetActionAsync(a,asset.Id,"disposal",new(){Date=DateTime.Today,Reason="Disposal verification",Amount=11500,AccountId=A("1000"),Version=asset.Version},ct);
   Check((await db.Set<FixedAsset>().SingleAsync(x=>x.Id==asset.Id)).Status=="Disposed");
  });
+ // Explicit fixture settlement mapping: production no longer guesses Cash/Bank control ledgers.
+ foreach(var scope in new[]{a,b}) {var cash=new MoneyAccount{FarmHouseId=scope.FarmHouseId,Code="FIXTURE-CASH",Name="Verified fixture cash",Kind="Cash",AccountId=scope.FarmHouseId==a.FarmHouseId?A("1000"):B("1000")};db.Add(cash);await db.SaveChangesAsync();var settings=await db.Set<AccountingSettings>().SingleAsync(x=>x.FarmHouseId==scope.FarmHouseId);settings.DefaultCashMoneyAccountId=cash.Id;await db.SaveChangesAsync();}
  var customer=new User{FarmHouseId=a.FarmHouseId,FullName="Verification customer",MobileNumber="9000000099",PasswordHash="test-only-no-login"};db.Add(customer);await db.SaveChangesAsync();var role=await db.Roles.FirstOrDefaultAsync(x=>x.RoleName=="Customer");if(role==null){role=new Role{RoleName="Customer"};db.Add(role);await db.SaveChangesAsync();}var membership=new UserMembership{FarmHouseId=a.FarmHouseId,UserId=customer.UserId,RoleId=role.RoleId};db.Add(membership);await db.SaveChangesAsync();
  var booking=new Booking{FarmHouseId=a.FarmHouseId,CustomerUserId=customer.UserId,BookingReference="TEST-ACCOUNTING",FullName="Test",MobileNumber="9000000099",AdultCount=1,PersonCount=1,CheckInDate=DateTime.Today,CheckOutDate=DateTime.Today.AddDays(1),ActualCheckOutAt=DateTime.Now,StayDays=1,TotalAmount=1000,BaseAmount=1000,Status="CheckedOut",CreatedBy=customer.UserId};db.Add(booking);await db.SaveChangesAsync();db.AddRange(new PaymentTransaction{FarmHouseId=a.FarmHouseId,BookingId=booking.BookingId,PaymentType="Advance",PaymentMethod="Cash",Amount=300,PaymentStatus="Success",IdempotencyKey="account-test-advance",PaidAt=DateTime.Now},new PaymentTransaction{FarmHouseId=a.FarmHouseId,BookingId=booking.BookingId,PaymentType="Checkout",PaymentMethod="Cash",Amount=700,PaymentStatus="Success",IdempotencyKey="account-test-checkout",PaidAt=DateTime.Now});await db.SaveChangesAsync();
  await Test("Booking advance + fulfilment + final receipt are idempotent",async()=>{await repo.ProcessSourcesAsync(ct);var first=await db.Set<Voucher>().CountAsync(x=>x.FarmHouseId==a.FarmHouseId&&x.SourceKey!=null);await repo.ProcessSourcesAsync(ct);Check(first==await db.Set<Voucher>().CountAsync(x=>x.FarmHouseId==a.FarmHouseId&&x.SourceKey!=null));Check(await db.Set<Voucher>().CountAsync(x=>x.FarmHouseId==a.FarmHouseId&&x.SourceKey=="BookingRevenue:"+booking.BookingId)==1);});
@@ -117,9 +133,33 @@ if(args.Contains("--integration")){
    client.DefaultRequestHeaders.Authorization=new AuthenticationHeaderValue("Bearer",Token(membership));
    await Test("HTTP customer cannot access Accounts",async()=>{using var response=await client.GetAsync("/api/administration/accounts/vouchers");Check(response.StatusCode==HttpStatusCode.Forbidden,"Expected 403, received "+response.StatusCode);});
    var adminMember=await db.UserMemberships.Include(x=>x.Role).SingleAsync(x=>x.FarmHouseId==a.FarmHouseId&&x.Role!.RoleName=="Admin");client.DefaultRequestHeaders.Authorization=new AuthenticationHeaderValue("Bearer",Token(adminMember));client.DefaultRequestHeaders.Add("FarmHouseId",b.FarmHouseId.ToString());
-   await Test("HTTP forged tenant header cannot select another tenant",async()=>{using var response=await client.GetAsync("/api/administration/accounts/ledgers?pageSize=100");Check(response.StatusCode==HttpStatusCode.OK,"Expected 200, received "+response.StatusCode);using var json=JsonDocument.Parse(await response.Content.ReadAsStringAsync());Check(json.RootElement.GetProperty("data").GetProperty("items").EnumerateArray().All(x=>x.GetProperty("farmHouseId").GetInt32()==a.FarmHouseId));});
+   await Test("HTTP forged tenant header cannot select another tenant",async()=>{using var response=await client.GetAsync("/api/administration/accounts/ledgers?pageSize=100");Check(response.StatusCode==HttpStatusCode.Forbidden,"Conflicting header must be rejected.");client.DefaultRequestHeaders.Remove("FarmHouseId");using var valid=await client.GetAsync("/api/administration/accounts/ledgers?pageSize=100");Check(valid.StatusCode==HttpStatusCode.OK);using var json=JsonDocument.Parse(await valid.Content.ReadAsStringAsync());Check(json.RootElement.GetProperty("data").GetProperty("items").EnumerateArray().All(x=>x.GetProperty("farmHouseId").GetInt32()==a.FarmHouseId));});
+   await Test("HTTP rejects tenant spoofing in query",async()=>{using var response=await client.GetAsync("/api/administration/accounts/ledgers?farmHouseId="+b.FarmHouseId);Check(response.StatusCode==HttpStatusCode.Forbidden);});
+   await Test("HTTP rejects tenant spoofing in JSON body",async()=>{using var response=await client.PostAsync("/api/administration/accounts/vouchers",new StringContent("{\"farmHouseId\":"+b.FarmHouseId+",\"lines\":[]}",Encoding.UTF8,"application/json"));Check(response.StatusCode==HttpStatusCode.Forbidden);Check(response.Headers.Contains("X-Correlation-ID"));});
    await Test("HTTP rejects excessive pagination",async()=>{using var response=await client.GetAsync("/api/administration/accounts/vouchers?pageSize=10000");Check(response.StatusCode==HttpStatusCode.BadRequest);});
   }finally{if(!server.HasExited)server.Kill(true);await server.WaitForExitAsync();}
+ }
+
+ async Task TenantDenied(Func<Task> operation,int status){try{await operation();throw new Exception("Expected tenant rejection");}catch(TenantAccessException e){Check(e.Status==status);}}
+ var ownerMembership=await db.UserMemberships.Include(x=>x.Role).SingleAsync(x=>x.FarmHouseId==a.FarmHouseId&&x.Role!.RoleName=="Admin");
+ DefaultHttpContext RequestFor(int actor,int member,string? header=null,string? roleClaim=null){var request=new DefaultHttpContext();var claims=new List<Claim>{new(ClaimTypes.NameIdentifier,actor.ToString()),new("UserMembershipId",member.ToString())};if(roleClaim!=null)claims.Add(new(ClaimTypes.Role,roleClaim));request.User=new ClaimsPrincipal(new ClaimsIdentity(claims,"test"));if(header!=null)request.Request.Headers["FarmHouseId"]=header;return request;}
+ await Test("Shared context rejects forged tenant header",()=>TenantDenied(async()=>await new CurrentTenantContext(new FixedHttpContextAccessor{HttpContext=RequestFor(ownerMembership.UserId,ownerMembership.UserMembershipId,b.FarmHouseId.ToString())},db).RequireAsync(),403));
+ await Test("Shared context rejects mismatched actor and membership",()=>TenantDenied(async()=>await new CurrentTenantContext(new FixedHttpContextAccessor{HttpContext=RequestFor(customer.UserId,ownerMembership.UserMembershipId)},db).RequireAsync(),403));
+ await Test("Shared context rejects stale role claims",()=>TenantDenied(async()=>await new CurrentTenantContext(new FixedHttpContextAccessor{HttpContext=RequestFor(customer.UserId,membership.UserMembershipId,null,"Admin")},db).RequireAsync(),401));
+ await Test("Shared context accepts membership authority with no client selector",async()=>{var resolved=await new CurrentTenantContext(new FixedHttpContextAccessor{HttpContext=RequestFor(ownerMembership.UserId,ownerMembership.UserMembershipId)},db).RequireAsync();Check(resolved.FarmHouseId==a.FarmHouseId);});
+ await Test("Generic permission repository does not treat role ID one as Super Admin",async()=>Check(!await new PermissionRepository(db).HasPermissionAsync(customer.UserId,a.FarmHouseId,"Accounts.Post")));
+ await Test("Unknown public domain rejected",()=>TenantDenied(async()=>await new PublicTenantResolver(new FixedPublicDomain("unknown.invalid"),db).ResolveAsync(),404));
+ await Test("Published public domain resolves anonymously",async()=>Check(await new PublicTenantResolver(new FixedPublicDomain(farms[0].DomainName),db).ResolveAsync()==a.FarmHouseId));
+ await Test("Inactive public farmhouse rejected",async()=>{var farm=await db.FarmHouses.SingleAsync(x=>x.FarmHouseId==b.FarmHouseId);farm.IsActive=false;await db.SaveChangesAsync();await TenantDenied(async()=>await new PublicTenantResolver(new FixedPublicDomain(farm.DomainName),db).ResolveAsync(),404);farm.IsActive=true;await db.SaveChangesAsync();});
+ await Test("Spoofed public domain selector rejected by resolver",()=>{var publicRequest=new DefaultHttpContext();publicRequest.Request.Host=new HostString("public-a.invalid");publicRequest.Request.Headers["X-Domain"]="public-b.invalid";Check(new FarmStay.Application.Services.Common.TenantResolver(new FixedHttpContextAccessor{HttpContext=publicRequest}).GetCurrentDomain()=="");return Task.CompletedTask;});
+ foreach(var item in new[]{("Traversal","../private","photo.jpg","image/jpeg",new byte[]{255,216,255}), ("MIME spoof","Gallery","photo.jpg","text/html",new byte[]{255,216,255}), ("Signature spoof","Gallery","photo.jpg","image/jpeg",new byte[]{60,104,116,109,108}), ("Unsafe double extension","Gallery","script.php.jpg","image/jpeg",new byte[]{255,216,255}), ("Private category","BookingDocuments","photo.jpg","image/jpeg",new byte[]{255,216,255})}) {
+  await Test("Upload rejects "+item.Item1,async()=>{
+   var uploadHttp=new DefaultHttpContext();uploadHttp.Request.Host=new HostString("localhost");uploadHttp.Request.Scheme="http";
+   var settings=Microsoft.Extensions.Options.Options.Create(new FarmStay.Application.Common.Settings.FileUploadSettings{AllowedImageExtensions=[".jpg"],AllowedImageMimeTypes=["image/jpeg"],MaxImageSizeInBytes=1000});
+   var upload=new FarmStay.Infrastructure.Services.Common.FileUploadRepository(new UploadEnvironment(),new FixedHttpContextAccessor{HttpContext=uploadHttp},NullLogger<FarmStay.Infrastructure.Services.Common.FileUploadRepository>.Instance,settings,new VerifiedUploadContext(a.FarmHouseId));
+   using var content=new MemoryStream(item.Item5);var file=new FormFile(content,0,content.Length,"file",item.Item3){Headers=new HeaderDictionary(),ContentType=item.Item4};
+   var result=await upload.UploadFileAsync(new FarmStay.Application.DTOs.FileUpload.FileUploadRequestDto{Folder=item.Item2,File=file});Check(!result.Success);
+  });
  }
  await Test("View-only/customer cannot escalate to posting",()=>Reject(async()=>await access.RequireAsync("Accounts.Post",ct),403));
  await Test("Invalid membership denied",async()=>{membership.IsActive=false;db.Update(membership);await db.SaveChangesAsync();await Reject(async()=>await access.RequireAsync("Accounts.View",ct),403);});
@@ -128,3 +168,16 @@ if(args.Contains("--integration")){
 Console.WriteLine($"TOTAL passed={passed} failed={failed}");return failed==0?0:1;
 
 sealed class FixedHttpContextAccessor : IHttpContextAccessor { public HttpContext? HttpContext { get; set; } }
+
+sealed class FixedPublicDomain(string name) : ITenantResolver { public string GetCurrentDomain()=>name; }
+
+sealed class VerifiedUploadContext(int tenant) : ICurrentTenantContext {
+ public Task<VerifiedTenant> RequireAsync(CancellationToken ct=default)=>Task.FromResult(new VerifiedTenant(tenant,1,1,"Admin","upload-test"));
+ public Task DemandAsync(params string[] anyPermissions)=>Task.CompletedTask;
+}
+sealed class UploadEnvironment : Microsoft.Extensions.Hosting.IHostEnvironment {
+ public string EnvironmentName{get;set;}="Development";
+ public string ApplicationName{get;set;}="Verification";
+ public string ContentRootPath{get;set;}=Path.GetFullPath(".build-phase1/upload-fixture");
+ public Microsoft.Extensions.FileProviders.IFileProvider ContentRootFileProvider{get;set;}=new Microsoft.Extensions.FileProviders.NullFileProvider();
+}

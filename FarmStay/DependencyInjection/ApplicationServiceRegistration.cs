@@ -16,6 +16,14 @@ namespace FarmStay.API.DependencyInjection
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
             // Application Services
+            services.AddScoped<IBookingActorContext, BookingActorContext>();
+            services.AddScoped<IBookingIdentityDocuments, BookingIdentityApplicationService>();
+            services.AddScoped<IBookingDecisionService, BookingDecisionApplicationService>();
+            services.AddScoped<IBookingStayOperations, BookingStayApplicationService>();
+            services.AddScoped<IAdvancePaymentOrders, AdvancePaymentApplicationService>();
+            services.AddScoped<IAdminBookingConfirmation, AdminBookingConfirmationService>();
+            services.AddScoped<IBookingSubmission, FarmStay.Application.Services.Booking.BookingSubmissionService>();
+            services.AddScoped<FarmStay.Application.Interfaces.Services.Common.IFileUploadService, FarmStay.Application.Services.FileUpload.FileUploadService>();
             services.AddScoped<FarmStay.Application.Accounts.IAccountsService, FarmStay.Application.Accounts.AccountsService>();
 
             services.AddScoped<IAdminBookingCustomers, FarmStay.Application.Services.Booking.AdminBookingCustomers>();

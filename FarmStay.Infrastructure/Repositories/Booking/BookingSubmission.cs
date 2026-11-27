@@ -13,7 +13,7 @@ using BookingEntity = FarmStay.Domain.Entities.Booking;
 namespace FarmStay.Infrastructure.Repositories.Booking;
 
 public sealed class BookingSubmission(AppDbContext db, IFarmHousePricingService pricing,
-    IBookingNotifications notifications, ILogger<BookingSubmission> logger) : IBookingSubmission
+    IBookingNotifications notifications, ILogger<BookingSubmission> logger) : FarmStay.Application.Interfaces.Repositories.IBookingSubmissionRepository
 {
     public async Task<IReadOnlyList<SubmitBookingResponse>> GetMineAsync(int farmHouseId, int userId,
         CancellationToken cancellationToken)
@@ -77,7 +77,7 @@ public sealed class BookingSubmission(AppDbContext db, IFarmHousePricingService 
             var previous = await existing.SingleOrDefaultAsync(cancellationToken);
             if (previous != null)
             {
-                if (previous.SubmitRequestHash != requestHash)
+                if (previous.SubmitRequestHash != requestHash || previous.BookingSource != source)
                     return new(409, "This submission key was already used for another request.", "DUPLICATE_SUBMISSION");
                 booking = previous;
                 replay = true;
@@ -169,7 +169,7 @@ public sealed class BookingSubmission(AppDbContext db, IFarmHousePricingService 
             var previous = await existing.SingleOrDefaultAsync(cancellationToken);
             if (previous == null)
                 return Unavailable();
-            if (previous.SubmitRequestHash != requestHash)
+            if (previous.SubmitRequestHash != requestHash || previous.BookingSource != source)
                 return new(409, "This submission key was already used for another request.", "DUPLICATE_SUBMISSION");
             booking = previous;
             replay = true;

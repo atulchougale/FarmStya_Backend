@@ -1,0 +1,70 @@
+# Declared DI map
+
+This maps registrations, not proof of complete runtime call chains.
+
+| Registration file | Contract | Implementation |
+|---|---|---|
+| FarmStay/DependencyInjection/ApplicationServiceRegistration.cs | IBookingSubmission | FarmStay.Application.Services.Booking.BookingSubmissionService |
+| FarmStay/DependencyInjection/ApplicationServiceRegistration.cs | FarmStay.Application.Interfaces.Services.Common.IFileUploadService | FarmStay.Application.Services.FileUpload.FileUploadService |
+| FarmStay/DependencyInjection/ApplicationServiceRegistration.cs | FarmStay.Application.Accounts.IAccountsService | FarmStay.Application.Accounts.AccountsService |
+| FarmStay/DependencyInjection/ApplicationServiceRegistration.cs | IAdminBookingCustomers | FarmStay.Application.Services.Booking.AdminBookingCustomers |
+| FarmStay/DependencyInjection/ApplicationServiceRegistration.cs | IUserService | UserService |
+| FarmStay/DependencyInjection/ApplicationServiceRegistration.cs | IFarmHouseService | FarmHouseService |
+| FarmStay/DependencyInjection/ApplicationServiceRegistration.cs | IPublicSiteService | PublicSiteService |
+| FarmStay/DependencyInjection/ApplicationServiceRegistration.cs | IGalleryService | GalleryService |
+| FarmStay/DependencyInjection/ApplicationServiceRegistration.cs | IFeedbackService | FeedbackService |
+| FarmStay/DependencyInjection/ApplicationServiceRegistration.cs | IAmenityService | AmenityService |
+| FarmStay/DependencyInjection/ApplicationServiceRegistration.cs | IPermissionService | PermissionService |
+| FarmStay/DependencyInjection/ApplicationServiceRegistration.cs | IAdminMenuService | AdminMenuService |
+| FarmStay/DependencyInjection/ApplicationServiceRegistration.cs | IDashboardService | DashboardService |
+| FarmStay/DependencyInjection/ApplicationServiceRegistration.cs | IContactService | ContactService |
+| FarmStay/DependencyInjection/ApplicationServiceRegistration.cs | IAboutUsService | AboutUsService |
+| FarmStay/DependencyInjection/ApplicationServiceRegistration.cs | IPublicPageService | PublicPageService |
+| FarmStay/DependencyInjection/ApplicationServiceRegistration.cs | IFarmHousePricingService | FarmHousePricingService |
+| FarmStay/DependencyInjection/ApplicationServiceRegistration.cs | IBookingCalendarService | BookingCalendarService |
+| FarmStay/DependencyInjection/ApplicationServiceRegistration.cs | IBookingListService | BookingListService |
+| FarmStay/DependencyInjection/ApplicationServiceRegistration.cs | FarmStay.Application.Interfaces.Services.Reports.IBookingReportService | FarmStay.Application.Services.Reports.Booking.BookingReportService |
+| FarmStay/DependencyInjection/ApplicationServiceRegistration.cs | FarmStay.Application.Interfaces.Services.Reports.IRevenueReportService | FarmStay.Application.Services.Reports.Revenue.RevenueReportService |
+| FarmStay/DependencyInjection/ApplicationServiceRegistration.cs | FarmStay.Application.Interfaces.Services.Reports.ICustomerReportService | FarmStay.Application.Services.Reports.Customer.CustomerReportService |
+| FarmStay/DependencyInjection/ApplicationServiceRegistration.cs | FarmStay.Application.Interfaces.Services.Reports.IOccupancyReportService | FarmStay.Application.Services.Reports.Occupancy.OccupancyReportService |
+| FarmStay/DependencyInjection/ApplicationServiceRegistration.cs | FarmStay.Application.Reporting.IReportingService | FarmStay.Application.Services.Reports.ReportingService |
+| FarmStay/DependencyInjection/InfrastructureServiceRegistration.cs | FarmStay.Application.Accounts.IAccountsRepository | FarmStay.Infrastructure.Accounts.AccountsRepository |
+| FarmStay/DependencyInjection/InfrastructureServiceRegistration.cs | FarmStay.Application.Accounts.IAccountsScope | FarmStay.Infrastructure.Accounts.AccountsScope |
+| FarmStay/DependencyInjection/InfrastructureServiceRegistration.cs | IUserRepository | UserRepository |
+| FarmStay/DependencyInjection/InfrastructureServiceRegistration.cs | IFarmHouseRepository | FarmHouseRepository |
+| FarmStay/DependencyInjection/InfrastructureServiceRegistration.cs | IUserRefreshTokenRepository | UserRefreshTokenRepository |
+| FarmStay/DependencyInjection/InfrastructureServiceRegistration.cs | IUserMembershipRepository | UserMembershipRepository |
+| FarmStay/DependencyInjection/InfrastructureServiceRegistration.cs | IPermissionRepository | PermissionRepository |
+| FarmStay/DependencyInjection/InfrastructureServiceRegistration.cs | IUserOtpRepository | UserOtpRepository |
+| FarmStay/DependencyInjection/InfrastructureServiceRegistration.cs | IRoleRepository | RoleRepository |
+| FarmStay/DependencyInjection/InfrastructureServiceRegistration.cs | IGalleryRepository | GalleryRepository |
+| FarmStay/DependencyInjection/InfrastructureServiceRegistration.cs | IFeedbackRepository | FeedbackRepository |
+| FarmStay/DependencyInjection/InfrastructureServiceRegistration.cs | IAmenityRepository | AmenityRepository |
+| FarmStay/DependencyInjection/InfrastructureServiceRegistration.cs | IAdminMenuRepository | AdminMenuRepository |
+| FarmStay/DependencyInjection/InfrastructureServiceRegistration.cs | IContactRepository | ContactRepository |
+| FarmStay/DependencyInjection/InfrastructureServiceRegistration.cs | IAboutUsRepository | AboutUsRepository |
+| FarmStay/DependencyInjection/InfrastructureServiceRegistration.cs | IPublicPageRepository | PublicPageRepository |
+| FarmStay/DependencyInjection/InfrastructureServiceRegistration.cs | IFarmHousePricingRepository | FarmHousePricingRepository |
+| FarmStay/DependencyInjection/InfrastructureServiceRegistration.cs | IBookingCalendarRepository | BookingCalendarRepository |
+| FarmStay/DependencyInjection/InfrastructureServiceRegistration.cs | IBookingListRepository | BookingListRepository |
+| FarmStay/DependencyInjection/InfrastructureServiceRegistration.cs | IDashboardRepository | FarmStay.Infrastructure.Repositories.Administration.DashboardRepository |
+| FarmStay/DependencyInjection/InfrastructureServiceRegistration.cs | IBookingDecisionService | BookingDecisionService |
+| FarmStay/DependencyInjection/InfrastructureServiceRegistration.cs | IBookingStayOperations | BookingStayOperations |
+| FarmStay/DependencyInjection/InfrastructureServiceRegistration.cs | IBookingReceipts | FarmStay.Infrastructure.Services.Reporting.BookingReceipts |
+| FarmStay/DependencyInjection/InfrastructureServiceRegistration.cs | IBookingIdentityDocuments | BookingIdentityDocuments |
+| FarmStay/DependencyInjection/InfrastructureServiceRegistration.cs | IAdvancePaymentOrders | RazorpayAdvancePaymentOrders |
+| FarmStay/DependencyInjection/InfrastructureServiceRegistration.cs | IAdminBookingConfirmation | AdminBookingConfirmation |
+| FarmStay/DependencyInjection/InfrastructureServiceRegistration.cs | FarmStay.Application.Reporting.IReportAccess | FarmStay.Infrastructure.Reporting.ReportAccess |
+| FarmStay/DependencyInjection/InfrastructureServiceRegistration.cs | FarmStay.Application.Interfaces.Repositories.Reports.IBookingReportRepository | FarmStay.Infrastructure.Repositories.Reports.Booking.BookingReportRepository |
+| FarmStay/DependencyInjection/InfrastructureServiceRegistration.cs | FarmStay.Application.Interfaces.Repositories.Reports.IRevenueReportRepository | FarmStay.Infrastructure.Repositories.Reports.Revenue.RevenueReportRepository |
+| FarmStay/DependencyInjection/InfrastructureServiceRegistration.cs | FarmStay.Application.Interfaces.Repositories.Reports.ICustomerReportRepository | FarmStay.Infrastructure.Repositories.Reports.Customer.CustomerReportRepository |
+| FarmStay/DependencyInjection/InfrastructureServiceRegistration.cs | FarmStay.Application.Interfaces.Repositories.Reports.IOccupancyReportRepository | FarmStay.Infrastructure.Repositories.Reports.Occupancy.OccupancyReportRepository |
+| FarmStay/DependencyInjection/InfrastructureServiceRegistration.cs | FarmStay.Application.Interfaces.Services.Reports.IReportFileRenderer | FarmStay.Infrastructure.Reporting.ReportFileRenderer |
+| FarmStay/DependencyInjection/InfrastructureServiceRegistration.cs | FarmStay.Application.Interfaces.Repositories.IBookingSubmissionRepository | BookingSubmission |
+| FarmStay/DependencyInjection/InfrastructureServiceRegistration.cs | IUnitOfWork | UnitOfWork |
+| FarmStay/DependencyInjection/InfrastructureServiceRegistration.cs | IJwtService | JwtService |
+| FarmStay/DependencyInjection/InfrastructureServiceRegistration.cs | IEmailService | EmailService |
+| FarmStay/DependencyInjection/InfrastructureServiceRegistration.cs | ITenantResolver | TenantResolver |
+| FarmStay/DependencyInjection/InfrastructureServiceRegistration.cs | FarmStay.Application.Interfaces.Repositories.FileUpload.IFileUploadRepository | FarmStay.Infrastructure.Services.Common.FileUploadRepository |
+| FarmStay/DependencyInjection/InfrastructureServiceRegistration.cs | IPasswordService | PasswordService |
+| FarmStay/DependencyInjection/InfrastructureServiceRegistration.cs | IBookingNotifications | BookingNotifications |

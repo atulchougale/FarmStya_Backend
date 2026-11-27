@@ -1,0 +1,336 @@
+ D FarmStay.Application/Accounts/AccountsContracts.cs
+ D FarmStay.Application/Accounts/AccountsService.cs
+ D FarmStay.Application/BackgroundJobs/EmailJob.cs
+ D FarmStay.Application/BackgroundJobs/WhatsAppJob.cs
+ D FarmStay.Application/DTOs/Admin/AboutUsFeatureRequestDto.cs
+ D FarmStay.Application/DTOs/Admin/AboutUsRequestDto.cs
+ D FarmStay.Application/DTOs/Admin/AboutUsResponseDto.cs
+ D FarmStay.Application/DTOs/Admin/AmenityRequestDto.cs
+ D FarmStay.Application/DTOs/Admin/AmenityResponseDto.cs
+ D FarmStay.Application/DTOs/Admin/CreateFarmHouseDto.cs
+ D FarmStay.Application/DTOs/Admin/FarmHouseDto.cs
+ D FarmStay.Application/DTOs/Admin/FarmHouseResponseDto.cs
+ D FarmStay.Application/DTOs/Admin/GalleryRequestDto.cs
+ D FarmStay.Application/DTOs/Admin/GalleryResponseDto.cs
+ D FarmStay.Application/DTOs/Admin/UpdateFarmHouseDto.cs
+ D FarmStay.Application/DTOs/Administration/AdminMenuResponseDto.cs
+ D FarmStay.Application/DTOs/Administration/DashboardDto.cs
+ D FarmStay.Application/DTOs/Auth/ChangePasswordDto.cs
+ D FarmStay.Application/DTOs/Auth/ForgotPasswordDto.cs
+ D FarmStay.Application/DTOs/Auth/LoginRequestDto.cs
+ D FarmStay.Application/DTOs/Auth/LoginResponseDto.cs
+ D FarmStay.Application/DTOs/Auth/LogoutDto.cs
+ D FarmStay.Application/DTOs/Auth/ProfileDto.cs
+ D FarmStay.Application/DTOs/Auth/RefreshTokenDto.cs
+ D FarmStay.Application/DTOs/Auth/RegisterRequestDto.cs
+ D FarmStay.Application/DTOs/Auth/RegisterResponseDto.cs
+ D FarmStay.Application/DTOs/Auth/ResendOtpRequestDto.cs
+ D FarmStay.Application/DTOs/Auth/ResetPasswordByEmailDto.cs
+ D FarmStay.Application/DTOs/Auth/ResetPasswordByOtpDto.cs
+ D FarmStay.Application/DTOs/Auth/SendLoginOtpRequestDto.cs
+ D FarmStay.Application/DTOs/Auth/UpdateEmailRequest.cs
+ D FarmStay.Application/DTOs/Auth/UpdateProfileRequest.cs
+ D FarmStay.Application/DTOs/Auth/VerificationStatusResponseDto.cs
+ D FarmStay.Application/DTOs/Auth/VerifyEmailRequestDto.cs
+ D FarmStay.Application/DTOs/Auth/VerifyLoginOtpRequestDto.cs
+ D FarmStay.Application/DTOs/Auth/VerifyOtpRequestDto.cs
+ D FarmStay.Application/DTOs/Booking/ActiveBookingDateReservationDto.cs
+ D FarmStay.Application/DTOs/Booking/AdministrationBookingList.cs
+ D FarmStay.Application/DTOs/Booking/BookingCalendarAvailabilityResponseDto.cs
+ D FarmStay.Application/DTOs/Booking/BookingCalendarMonthResponseDto.cs
+ D FarmStay.Application/DTOs/Booking/BookingListResponseDto.cs
+ D FarmStay.Application/DTOs/Booking/BookingQuoteDto.cs
+ D FarmStay.Application/DTOs/Booking/CreateBookingDateReservationsDto.cs
+ D FarmStay.Application/DTOs/Booking/FarmHousePricingResponseDto.cs
+ D FarmStay.Application/DTOs/Booking/ManageFarmHousePricing.cs
+ D FarmStay.Application/DTOs/Booking/SubmitBookingRequest.cs
+ D FarmStay.Application/DTOs/FileUpload/FileUploadRequestDto.cs
+ D FarmStay.Application/DTOs/FileUpload/FileUploadResponseDto.cs
+ D FarmStay.Application/DTOs/Public/ContactRequestDto.cs
+ D FarmStay.Application/DTOs/Public/ContactResponseDto.cs
+ D FarmStay.Application/DTOs/Public/FeedbackRequestDto.cs
+ D FarmStay.Application/DTOs/Public/FeedbackResponseDto.cs
+ D FarmStay.Application/DTOs/Public/PublicSiteDto.cs
+ D FarmStay.Application/DTOs/WhatsApp/WhatsAppMessageRequest.cs
+ D FarmStay.Application/DTOs/WhatsApp/WhatsAppResponseDto.cs
+ D FarmStay.Application/Interfaces/Repositories/IAboutUsRepository.cs
+ D FarmStay.Application/Interfaces/Repositories/IAdminMenuRepository.cs
+ D FarmStay.Application/Interfaces/Repositories/IAmenityRepository.cs
+ D FarmStay.Application/Interfaces/Repositories/IBookingCalendarRepository.cs
+ D FarmStay.Application/Interfaces/Repositories/IBookingListRepository.cs
+ D FarmStay.Application/Interfaces/Repositories/IContactRepository.cs
+ D FarmStay.Application/Interfaces/Repositories/IDashboardRepository.cs
+ D FarmStay.Application/Interfaces/Repositories/IFarmHousePricingRepository.cs
+ D FarmStay.Application/Interfaces/Repositories/IFarmHouseRepository.cs
+ D FarmStay.Application/Interfaces/Repositories/IFeedbackRepository.cs
+ D FarmStay.Application/Interfaces/Repositories/IGalleryRepository.cs
+ D FarmStay.Application/Interfaces/Repositories/IPermissionRepository.cs
+ D FarmStay.Application/Interfaces/Repositories/IPublicPageRepository.cs
+ D FarmStay.Application/Interfaces/Repositories/IRoleRepository.cs
+ D FarmStay.Application/Interfaces/Repositories/IUserMembershipRepository.cs
+ D FarmStay.Application/Interfaces/Repositories/IUserOtpRepository.cs
+ D FarmStay.Application/Interfaces/Repositories/IUserRefreshTokenRepository.cs
+ D FarmStay.Application/Interfaces/Repositories/IUserRepository.cs
+ D FarmStay.Application/Interfaces/Services/Admin/IAboutUsService.cs
+ D FarmStay.Application/Interfaces/Services/Admin/IAmenityService.cs
+ D FarmStay.Application/Interfaces/Services/Admin/IFarmHouseService.cs
+ D FarmStay.Application/Interfaces/Services/Admin/IGalleryService.cs
+ D FarmStay.Application/Interfaces/Services/Administration/IDashboardService.cs
+ D FarmStay.Application/Interfaces/Services/Common/IFileUploadService.cs
+ D FarmStay.Application/Interfaces/Services/Public/IContactService.cs
+ D FarmStay.Application/Interfaces/Services/Public/IFeedbackService.cs
+ D FarmStay.Application/Reporting/IReportingService.cs
+ D FarmStay.Application/Reporting/ReportExecution.cs
+ D FarmStay.Application/Reporting/ReportModels.cs
+ D FarmStay.Application/Services/Admin/AboutUsService.cs
+ D FarmStay.Application/Services/Admin/AmenityService.cs
+ D FarmStay.Application/Services/Admin/FarmHouseService.cs
+ D FarmStay.Application/Services/Admin/GalleryService.cs
+ D FarmStay.Application/Services/Administration/DashboardService.cs
+ D FarmStay.Application/Services/Public/ContactService.cs
+ D FarmStay.Application/Services/Public/FeedbackService.cs
+ D FarmStay.Application/Validators/Admin/CreateFarmHouseValidator.cs
+ D FarmStay.Application/Validators/Admin/CreateGalleryValidator.cs
+ D FarmStay.Application/Validators/Admin/UpdateFarmHouseValidator.cs
+ D FarmStay.Domain/Accounts/AccountingEntities.cs
+ D FarmStay.Domain/Entities/AboutUs.cs
+ D FarmStay.Domain/Entities/AboutUsFeature.cs
+ D FarmStay.Domain/Entities/Amenity.cs
+ D FarmStay.Domain/Entities/Booking.cs
+ D FarmStay.Domain/Entities/BookingActionToken.cs
+ D FarmStay.Domain/Entities/BookingDateReservation.cs
+ D FarmStay.Domain/Entities/BookingDocument.cs
+ D FarmStay.Domain/Entities/BookingEventDate.cs
+ D FarmStay.Domain/Entities/BookingReceipt.cs
+ D FarmStay.Domain/Entities/BookingStatusHistory.cs
+ D FarmStay.Domain/Entities/BookingStayDate.cs
+ D FarmStay.Domain/Entities/CheckoutDiscount.cs
+ D FarmStay.Domain/Entities/ContactUs.cs
+ D FarmStay.Domain/Entities/FarmHouse.cs
+ D FarmStay.Domain/Entities/FarmHouseCancellationPolicy.cs
+ D FarmStay.Domain/Entities/FarmHouseModule.cs
+ D FarmStay.Domain/Entities/FarmHousePaymentConfiguration.cs
+ D FarmStay.Domain/Entities/FarmHousePricing.cs
+ D FarmStay.Domain/Entities/FeedBack.cs
+ D FarmStay.Domain/Entities/Gallery.cs
+ D FarmStay.Domain/Entities/Module.cs
+ D FarmStay.Domain/Entities/NotificationOutbox.cs
+ D FarmStay.Domain/Entities/PaymentTransaction.cs
+ D FarmStay.Domain/Entities/Permission.cs
+ D FarmStay.Domain/Entities/Role.cs
+ D FarmStay.Domain/Entities/RoleModule.cs
+ D FarmStay.Domain/Entities/RoleModulePermission.cs
+ D FarmStay.Domain/Entities/SubscriptionPlan.cs
+ D FarmStay.Domain/Entities/User.cs
+ D FarmStay.Domain/Entities/UserMembership.cs
+ D FarmStay.Domain/Entities/UserOtp.cs
+ D FarmStay.Domain/Entities/UserRefreshToken.cs
+ D FarmStay.Domain/Enums/ForgotPasswordMethod.cs
+ D FarmStay.Domain/Enums/OtpPurpose.cs
+ D FarmStay.Infrastructure/Accounts/AccountingModel.cs
+ D FarmStay.Infrastructure/Accounts/AccountingReport.rdlc
+ D FarmStay.Infrastructure/Accounts/AccountingWorker.cs
+ D FarmStay.Infrastructure/Accounts/AccountsRepository.AssetsAndSources.cs
+ D FarmStay.Infrastructure/Accounts/AccountsRepository.Foundation.cs
+ D FarmStay.Infrastructure/Accounts/AccountsRepository.Masters.cs
+ D FarmStay.Infrastructure/Accounts/AccountsRepository.Reports.cs
+ D FarmStay.Infrastructure/Accounts/AccountsRepository.Vouchers.cs
+ D FarmStay.Infrastructure/Accounts/AccountsScope.cs
+ D FarmStay.Infrastructure/Accounts/Sql/AccountsReport.sql
+ D FarmStay.Infrastructure/Accounts/Sql/AccountsSeeds.sql
+ D FarmStay.Infrastructure/Accounts/Sql/ImmutableAudit.sql
+ D FarmStay.Infrastructure/Accounts/Sql/ImmutableLine.sql
+ D FarmStay.Infrastructure/Accounts/Sql/ImmutableVoucher.sql
+ D FarmStay.Infrastructure/BackgroundServices/BookingNotificationBackgroundService.cs
+ D FarmStay.Infrastructure/BackgroundServices/BookingOwnerApprovalBackgroundService.cs
+ D FarmStay.Infrastructure/BackgroundServices/EmailBackgroundService.cs
+ D FarmStay.Infrastructure/BackgroundServices/WhatsAppBackgroundService.cs
+ M FarmStay.Infrastructure/FarmStay.Infrastructure.csproj
+ D FarmStay.Infrastructure/Persistence/Configurations/AboutUsConfiguration.cs
+ D FarmStay.Infrastructure/Persistence/Configurations/AboutUsFeatureConfiguration.cs
+ D FarmStay.Infrastructure/Persistence/Configurations/AmenityConfiguration.cs
+ D FarmStay.Infrastructure/Persistence/Configurations/BookingActionTokenConfiguration.cs
+ D FarmStay.Infrastructure/Persistence/Configurations/BookingConfiguration.cs
+ D FarmStay.Infrastructure/Persistence/Configurations/BookingDateReservationConfiguration.cs
+ D FarmStay.Infrastructure/Persistence/Configurations/BookingDocumentConfiguration.cs
+ D FarmStay.Infrastructure/Persistence/Configurations/BookingEventDateConfiguration.cs
+ D FarmStay.Infrastructure/Persistence/Configurations/BookingReceiptConfiguration.cs
+ D FarmStay.Infrastructure/Persistence/Configurations/BookingStatusHistoryConfiguration.cs
+ D FarmStay.Infrastructure/Persistence/Configurations/BookingStayDateConfiguration.cs
+ D FarmStay.Infrastructure/Persistence/Configurations/CheckoutDiscountConfiguration.cs
+ D FarmStay.Infrastructure/Persistence/Configurations/ContactConfiguration.cs
+ D FarmStay.Infrastructure/Persistence/Configurations/FarmHouseCancellationPolicyConfiguration.cs
+ D FarmStay.Infrastructure/Persistence/Configurations/FarmHousePaymentConfigurationConfiguration.cs
+ D FarmStay.Infrastructure/Persistence/Configurations/FarmHousePricingConfiguration.cs
+ D FarmStay.Infrastructure/Persistence/Configurations/FeedbackConfiguration.cs
+ D FarmStay.Infrastructure/Persistence/Configurations/GalleryConfiguration.cs
+ D FarmStay.Infrastructure/Persistence/Configurations/NotificationOutboxConfiguration.cs
+ D FarmStay.Infrastructure/Persistence/Configurations/PaymentTransactionConfiguration.cs
+ D FarmStay.Infrastructure/Persistence/Configurations/UserOtpConfiguration.cs
+ D "FarmStay.Infrastructure/Persistence/Configurations/UserRefreshTokenConfiguration .cs"
+ D FarmStay.Infrastructure/Reporting/Mapping/ReportResultConfiguration.cs
+ D FarmStay.Infrastructure/Reporting/ReportAccess.cs
+ D FarmStay.Infrastructure/Reporting/ReportFileRenderer.cs
+ D FarmStay.Infrastructure/Reporting/Sql/Bookings.sql
+ D FarmStay.Infrastructure/Reporting/Sql/Customers.sql
+ D FarmStay.Infrastructure/Reporting/Sql/Dashboard/BookingSources.sql
+ D FarmStay.Infrastructure/Reporting/Sql/Dashboard/Calendar.sql
+ D FarmStay.Infrastructure/Reporting/Sql/Dashboard/Permissions.sql
+ D FarmStay.Infrastructure/Reporting/Sql/Dashboard/RevenueTrend.sql
+ D FarmStay.Infrastructure/Reporting/Sql/Dashboard/Summary.sql
+ D FarmStay.Infrastructure/Reporting/Sql/Occupancy.sql
+ D FarmStay.Infrastructure/Reporting/Sql/Revenue.sql
+ D FarmStay.Infrastructure/Reporting/Sql/SeedAndIndexes.sql
+ D FarmStay.Infrastructure/Reporting/Sql/Standard/Booking_GetReport.sql
+ D FarmStay.Infrastructure/Reporting/Sql/Standard/Booking_GetSummary.sql
+ D FarmStay.Infrastructure/Reporting/Sql/Standard/Customer_GetReport.sql
+ D FarmStay.Infrastructure/Reporting/Sql/Standard/Customer_GetSummary.sql
+ D FarmStay.Infrastructure/Reporting/Sql/Standard/Occupancy_GetReport.sql
+ D FarmStay.Infrastructure/Reporting/Sql/Standard/Occupancy_GetSummary.sql
+ D FarmStay.Infrastructure/Reporting/Sql/Standard/Revenue_GetReport.sql
+ D FarmStay.Infrastructure/Reporting/Sql/Standard/Revenue_GetSummary.sql
+ D FarmStay.Infrastructure/Reporting/Templates/bookings.rdlc
+ D FarmStay.Infrastructure/Reporting/Templates/customers.rdlc
+ D FarmStay.Infrastructure/Reporting/Templates/occupancy.rdlc
+ D FarmStay.Infrastructure/Reporting/Templates/revenue.rdlc
+ D FarmStay.Infrastructure/Repositories/Admin/AboutUsRepository.cs
+ D FarmStay.Infrastructure/Repositories/Admin/AmenityRepository.cs
+ D FarmStay.Infrastructure/Repositories/Admin/FarmHouseRepository.cs
+ D FarmStay.Infrastructure/Repositories/Admin/GalleryRepository.cs
+ D FarmStay.Infrastructure/Repositories/Admin/RoleRepository.cs
+ D FarmStay.Infrastructure/Repositories/Administration/DashboardRepository.cs
+ M FarmStay.Infrastructure/Repositories/Booking/BookingSubmission.cs
+ D FarmStay.Infrastructure/Repositories/Public/ContactRepository.cs
+ D FarmStay.Infrastructure/Repositories/Public/FeedbackRepository.cs
+ D FarmStay.Infrastructure/Services/Common/FileUploadService.cs
+ D FarmStay/Controllers/Admin/AboutUsController.cs
+ D FarmStay/Controllers/Admin/AmenityController.cs
+ D FarmStay/Controllers/Admin/FarmHouseController.cs
+ D FarmStay/Controllers/Admin/GalleryController.cs
+ D FarmStay/Controllers/Administration/AdminBookingsController.cs
+ D FarmStay/Controllers/Administration/DashboardController.cs
+ D FarmStay/Controllers/Administration/PricingManagementController.cs
+ D FarmStay/Controllers/FileUploadController.cs
+ D FarmStay/Controllers/Public/ContactController.cs
+ D FarmStay/Controllers/Public/FeedbackController.cs
+ M FarmStay/DependencyInjection/ApplicationServiceRegistration.cs
+ M FarmStay/DependencyInjection/InfrastructureServiceRegistration.cs
+?? FarmStay.Application/BackgroundJobs/Communication/
+?? FarmStay.Application/Common/Exceptions/
+?? FarmStay.Application/Common/Reporting/
+?? FarmStay.Application/DTOs/AboutUs/
+?? FarmStay.Application/DTOs/Accounts/
+?? FarmStay.Application/DTOs/Administration/Responses/
+?? FarmStay.Application/DTOs/Amenity/
+?? FarmStay.Application/DTOs/Auth/Requests/
+?? FarmStay.Application/DTOs/Auth/Responses/
+?? FarmStay.Application/DTOs/Booking/Requests/
+?? FarmStay.Application/DTOs/Booking/Responses/
+?? FarmStay.Application/DTOs/Contact/
+?? FarmStay.Application/DTOs/Dashboard/
+?? FarmStay.Application/DTOs/FarmHouse/
+?? FarmStay.Application/DTOs/Feedback/
+?? FarmStay.Application/DTOs/FileUpload/Requests/
+?? FarmStay.Application/DTOs/FileUpload/Responses/
+?? FarmStay.Application/DTOs/Gallery/
+?? FarmStay.Application/DTOs/Public/Responses/
+?? FarmStay.Application/DTOs/Reports/Requests/
+?? FarmStay.Application/DTOs/Reports/Responses/
+?? FarmStay.Application/DTOs/WhatsApp/Requests/
+?? FarmStay.Application/DTOs/WhatsApp/Responses/
+?? FarmStay.Application/Interfaces/Repositories/AboutUs/
+?? FarmStay.Application/Interfaces/Repositories/Accounts/
+?? FarmStay.Application/Interfaces/Repositories/Administration/
+?? FarmStay.Application/Interfaces/Repositories/Amenity/
+?? FarmStay.Application/Interfaces/Repositories/Auth/
+?? FarmStay.Application/Interfaces/Repositories/Authorization/
+?? FarmStay.Application/Interfaces/Repositories/Booking/
+?? FarmStay.Application/Interfaces/Repositories/Common/
+?? FarmStay.Application/Interfaces/Repositories/Contact/
+?? FarmStay.Application/Interfaces/Repositories/Dashboard/
+?? FarmStay.Application/Interfaces/Repositories/FarmHouse/
+?? FarmStay.Application/Interfaces/Repositories/Feedback/
+?? FarmStay.Application/Interfaces/Repositories/FileUpload/
+?? FarmStay.Application/Interfaces/Repositories/Gallery/
+?? FarmStay.Application/Interfaces/Repositories/Pricing/
+?? FarmStay.Application/Interfaces/Services/AboutUs/
+?? FarmStay.Application/Interfaces/Services/Accounts/
+?? FarmStay.Application/Interfaces/Services/Amenity/
+?? FarmStay.Application/Interfaces/Services/Contact/
+?? FarmStay.Application/Interfaces/Services/Dashboard/
+?? FarmStay.Application/Interfaces/Services/FarmHouse/
+?? FarmStay.Application/Interfaces/Services/Feedback/
+?? FarmStay.Application/Interfaces/Services/FileUpload/
+?? FarmStay.Application/Interfaces/Services/Gallery/
+?? FarmStay.Application/Interfaces/Services/Reports/IReportAccess.cs
+?? FarmStay.Application/Interfaces/Services/Reports/IReportPage.cs
+?? FarmStay.Application/Interfaces/Services/Reports/IReportingService.cs
+?? FarmStay.Application/Services/AboutUs/
+?? FarmStay.Application/Services/Accounts/
+?? FarmStay.Application/Services/Amenity/
+?? FarmStay.Application/Services/Booking/BookingSubmissionService.cs
+?? FarmStay.Application/Services/Contact/
+?? FarmStay.Application/Services/Dashboard/
+?? FarmStay.Application/Services/FarmHouse/
+?? FarmStay.Application/Services/Feedback/
+?? FarmStay.Application/Services/FileUpload/
+?? FarmStay.Application/Services/Gallery/
+?? FarmStay.Application/Validators/FarmHouse/
+?? FarmStay.Application/Validators/Gallery/
+?? FarmStay.Domain/Entities/AboutUs/
+?? FarmStay.Domain/Entities/Accounts/
+?? FarmStay.Domain/Entities/Amenity/
+?? FarmStay.Domain/Entities/Auth/
+?? FarmStay.Domain/Entities/Authorization/
+?? FarmStay.Domain/Entities/Booking/
+?? FarmStay.Domain/Entities/Contact/
+?? FarmStay.Domain/Entities/FarmHouse/
+?? FarmStay.Domain/Entities/Feedback/
+?? FarmStay.Domain/Entities/Gallery/
+?? FarmStay.Domain/Entities/Notifications/
+?? FarmStay.Domain/Entities/Pricing/
+?? FarmStay.Domain/Entities/Subscription/
+?? FarmStay.Domain/Enums/Common/
+?? FarmStay.Domain/Rules/
+?? FarmStay.Infrastructure/BackgroundServices/Accounts/
+?? FarmStay.Infrastructure/BackgroundServices/Booking/
+?? FarmStay.Infrastructure/BackgroundServices/Communication/
+?? FarmStay.Infrastructure/Persistence/Configurations/AboutUs/
+?? FarmStay.Infrastructure/Persistence/Configurations/Accounts/
+?? FarmStay.Infrastructure/Persistence/Configurations/Amenity/
+?? FarmStay.Infrastructure/Persistence/Configurations/Auth/
+?? FarmStay.Infrastructure/Persistence/Configurations/Booking/
+?? FarmStay.Infrastructure/Persistence/Configurations/Contact/
+?? FarmStay.Infrastructure/Persistence/Configurations/Feedback/
+?? FarmStay.Infrastructure/Persistence/Configurations/Gallery/
+?? FarmStay.Infrastructure/Persistence/Configurations/Notifications/
+?? FarmStay.Infrastructure/Persistence/Configurations/Pricing/
+?? FarmStay.Infrastructure/Persistence/Configurations/Reports/
+?? FarmStay.Infrastructure/Reports/Accounts/
+?? FarmStay.Infrastructure/Reports/Operational/
+?? FarmStay.Infrastructure/Repositories/AboutUs/
+?? FarmStay.Infrastructure/Repositories/Accounts/
+?? FarmStay.Infrastructure/Repositories/Amenity/
+?? FarmStay.Infrastructure/Repositories/Authorization/
+?? FarmStay.Infrastructure/Repositories/Contact/
+?? FarmStay.Infrastructure/Repositories/Dashboard/
+?? FarmStay.Infrastructure/Repositories/FarmHouse/
+?? FarmStay.Infrastructure/Repositories/Feedback/
+?? FarmStay.Infrastructure/Repositories/FileUpload/
+?? FarmStay.Infrastructure/Repositories/Gallery/
+?? FarmStay.Infrastructure/SQL/
+?? FarmStay.Infrastructure/Services/Accounts/
+?? FarmStay.Infrastructure/Services/Reports/
+?? FarmStay/Controllers/AboutUs/
+?? FarmStay/Controllers/Amenity/
+?? FarmStay/Controllers/Booking/AdminBookingsController.cs
+?? FarmStay/Controllers/Contact/
+?? FarmStay/Controllers/Dashboard/
+?? FarmStay/Controllers/FarmHouse/
+?? FarmStay/Controllers/Feedback/
+?? FarmStay/Controllers/FileUpload/
+?? FarmStay/Controllers/Gallery/
+?? FarmStay/Controllers/Pricing/
+?? docs/Accounts/backend-folder-moves.json
+?? docs/Phase0/
+?? docs/backend-structure.md

@@ -26,6 +26,7 @@ public sealed class ReportsController(IReportingService reporting) : ControllerB
     });
 
     [HttpGet("{report}/export/{format}")]
+    [Microsoft.AspNetCore.RateLimiting.EnableRateLimiting("Export")]
     public Task<IActionResult> Export(string report, string format, [FromQuery, CustomizeValidator(Skip = true)] ReportFilter filter, CancellationToken ct) => Respond(async () => {
         Response.Headers.CacheControl = "no-store";
         var file = await reporting.ExportAsync(report, filter, format, ct);

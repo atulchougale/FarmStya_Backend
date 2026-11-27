@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 namespace FarmStay.Infrastructure.Repositories.Booking;
 
 public sealed class AdminBookingConfirmation(AppDbContext db, IBookingNotifications notifications,
-    ILogger<AdminBookingConfirmation> logger) : IAdminBookingConfirmation
+    ILogger<AdminBookingConfirmation> logger) : FarmStay.Application.Interfaces.Repositories.IAdminBookingConfirmationRepository
 {
     public async Task<AdminConfirmationResult> CollectCashAsync(int farmhouse, long bookingId, int actor,
         AdminAdvanceRequest request, CancellationToken ct)

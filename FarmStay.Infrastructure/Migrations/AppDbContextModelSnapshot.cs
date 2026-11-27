@@ -287,6 +287,76 @@ namespace FarmStay.Infrastructure.Migrations
                     b.ToView("OccupancyReportResult", (string)null);
                 });
 
+            modelBuilder.Entity("FarmStay.Application.DTOs.Reports.Receipts.Responses.PaymentReceiptReportRow", b =>
+                {
+                    b.Property<string>("Address")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Amount")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("BookingReference")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("BookingType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CheckInDate")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CheckOutDate")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CurrencyCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Discount")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FarmHouseName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FarmPhone")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FullName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("IssuedAt")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MobileNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PaymentMethod")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PaymentReference")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PaymentType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ReceiptNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Remaining")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TotalAmount")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TotalPaid")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.ToTable((string)null);
+
+                    b.ToView("PaymentReceiptReportResult", (string)null);
+                });
+
             modelBuilder.Entity("FarmStay.Application.DTOs.Reports.Revenue.Responses.RevenueReportResponseDto", b =>
                 {
                     b.Property<decimal>("Amount")
@@ -387,7 +457,7 @@ namespace FarmStay.Infrastructure.Migrations
 
                     b.HasIndex("FarmHouseId");
 
-                    b.HasIndex("VoucherId");
+                    b.HasIndex("FarmHouseId", "VoucherId");
 
                     b.ToTable("AccountingAttachments", (string)null);
 
@@ -607,6 +677,12 @@ namespace FarmStay.Infrastructure.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
+                    b.Property<long?>("DefaultBankMoneyAccountId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("DefaultCashMoneyAccountId")
+                        .HasColumnType("bigint");
+
                     b.Property<int>("FarmHouseId")
                         .HasColumnType("int");
 
@@ -616,6 +692,9 @@ namespace FarmStay.Infrastructure.Migrations
                     b.Property<string>("GstNumber")
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
+
+                    b.Property<int>("InitializationVersion")
+                        .HasColumnType("int");
 
                     b.Property<int?>("ModifiedBy")
                         .HasColumnType("int");
@@ -639,7 +718,83 @@ namespace FarmStay.Infrastructure.Migrations
                     b.HasIndex("FarmHouseId")
                         .IsUnique();
 
+                    b.HasIndex("FarmHouseId", "DefaultBankMoneyAccountId");
+
+                    b.HasIndex("FarmHouseId", "DefaultCashMoneyAccountId");
+
                     b.ToTable("AccountingSettings", (string)null);
+
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
+                });
+
+            modelBuilder.Entity("FarmStay.Domain.Accounts.AccountingSourceReview", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<int>("Attempts")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("nvarchar(40)");
+
+                    b.Property<int>("CreatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("FarmHouseId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<int?>("ModifiedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long>("SourceId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("SourceKey")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("SourceKind")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<byte[]>("Version")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FarmHouseId");
+
+                    b.HasIndex("FarmHouseId", "SourceKey")
+                        .IsUnique();
+
+                    b.ToTable("AccountingSourceReviews", (string)null);
 
                     b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
                 });
@@ -703,12 +858,14 @@ namespace FarmStay.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AssetId");
-
                     b.HasIndex("FarmHouseId");
+
+                    b.HasIndex("FarmHouseId", "AssetId");
 
                     b.HasIndex("FarmHouseId", "EventKey")
                         .IsUnique();
+
+                    b.HasIndex("FarmHouseId", "VoucherId");
 
                     b.ToTable("AccountingAssetEvents", (string)null);
 
@@ -1164,6 +1321,12 @@ namespace FarmStay.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("FarmHouseId");
+
+                    b.HasIndex("FarmHouseId", "CreditAccountId");
+
+                    b.HasIndex("FarmHouseId", "ExpenseAccountId");
+
+                    b.HasIndex("FarmHouseId", "VendorId");
 
                     b.ToTable("AccountingRecurringExpenses", (string)null);
 
@@ -1976,6 +2139,8 @@ namespace FarmStay.Infrastructure.Migrations
                     b.HasIndex("UserId");
 
                     b.HasIndex("BookingId", "CreatedDate");
+
+                    b.HasIndex("FarmHouseId", "BookingId", "UserId");
 
                     b.HasIndex("FarmHouseId", "BookingId", "VerificationStatus");
 
@@ -2850,7 +3015,7 @@ namespace FarmStay.Infrastructure.Migrations
                         new
                         {
                             ModuleId = 1,
-                            CreatedDate = new DateTime(2026, 11, 25, 0, 31, 56, 763, DateTimeKind.Local).AddTicks(5987),
+                            CreatedDate = new DateTime(2026, 11, 26, 11, 13, 48, 917, DateTimeKind.Local).AddTicks(5417),
                             DisplayName = "Dashboard",
                             DisplayOrder = 1,
                             IsActive = true,
@@ -2860,7 +3025,7 @@ namespace FarmStay.Infrastructure.Migrations
                         new
                         {
                             ModuleId = 2,
-                            CreatedDate = new DateTime(2026, 11, 25, 0, 31, 56, 763, DateTimeKind.Local).AddTicks(6241),
+                            CreatedDate = new DateTime(2026, 11, 26, 11, 13, 48, 917, DateTimeKind.Local).AddTicks(5456),
                             DisplayName = "Bookings",
                             DisplayOrder = 2,
                             IsActive = true,
@@ -2870,7 +3035,7 @@ namespace FarmStay.Infrastructure.Migrations
                         new
                         {
                             ModuleId = 3,
-                            CreatedDate = new DateTime(2026, 11, 25, 0, 31, 56, 763, DateTimeKind.Local).AddTicks(6246),
+                            CreatedDate = new DateTime(2026, 11, 26, 11, 13, 48, 917, DateTimeKind.Local).AddTicks(5462),
                             DisplayName = "Accounts / Finance",
                             DisplayOrder = 3,
                             IsActive = true,
@@ -2880,7 +3045,7 @@ namespace FarmStay.Infrastructure.Migrations
                         new
                         {
                             ModuleId = 4,
-                            CreatedDate = new DateTime(2026, 11, 25, 0, 31, 56, 763, DateTimeKind.Local).AddTicks(6249),
+                            CreatedDate = new DateTime(2026, 11, 26, 11, 13, 48, 917, DateTimeKind.Local).AddTicks(5467),
                             DisplayName = "Reporting",
                             DisplayOrder = 4,
                             IsActive = true,
@@ -2890,7 +3055,7 @@ namespace FarmStay.Infrastructure.Migrations
                         new
                         {
                             ModuleId = 5,
-                            CreatedDate = new DateTime(2026, 11, 25, 0, 31, 56, 763, DateTimeKind.Local).AddTicks(6255),
+                            CreatedDate = new DateTime(2026, 11, 26, 11, 13, 48, 917, DateTimeKind.Local).AddTicks(5472),
                             DisplayName = "Website Settings",
                             DisplayOrder = 5,
                             IsActive = true,
@@ -3027,6 +3192,12 @@ namespace FarmStay.Infrastructure.Migrations
                     b.Property<DateTime?>("ModifiedDate")
                         .HasColumnType("datetime2(0)");
 
+                    b.Property<long?>("MoneyAccountId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("OriginalPaymentTransactionId")
+                        .HasColumnType("bigint");
+
                     b.Property<DateTime?>("PaidAt")
                         .HasColumnType("datetime2(0)");
 
@@ -3061,6 +3232,22 @@ namespace FarmStay.Infrastructure.Migrations
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
 
+                    b.Property<string>("RefundAccountingKind")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("RefundReason")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<string>("RefundReference")
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<string>("RefundRequestHash")
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
+
                     b.Property<DateTime?>("VerifiedAt")
                         .HasColumnType("datetime2(0)");
 
@@ -3071,7 +3258,16 @@ namespace FarmStay.Infrastructure.Migrations
                     b.HasIndex("FarmHouseId", "IdempotencyKey")
                         .IsUnique();
 
+                    b.HasIndex("FarmHouseId", "MoneyAccountId");
+
+                    b.HasIndex("FarmHouseId", "OriginalPaymentTransactionId");
+
                     b.HasIndex("FarmHouseId", "BookingId", "PaymentStatus");
+
+                    b.HasIndex("FarmHouseId", "MoneyAccountId", "RefundReference")
+                        .IsUnique()
+                        .HasDatabaseName("IX_Payment_ActualRefundReference")
+                        .HasFilter("[PaymentType]='Refund' AND [RefundReference] IS NOT NULL AND [IsDelete]=0");
 
                     b.ToTable("PaymentTransactions", (string)null);
                 });
@@ -3125,7 +3321,7 @@ namespace FarmStay.Infrastructure.Migrations
                         new
                         {
                             PermissionId = 1,
-                            CreatedDate = new DateTime(2026, 11, 25, 0, 31, 56, 769, DateTimeKind.Local).AddTicks(2951),
+                            CreatedDate = new DateTime(2026, 11, 26, 11, 13, 48, 918, DateTimeKind.Local).AddTicks(7641),
                             Description = "View gallery items",
                             DisplayOrder = 1,
                             IsActive = true,
@@ -3135,7 +3331,7 @@ namespace FarmStay.Infrastructure.Migrations
                         new
                         {
                             PermissionId = 2,
-                            CreatedDate = new DateTime(2026, 11, 25, 0, 31, 56, 769, DateTimeKind.Local).AddTicks(3215),
+                            CreatedDate = new DateTime(2026, 11, 26, 11, 13, 48, 918, DateTimeKind.Local).AddTicks(7668),
                             Description = "Create gallery items",
                             DisplayOrder = 2,
                             IsActive = true,
@@ -3145,7 +3341,7 @@ namespace FarmStay.Infrastructure.Migrations
                         new
                         {
                             PermissionId = 3,
-                            CreatedDate = new DateTime(2026, 11, 25, 0, 31, 56, 769, DateTimeKind.Local).AddTicks(3219),
+                            CreatedDate = new DateTime(2026, 11, 26, 11, 13, 48, 918, DateTimeKind.Local).AddTicks(7674),
                             Description = "Edit gallery items",
                             DisplayOrder = 3,
                             IsActive = true,
@@ -3155,7 +3351,7 @@ namespace FarmStay.Infrastructure.Migrations
                         new
                         {
                             PermissionId = 4,
-                            CreatedDate = new DateTime(2026, 11, 25, 0, 31, 56, 769, DateTimeKind.Local).AddTicks(3222),
+                            CreatedDate = new DateTime(2026, 11, 26, 11, 13, 48, 918, DateTimeKind.Local).AddTicks(7678),
                             Description = "Delete gallery items",
                             DisplayOrder = 4,
                             IsActive = true,
@@ -3165,7 +3361,7 @@ namespace FarmStay.Infrastructure.Migrations
                         new
                         {
                             PermissionId = 5,
-                            CreatedDate = new DateTime(2026, 11, 25, 0, 31, 56, 769, DateTimeKind.Local).AddTicks(3224),
+                            CreatedDate = new DateTime(2026, 11, 26, 11, 13, 48, 918, DateTimeKind.Local).AddTicks(7683),
                             Description = "View amenities",
                             DisplayOrder = 5,
                             IsActive = true,
@@ -3175,7 +3371,7 @@ namespace FarmStay.Infrastructure.Migrations
                         new
                         {
                             PermissionId = 6,
-                            CreatedDate = new DateTime(2026, 11, 25, 0, 31, 56, 769, DateTimeKind.Local).AddTicks(3233),
+                            CreatedDate = new DateTime(2026, 11, 26, 11, 13, 48, 918, DateTimeKind.Local).AddTicks(7687),
                             Description = "Create amenities",
                             DisplayOrder = 6,
                             IsActive = true,
@@ -3185,7 +3381,7 @@ namespace FarmStay.Infrastructure.Migrations
                         new
                         {
                             PermissionId = 7,
-                            CreatedDate = new DateTime(2026, 11, 25, 0, 31, 56, 769, DateTimeKind.Local).AddTicks(3236),
+                            CreatedDate = new DateTime(2026, 11, 26, 11, 13, 48, 918, DateTimeKind.Local).AddTicks(7692),
                             Description = "Edit amenities",
                             DisplayOrder = 7,
                             IsActive = true,
@@ -3195,7 +3391,7 @@ namespace FarmStay.Infrastructure.Migrations
                         new
                         {
                             PermissionId = 8,
-                            CreatedDate = new DateTime(2026, 11, 25, 0, 31, 56, 769, DateTimeKind.Local).AddTicks(3239),
+                            CreatedDate = new DateTime(2026, 11, 26, 11, 13, 48, 918, DateTimeKind.Local).AddTicks(7696),
                             Description = "Delete amenities",
                             DisplayOrder = 8,
                             IsActive = true,
@@ -3205,7 +3401,7 @@ namespace FarmStay.Infrastructure.Migrations
                         new
                         {
                             PermissionId = 9,
-                            CreatedDate = new DateTime(2026, 11, 25, 0, 31, 56, 769, DateTimeKind.Local).AddTicks(3241),
+                            CreatedDate = new DateTime(2026, 11, 26, 11, 13, 48, 918, DateTimeKind.Local).AddTicks(7701),
                             Description = "View customer feedback and reviews",
                             DisplayOrder = 9,
                             IsActive = true,
@@ -3215,7 +3411,7 @@ namespace FarmStay.Infrastructure.Migrations
                         new
                         {
                             PermissionId = 10,
-                            CreatedDate = new DateTime(2026, 11, 25, 0, 31, 56, 769, DateTimeKind.Local).AddTicks(3255),
+                            CreatedDate = new DateTime(2026, 11, 26, 11, 13, 48, 918, DateTimeKind.Local).AddTicks(7705),
                             Description = "Create customer feedback",
                             DisplayOrder = 10,
                             IsActive = true,
@@ -3225,7 +3421,7 @@ namespace FarmStay.Infrastructure.Migrations
                         new
                         {
                             PermissionId = 11,
-                            CreatedDate = new DateTime(2026, 11, 25, 0, 31, 56, 769, DateTimeKind.Local).AddTicks(3258),
+                            CreatedDate = new DateTime(2026, 11, 26, 11, 13, 48, 918, DateTimeKind.Local).AddTicks(7709),
                             Description = "Delete customer feedback",
                             DisplayOrder = 11,
                             IsActive = true,
@@ -3714,7 +3910,8 @@ namespace FarmStay.Infrastructure.Migrations
 
                     b.HasOne("FarmStay.Domain.Accounts.Voucher", null)
                         .WithMany()
-                        .HasForeignKey("VoucherId")
+                        .HasForeignKey("FarmHouseId", "VoucherId")
+                        .HasPrincipalKey("FarmHouseId", "Id")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
@@ -3760,21 +3957,49 @@ namespace FarmStay.Infrastructure.Migrations
                         .HasForeignKey("FarmHouseId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("FarmStay.Domain.Accounts.MoneyAccount", null)
+                        .WithMany()
+                        .HasForeignKey("FarmHouseId", "DefaultBankMoneyAccountId")
+                        .HasPrincipalKey("FarmHouseId", "Id")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("FarmStay.Domain.Accounts.MoneyAccount", null)
+                        .WithMany()
+                        .HasForeignKey("FarmHouseId", "DefaultCashMoneyAccountId")
+                        .HasPrincipalKey("FarmHouseId", "Id")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
-            modelBuilder.Entity("FarmStay.Domain.Accounts.AssetEvent", b =>
+            modelBuilder.Entity("FarmStay.Domain.Accounts.AccountingSourceReview", b =>
                 {
-                    b.HasOne("FarmStay.Domain.Accounts.FixedAsset", null)
-                        .WithMany()
-                        .HasForeignKey("AssetId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("FarmStay.Domain.Entities.FarmHouse", null)
                         .WithMany()
                         .HasForeignKey("FarmHouseId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("FarmStay.Domain.Accounts.AssetEvent", b =>
+                {
+                    b.HasOne("FarmStay.Domain.Entities.FarmHouse", null)
+                        .WithMany()
+                        .HasForeignKey("FarmHouseId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("FarmStay.Domain.Accounts.FixedAsset", null)
+                        .WithMany()
+                        .HasForeignKey("FarmHouseId", "AssetId")
+                        .HasPrincipalKey("FarmHouseId", "Id")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("FarmStay.Domain.Accounts.Voucher", null)
+                        .WithMany()
+                        .HasForeignKey("FarmHouseId", "VoucherId")
+                        .HasPrincipalKey("FarmHouseId", "Id")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("FarmStay.Domain.Accounts.BankStatementEntry", b =>
@@ -3782,6 +4007,18 @@ namespace FarmStay.Infrastructure.Migrations
                     b.HasOne("FarmStay.Domain.Entities.FarmHouse", null)
                         .WithMany()
                         .HasForeignKey("FarmHouseId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("FarmStay.Domain.Accounts.VoucherLine", null)
+                        .WithMany()
+                        .HasForeignKey("VoucherLineId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("FarmStay.Domain.Accounts.LedgerAccount", null)
+                        .WithMany()
+                        .HasForeignKey("FarmHouseId", "AccountId")
+                        .HasPrincipalKey("FarmHouseId", "Id")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
@@ -3859,6 +4096,26 @@ namespace FarmStay.Infrastructure.Migrations
                         .HasForeignKey("FarmHouseId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("FarmStay.Domain.Accounts.LedgerAccount", null)
+                        .WithMany()
+                        .HasForeignKey("FarmHouseId", "CreditAccountId")
+                        .HasPrincipalKey("FarmHouseId", "Id")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("FarmStay.Domain.Accounts.LedgerAccount", null)
+                        .WithMany()
+                        .HasForeignKey("FarmHouseId", "ExpenseAccountId")
+                        .HasPrincipalKey("FarmHouseId", "Id")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("FarmStay.Domain.Accounts.Vendor", null)
+                        .WithMany()
+                        .HasForeignKey("FarmHouseId", "VendorId")
+                        .HasPrincipalKey("FarmHouseId", "Id")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("FarmStay.Domain.Accounts.Vendor", b =>
@@ -4043,12 +4300,6 @@ namespace FarmStay.Infrastructure.Migrations
 
             modelBuilder.Entity("FarmStay.Domain.Entities.BookingDocument", b =>
                 {
-                    b.HasOne("FarmStay.Domain.Entities.Booking", "Booking")
-                        .WithMany()
-                        .HasForeignKey("BookingId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("FarmStay.Domain.Entities.FarmHouse", "FarmHouse")
                         .WithMany()
                         .HasForeignKey("FarmHouseId")
@@ -4058,6 +4309,13 @@ namespace FarmStay.Infrastructure.Migrations
                     b.HasOne("FarmStay.Domain.Entities.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("FarmStay.Domain.Entities.Booking", "Booking")
+                        .WithMany()
+                        .HasForeignKey("FarmHouseId", "BookingId", "UserId")
+                        .HasPrincipalKey("FarmHouseId", "BookingId", "CustomerUserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -4319,6 +4577,18 @@ namespace FarmStay.Infrastructure.Migrations
                         .HasForeignKey("FarmHouseId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("FarmStay.Domain.Accounts.MoneyAccount", null)
+                        .WithMany()
+                        .HasForeignKey("FarmHouseId", "MoneyAccountId")
+                        .HasPrincipalKey("FarmHouseId", "Id")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("FarmStay.Domain.Entities.PaymentTransaction", null)
+                        .WithMany()
+                        .HasForeignKey("FarmHouseId", "OriginalPaymentTransactionId")
+                        .HasPrincipalKey("FarmHouseId", "PaymentTransactionId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Booking");
 

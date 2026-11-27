@@ -8,8 +8,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
 namespace FarmStay.Application.Services.Reports;
-public sealed class ReportingService(IHttpContextAccessor http, IUserMembershipRepository memberships,
-    IFarmHouseRepository farmhouses, IBookingListService administration, IReportAccess access,
+public sealed class ReportingService(FarmStay.Application.Interfaces.Common.ICurrentTenantContext tenant,
+    IFarmHouseRepository farmhouses, IReportAccess access,
     IBookingReportService booking, IRevenueReportService revenue, ICustomerReportService customer,
     IOccupancyReportService occupancy, ILogger<ReportingService> logger) : IReportingService
 {
@@ -60,27 +60,16 @@ public sealed class ReportingService(IHttpContextAccessor http, IUserMembershipR
     private async Task<ReportScope> ResolveAsync(CancellationToken ct)
     {
         if (resolved != null) return resolved;
-        ct.ThrowIfCancellationRequested();
-        var context = http.HttpContext;
-        if (context?.User.Identity?.IsAuthenticated != true ||
-            !int.TryParse(context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value, out var user) || user <= 0)
-            throw new ReportException(ReportError.Unauthorized, "Authentication is required.");
-        if (!int.TryParse(context.Request.Headers["FarmHouseId"].FirstOrDefault(), out var farmhouse) || farmhouse <= 0)
-            throw new ReportException(ReportError.InvalidRequest, "A valid farmhouse is required.");
+        var current = await tenant.RequireAsync(ct);
+        var farmhouse = current.FarmHouseId;
+        var user = current.UserId;
         var farm = await farmhouses.GetByIdAsync(farmhouse);
         if (farm is not { IsActive: true, IsDeleted: false }) throw new ReportException(ReportError.NotFound, "Farmhouse not found.");
-        var global = await administration.IsGlobalAdministratorAsync(user);
-        if (!global)
-        {
-            if (context.User.FindFirst(JwtClaimNames.FarmHouseId)?.Value != farmhouse.ToString())
-                throw new ReportException(ReportError.Forbidden, "You do not have access to this farmhouse.");
-            var member = await memberships.GetMembershipAsync(user, farmhouse);
-            if (member?.User is not { IsActive: true, IsDeleted: false } ||
-                member.Role is not { IsActive: true, IsDeleted: false, RoleName: "Admin" or "Farm Owner" or "FarmOwner" })
-                throw new ReportException(ReportError.Forbidden, "An active administration membership is required.");
-        }
+        var global = current.Role == "Super Admin";
+        if (!global && current.Role is not ("Admin" or "Farm Owner" or "FarmOwner"))
+            throw new ReportException(ReportError.Forbidden, "An active administration membership is required.");
         IReadOnlySet<string> rights = global ? new HashSet<string>() : await access.PermissionsAsync(farmhouse, user, ct);
         return resolved = new(farmhouse, user, farm.FarmHouseName, farm.Address, farm.MobileNumber,
-            global, rights, context.TraceIdentifier);
+            global, rights, current.CorrelationId);
     }
 }
